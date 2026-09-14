@@ -1,6 +1,6 @@
 ---
 name: api-update
-description: EXCLUSIVE /api-update — ONLY for updating/syncing backend contract under product/surfaces/ when Portal spec changes or BE-only requirements update. DO NOT generate Markdown reports.
+description: EXCLUSIVE /api-update — ONLY for updating/syncing backend contract under surfaces/ when Portal spec changes or BE-only requirements update. DO NOT generate Markdown reports.
 disable-model-invocation: true
 ---
 
@@ -17,7 +17,7 @@ Shared extracts: `.cursor/extracts/api-spec-sync.md`, `spec-evolution.md`, `enti
 ## Target / ID Resolution Rule
 
 - User prompt MAY provide a full path OR just a function/module/screen ID (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`, `login`).
-- If an ID is provided, Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve the exact target folder under `product/surfaces/...`. Do NOT force the user to prompt the full folder path.
+- If an ID is provided, Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve the exact target folder under `surfaces/...`. Do NOT force the user to prompt the full folder path.
 
 ## Modes
 
@@ -31,7 +31,7 @@ Shared extracts: `.cursor/extracts/api-spec-sync.md`, `spec-evolution.md`, `enti
 Same leaf as the FE bundle. Trio lives under `api/<seq>/` — never next to `*.bundle.yaml`.
 
 ```text
-product/surfaces/<surface>/CMP-*/<NN…>/     # e.g. CMP-ADM-009/01/01/01
+surfaces/<surface>/CMP-*/<NN…>/     # e.g. CMP-ADM-009/01/01/01
   <slug>.bundle.yaml
   ir/
   api/<seq>/

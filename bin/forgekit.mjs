@@ -132,14 +132,45 @@ async function main() {
   }
 
   if (command === 'dev' || command === 'serve') {
-    const { spawn } = await import('node:child_process');
+    const { spawn, spawnSync } = await import('node:child_process');
     const configPath = path.join(process.cwd(), '.forgekit', 'config.json');
-    let docsRoot, testsRoot;
+    let docsRoot, testsRoot, feAdapter;
     if (fs.existsSync(configPath)) {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       docsRoot = config.frontend?.docsRoot || config.backend?.docsRoot;
       testsRoot = config.frontend?.testsRoot;
+      feAdapter = config.frontend?.adapter;
     }
+    feAdapter = feAdapter || 'nextjs';
+    const projectRoot = process.cwd();
+
+    // ── gen-common: initial build (watch is handled by VitePress plugin) ──
+    const webAdapters = new Set(['nuxt4', 'nextjs']);
+    if (docsRoot && webAdapters.has(feAdapter)) {
+      const resolvedDocsRoot = path.resolve(docsRoot);
+      const forgekitRoot = path.resolve(new URL(import.meta.url).pathname, '../..');
+      const commonEngine = path.join(forgekitRoot, 'adapters', 'shared', 'common-gen.mjs');
+      const env = {
+        ...process.env,
+        CODEGENKIT_ROOT: projectRoot,
+        CODEGENKIT_ADAPTER: feAdapter,
+        CODEGENKIT_DOCS_ROOT: resolvedDocsRoot,
+      };
+      const res = spawnSync(process.execPath, [commonEngine, '--all-surfaces', '--all-modules'], {
+        cwd: projectRoot,
+        encoding: 'utf8',
+        env,
+      });
+      if (res.status === 0) {
+        const lines = (res.stdout || '').split('\n').filter(Boolean);
+        console.log(pc.green(`[Common] initial build — ${lines.length ? lines[0] : 'done'}`));
+      } else {
+        const msg = (res.stderr || res.stdout || '').trim().split('\n')[0];
+        console.log(pc.yellow(`[Common] skipped: ${msg || 'no common sources'}`));
+      }
+    }
+
+    // ── VitePress dev servers ────────────────────────────────────────
     if (docsRoot) {
       console.log(pc.blue(`[Docs] Starting VitePress in ${docsRoot}...`));
       spawn('npx', ['vitepress', 'dev', docsRoot, ...args.slice(1)], { stdio: 'inherit' });
@@ -359,6 +390,33 @@ async function main() {
     }
   }
 
+  // 3. Languages
+  let defaultLanguage = 'en';
+  let supportedLanguages = ['en'];
+  
+  if (selectedType === 'Document') {
+    const langsAns = await text({
+      message: 'Enter system language codes (comma separated, e.g. vn, ja, en):',
+      placeholder: 'en',
+      defaultValue: 'en'
+    });
+    if (isCancel(langsAns)) { cancel('Cancelled.'); process.exit(0); }
+    
+    if (langsAns) {
+      supportedLanguages = langsAns.split(',').map(l => l.trim()).filter(Boolean);
+      if (supportedLanguages.length === 1) {
+        defaultLanguage = supportedLanguages[0];
+      } else if (supportedLanguages.length > 1) {
+        const defLangAns = await select({
+          message: 'Select default language:',
+          options: supportedLanguages.map(l => ({ value: l, label: l }))
+        });
+        if (isCancel(defLangAns)) { cancel('Cancelled.'); process.exit(0); }
+        defaultLanguage = defLangAns;
+      }
+    }
+  }
+
   console.log(pc.magenta("\n=== Installation Plan ==="));
   console.log(`- Project Type: ${selectedType}`);
   if (selectedType !== 'Document') {
@@ -392,6 +450,8 @@ async function main() {
 
   const projectConfig = {
     type: selectedType,
+    languages: supportedLanguages,
+    defaultLanguage,
     frontend: feAdapter ? {
       adapter: feAdapter,
       docsRoot: feDocRoot,
@@ -412,6 +472,9 @@ async function main() {
     if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
     const items = fs.readdirSync(srcDir, { withFileTypes: true });
     for (const item of items) {
+      if (['node_modules', '.git', 'dist', '.agents', '.gemini', '.cursor', '.forgekit'].includes(item.name)) continue;
+      if (item.name.endsWith('.db')) continue;
+
       const srcPath = path.join(srcDir, item.name);
       const destPath = path.join(destDir, item.name);
       if (item.isDirectory()) {
@@ -448,7 +511,7 @@ async function main() {
        console.log(pc.blue(`  + Syncing .vitepress configs to ${path.relative(process.cwd(), destDocVp) || '.vitepress'}...`));
        copyRecursive(vitepressDocsSource, destDocVp);
        
-       const baseDocsSource = path.join(forgekitRoot, 'templates', 'product-skeleton');
+       const baseDocsSource = path.join(forgekitRoot, 'templates', 'project-skeleton');
        if (fs.existsSync(baseDocsSource)) {
           console.log(pc.blue(`  + Initializing Base Docs Structure to ${path.relative(process.cwd(), destDocsRoot) || '.'}...`));
           if (!fs.existsSync(destDocsRoot)) fs.mkdirSync(destDocsRoot, { recursive: true });
@@ -576,6 +639,10 @@ async function main() {
           }
         }
 
+        if (defaultLanguage) {
+          env.DOCSKIT_DEFAULT_LANG = defaultLanguage;
+        }
+
         const mcpConfig = {
           mcpServers: {
             forgekit: {
@@ -591,6 +658,39 @@ async function main() {
         );
         console.log(`  + Wrote mcp_config.json for ${agent}`);
       }
+
+      // Rewrite extract-registry paths for the agent
+      const agentPrefix = agent === 'gemini_antigravity' ? '.agents' : `.${agent}`;
+      const searchAndRewrite = (dir) => {
+        if (!fs.existsSync(dir)) return;
+        const items = fs.readdirSync(dir, { withFileTypes: true });
+        for (const item of items) {
+          const p = path.join(dir, item.name);
+          if (item.isDirectory()) {
+            searchAndRewrite(p);
+          } else if (item.name.includes('extract-registry') && item.name.endsWith('.json')) {
+            try {
+              const content = JSON.parse(fs.readFileSync(p, 'utf8'));
+              if (content.bundles) {
+                let modified = false;
+                for (const [key, paths] of Object.entries(content.bundles)) {
+                  content.bundles[key] = paths.map(fp => {
+                    if (fp.startsWith('.cursor/')) {
+                      modified = true;
+                      return fp.replace('.cursor', agentPrefix);
+                    }
+                    return fp;
+                  });
+                }
+                if (modified) {
+                  fs.writeFileSync(p, JSON.stringify(content, null, 2) + '\n');
+                }
+              }
+            } catch (e) {}
+          }
+        }
+      };
+      searchAndRewrite(agentDir);
     }
   }
 
@@ -674,6 +774,51 @@ async function main() {
     console.log('  + Đã build SQLite cache thành công tại .forgekit/index.db');
   } catch (e) {
     console.log(pc.yellow('  ! Không thể khởi tạo SQLite cache (chưa có specs/registry): ' + e.message));
+  }
+
+  if (['Frontend', 'Backend', 'Fullstack'].includes(selectedType)) {
+    const optionalAns = await multiselect({
+      message: 'Optional toolkits to initialize now (none = skip, add later):',
+      options: [
+        { value: 'codegraph', label: 'Codegraph — semantic code intelligence' }
+      ],
+      required: false
+    });
+    if (!isCancel(optionalAns) && optionalAns.includes('codegraph')) {
+      console.log(pc.blue('\n[INFO] Initializing Codegraph...'));
+      try {
+        const { spawnSync } = await import('node:child_process');
+        const res = spawnSync('npx', ['codegraph', 'init'], { stdio: 'inherit' });
+        if (res.status === 0) {
+          console.log('  + Codegraph initialized successfully');
+        } else {
+          console.log(pc.yellow(`  ! Codegraph initialization failed with status ${res.status}`));
+        }
+      } catch (e) {
+        console.log(pc.yellow('  ! Failed to run Codegraph init: ' + e.message));
+      }
+    }
+  }
+
+  // Cập nhật .gitignore
+  const gitignorePath = path.join(process.cwd(), '.gitignore');
+  const ignores = ['.forgekit', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo'];
+  let gitignoreContent = '';
+  if (fs.existsSync(gitignorePath)) {
+    gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
+  }
+  let appended = [];
+  for (const ignore of ignores) {
+    // Only add if not already in .gitignore
+    const regex = new RegExp(`^\\/?${ignore}\\/?$`, 'm');
+    if (!regex.test(gitignoreContent)) {
+      gitignoreContent += (gitignoreContent && !gitignoreContent.endsWith('\n') ? '\n' : '') + ignore + '\n';
+      appended.push(ignore);
+    }
+  }
+  if (appended.length > 0) {
+    fs.writeFileSync(gitignorePath, gitignoreContent);
+    console.log(pc.blue(`\n[INFO] Cập nhật .gitignore: đã thêm ${appended.join(', ')}`));
   }
 
   outro(pc.green("Success! Forgekit is initialized for your project."));

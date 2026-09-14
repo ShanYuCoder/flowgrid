@@ -164,7 +164,7 @@ export async function syncPageLifecycleFromManifests(root) {
 
 async function listManifestFiles(root) {
   const files = []
-  const featuresDir = path.join(root, 'product', 'surfaces')
+  const featuresDir = path.join(root, 'surfaces')
 
   async function walk(dir) {
     let entries = []

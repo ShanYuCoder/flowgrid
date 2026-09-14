@@ -90,7 +90,7 @@ export function registerTools(server: McpServer): void {
   }
 
   server.tool('common_gen',
-    'Inventory and stub shared UI from product/surfaces/<surface>/common or CMP-*/common.',
+    'Inventory and stub shared UI from surfaces/<surface>/common or CMP-*/common.',
     commonGenShape,
     async (input) => {
       try {

@@ -79,7 +79,7 @@ Scripts: `scripts/docs/` · `codegen/runners/` · `pnpm forge:render` · `pnpm a
 
 | Command | Skill | Output |
 |---------|-------|--------|
-| `/api-spec` | `.cursor/skills/api-spec/` | `product/surfaces/…/CMP-*/NN…/api/<seq>/01-backend-spec.yaml` (+ 02, 03) |
+| `/api-spec` | `.cursor/skills/api-spec/` | `surfaces/…/CMP-*/NN…/api/<seq>/01-backend-spec.yaml` (+ 02, 03) |
 | `/api-update-spec` | `.cursor/skills/api-update-spec/` | Sync portal delta / merge child specs / `be-only` updates in-place |
 | `/grill-api-spec` | `.cursor/skills/grill-api-spec/` | Audit + codegen-ready + `api:gen:dry` gate |
 | `/api-code` | `.cursor/skills/api-code/` | `pnpm api:gen` + HANDOFF manual items |
@@ -137,7 +137,7 @@ Không clone vendor Superpowers/Karpathy/Matt Pocock — nội dung đã rút g�
 ## Input from Portal
 
 ```text
-`product/surfaces/…/CMP-*/<NN…>/` trên docs hub (`ir/design.yaml` + `api/<seq>/`)
+`surfaces/…/CMP-*/<NN…>/` trên docs hub (`ir/design.yaml` + `api/<seq>/`)
 Test plans: https://github.com/raintr91/base_test
 ```
 
@@ -180,8 +180,8 @@ PHPUnit (rule riêng — không testcase):
 pnpm forge:render
 pnpm forge:publish
 pnpm docs:dev
-Bộ Code (Forgekit) api-gen:dry -- --spec product/surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
-Bộ Code (Forgekit) api-gen -- --spec product/surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
+Bộ Code (Forgekit) api-gen:dry -- --spec surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
+Bộ Code (Forgekit) api-gen -- --spec surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
 ```
 
 ## OpenAPI tooling

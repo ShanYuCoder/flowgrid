@@ -13,12 +13,12 @@ OpenAPI is a **docs artifact**, not Codegenkit. One generator: OpenAPI **3.0.3**
 ## Generate
 
 ```bash
-docskit openapi:gen --spec product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml
-docskit openapi:gen --spec product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml --dry-run
-docskit openapi:gen --spec product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml --force
-# or from docs hub root (all 01-backend-spec.yaml under product/surfaces):
+docskit openapi:gen --spec surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml
+docskit openapi:gen --spec surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml --dry-run
+docskit openapi:gen --spec surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml --force
+# or from docs hub root (all 01-backend-spec.yaml under surfaces):
 docskit openapi:gen
-docskit api:check --spec product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml
+docskit api:check --spec surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml
 ```
 
 Writes sibling **`02-openapi.yaml`**. Then `docskit openapi:render` merges fragments into `docs/openapi/api.yaml`.

@@ -4,7 +4,7 @@ Tài liệu này hướng dẫn quy trình tiêu chuẩn để định nghĩa v�
 
 ## 1. Phạm vi Common (bắt buộc)
 
-Đọc `.cursor/extracts/common-scope.md`. Đặt `common/` tại **thư mục thấp nhất mà mọi consumer dùng chung** (cluster → module → surface → `product/surfaces/common`). Nội bộ một module → `CMP-*/common/` (hoặc `CMP-*/NN/common/` nếu chỉ một cluster). Không dump hết vào `product/surfaces/common`.
+Đọc `.cursor/extracts/common-scope.md`. Đặt `common/` tại **thư mục thấp nhất mà mọi consumer dùng chung** (cluster → module → surface → `surfaces/common`). Nội bộ một module → `CMP-*/common/` (hoặc `CMP-*/NN/common/` nếu chỉ một cluster). Không dump hết vào `surfaces/common`.
 
 ## 2. Phân loại các tầng Common
 
@@ -15,14 +15,14 @@ Hệ thống hỗ trợ định nghĩa Common ở nhiều tầng khác nhau, ph�
 - **API Functions:** Các API dùng chung không phụ thuộc nghiệp vụ cụ thể (vd: `health-check`, `file-upload`, `master-data`).
 - **Business Rules:** Các quy tắc nghiệp vụ toàn cục (vd: quy tắc tính thuế, quy tắc làm tròn số).
 
-> **Lưu ý:** Thư mục template hiện tại (`templates/product-skeleton/surfaces/common/yaml/`) chủ yếu chứa các seed mẫu cho **UI Patterns** (Web CRUD). Hệ thống **chưa** có sẵn các seed mẫu cho tầng **Middlewares** hay **API Functions** (ngoại trừ pilot `API-CMN-HEALTH-001` trong thư mục `code/`). Bạn có thể tự do tạo mới chúng theo nhu cầu dự án bằng công cụ AI có sẵn.
+> **Lưu ý:** Thư mục template hiện tại (`templates/project-skeleton/surfaces/common/yaml/`) chủ yếu chứa các seed mẫu cho **UI Patterns** (Web CRUD). Hệ thống **chưa** có sẵn các seed mẫu cho tầng **Middlewares** hay **API Functions** (ngoại trừ pilot `API-CMN-HEALTH-001` trong thư mục `code/`). Bạn có thể tự do tạo mới chúng theo nhu cầu dự án bằng công cụ AI có sẵn.
 
 ## 2. Quy trình thiết kế Common
 
 ### Bước 1: Chọn LCA rồi scaffold `common/`
 - Nội bộ module: `/module CMP-… common` (hoặc `/module CMP-… 02 common` cho cluster).
 - Nhiều module một surface: `/surfaces <surface> common`.
-- Nhiều surface: `/surfaces common` → `product/surfaces/common`.
+- Nhiều surface: `/surfaces common` → `surfaces/common`.
 
 ### Bước 2: Định nghĩa Quy tắc Nghiệp vụ (Markdown)
 Dành cho BA / QA / Dev để thống nhất logic trên giấy tờ (Human-readable).
@@ -51,7 +51,7 @@ Trước khi sinh code, bạn có thể yêu cầu AI kiểm tra lại bundle:
 ### Bước 5: Render và Tích hợp
 Sau khi có file YAML, chạy lệnh để sinh tài liệu Markdown cho toàn team đọc:
 ```bash
-docskit split -- product/surfaces/<surface>/common/yaml/auth-middleware/auth-middleware.bundle.yaml
+docskit split -- surfaces/<surface>/common/yaml/auth-middleware/auth-middleware.bundle.yaml
 docskit render
 ```
 
@@ -85,7 +85,7 @@ spec:
 
 Nếu dự án có một nhóm các common thường xuyên đi chung với nhau (ví dụ: mọi webhook đều cần rate-limit, circuit-breaker, retry), bạn có thể tạo một file archetype:
 
-**File:** `product/surfaces/<surface>/common/patterns/webhook.pattern.yaml`
+**File:** `surfaces/<surface>/common/patterns/webhook.pattern.yaml`
 ```yaml
 schema: surface-pattern/v1
 id: gateway-webhook

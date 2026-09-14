@@ -5,7 +5,7 @@
 > Vi phạm bất kỳ đạo luật nào → run **FAILED**. Chat-only "done" = **KHÔNG ĐƯỢC CHẤP NHẬN**.
 >
 > Tracker SSOT: `TODO.md` ở thư mục root (không dùng `.agents/tasks/` làm SSOT).
-> Path SSOT: `product/surfaces/<surface>/CMP-*/<slug>/` (không có segment `modules/`).
+> Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (không có segment `modules/`).
 
 ---
 

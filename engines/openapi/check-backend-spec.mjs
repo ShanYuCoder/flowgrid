@@ -10,7 +10,7 @@ import { checkBackendSpec } from './lib/check-backend-spec.mjs'
 
 async function resolveSpecFiles(specArg, cwd) {
   if (!specArg) {
-    const surfaces = path.join(cwd, 'product', 'surfaces')
+    const surfaces = path.join(cwd, 'surfaces')
     return await listBackendSpecs(surfaces)
   }
   const abs = path.resolve(cwd, specArg)

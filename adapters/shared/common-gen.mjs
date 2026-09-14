@@ -80,7 +80,7 @@ function readSpecMeta(specPath) {
 }
 
 export function listSurfaceCommonDirs(docsRoot) {
-  const surfacesDir = path.join(docsRoot, 'product', 'surfaces')
+  const surfacesDir = path.join(docsRoot, 'surfaces')
   if (!existsSync(surfacesDir)) return []
   const out = []
   for (const entry of readdirSync(surfacesDir, { withFileTypes: true })) {
@@ -94,7 +94,7 @@ export function listSurfaceCommonDirs(docsRoot) {
 }
 
 export function listModuleCommonDirs(docsRoot) {
-  const surfacesDir = path.join(docsRoot, 'product', 'surfaces')
+  const surfacesDir = path.join(docsRoot, 'surfaces')
   if (!existsSync(surfacesDir)) return []
   const out = []
   for (const surface of readdirSync(surfacesDir, { withFileTypes: true })) {
@@ -387,7 +387,7 @@ function upsertCommonRegistry(projectRoot, entries, surface, dryRun) {
   const registryPath = path.join(projectRoot, 'registries', 'common.registry.json')
   let doc = {
     version: 1,
-    description: `FE surface common UI — product/surfaces/${surface}/common`,
+    description: `FE surface common UI — surfaces/${surface}/common`,
     entries: {},
     aliasIndex: {},
   }
@@ -482,7 +482,7 @@ export function runCommonGen(opts) {
   const sources = selectSources(surfaceListed, moduleListed, opts)
   if (!sources.length) {
     throw new Error(
-      `No product/surfaces/<surface>/common or <CMP-*>/common under ${docsRoot}. Run Docskit split first.`,
+      `No surfaces/<surface>/common or <CMP-*>/common under ${docsRoot}. Run Docskit split first.`,
     )
   }
   const notes = []

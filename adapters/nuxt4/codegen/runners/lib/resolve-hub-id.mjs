@@ -48,7 +48,7 @@ export function loadDocsIndex(docsRoot) {
 function buildDocsIndexFallback(docsRoot) {
   const codeIds = {}
   const modules = []
-  const surfacesDir = path.join(docsRoot, 'product', 'surfaces')
+  const surfacesDir = path.join(docsRoot, 'surfaces')
 
   function scanSurfaces(dir) {
     if (!existsSync(dir)) return

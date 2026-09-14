@@ -1,6 +1,6 @@
 ---
 description: Docskit docs spec/grill/update workflow
-globs: product/surfaces/**, product/legacy-dynamics/**
+globs: surfaces/**, legacy-dynamics/**
 alwaysApply: false
 ---
 

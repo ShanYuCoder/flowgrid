@@ -6,9 +6,9 @@ function normalize(filePath) {
 
 /**
  * Docs-hub common trees that must not be page-gen'd:
- * - platform:  product/surfaces/common/
- * - surface:   product/surfaces/<surface>/common/
- * - module:    product/surfaces/<surface>/CMP-…/common/
+ * - platform:  surfaces/common/
+ * - surface:   surfaces/<surface>/common/
+ * - module:    surfaces/<surface>/CMP-…/common/
  */
 export function isDocsCommonPath(filePath) {
   const n = normalize(filePath)

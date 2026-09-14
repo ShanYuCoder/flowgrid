@@ -10,10 +10,10 @@
     "registries/docs-index.json"
   ],
   "gapSources": [
-    "product/surfaces/**/code/**/generated/HANDOFF.md"
+    "surfaces/**/code/**/generated/HANDOFF.md"
   ],
   "specRoots": [
-    "product/surfaces/**/code/**"
+    "surfaces/**/code/**"
   ],
   "vocabularies": {
     "registryTags": "artifactgraph/lexicon/registry-tags.en.txt"

@@ -25,7 +25,7 @@
 
 Chi tiết quy ước: [System doc structure](./system-doc-structure.md).
 
-Pilot tham khảo: [FLOW-login](#). Màn hình sống dưới `product/surfaces/<surface>/CMP-*/<NN…>/` (bundle + `ir/` + `api/<seq>/`).
+Pilot tham khảo: [FLOW-login](#). Màn hình sống dưới `surfaces/<surface>/CMP-*/<NN…>/` (bundle + `ir/` + `api/<seq>/`).
 
 <div class="intro-hero">
 
@@ -189,7 +189,7 @@ flowchart TB
 
 `Surface` là bề mặt tương tác (Admin Web, Line Client/HMI, Integration Gateway) — không đồng nghĩa với Operational area. Mỗi surface lặp lại cùng cấu trúc `Common? → Modules → Functions`.
 
-Mỗi Module (`CMP-*`) có **một owner surface** và SSOT tại `product/surfaces/<owner-surface>/CMP-*`. Surface khác chỉ map/link, không copy. `FLOW-*`: Architecture = overview; Common = detail. Màn hình: `CMP-*/<NN…>/` (`*.bundle.yaml`, `ir/`, `api/<seq>/`).
+Mỗi Module (`CMP-*`) có **một owner surface** và SSOT tại `surfaces/<owner-surface>/CMP-*`. Surface khác chỉ map/link, không copy. `FLOW-*`: Architecture = overview; Common = detail. Màn hình: `CMP-*/<NN…>/` (`*.bundle.yaml`, `ir/`, `api/<seq>/`).
 
 ---
 
@@ -394,10 +394,10 @@ Setup: [Kits (MCP)](./toolkits.md) — Sử dụng `forgekit init`.
 
 | Nhu cầu | Artifact | Skill | Technical home |
 |---------|----------|-------|----------------|
-| Overview / scope / actor | — | `/overview` | `product/overview/` |
+| Overview / scope / actor | — | `/overview` | `overview/` |
 | business-process overview | `FLOW-*` | `/business-process` | `architecture/03-business-process/` |
 | business-process detail | `FLOW-*` | `/business-process` | Common theo scope |
-| Module | `CMP-*` | `/module` | `product/surfaces/<owner-surface>/CMP-*/` |
+| Module | `CMP-*` | `/module` | `surfaces/<owner-surface>/CMP-*/` |
 | Screen leaf | `<NN…>` | `/spec` | `…/CMP-*/<NN…>/` |
 | FE IR | — | Codegenkit `/prototype` | `…/ir/design.yaml` |
 | API contract | — | `/api-spec` | `…/api/<seq>/01-backend-spec.yaml` |

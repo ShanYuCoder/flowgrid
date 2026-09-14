@@ -8,7 +8,7 @@ disable-model-invocation: true
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
 > - Materialize `TODO.md` at root from Workflow before durable writes; plan before patching the bundle.
-> - Path SSOT: `product/surfaces/<surface>/CMP-*/<slug>/` (no `modules/` segment). Gaps → AskQuestion or `qa/open/` (`qa-inbox.md`); do not invent business data.
+> - Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (no `modules/` segment). Gaps → AskQuestion or `qa/open/` (`qa-inbox.md`); do not invent business data.
 > - Protocol: `extracts/agent-execution-protocol.md` + host `AGENTS.md` / `agent-compliance`.
 
 # /update-spec — Controlled spec delta
@@ -62,8 +62,8 @@ retries and report only actual `fileReads` / `contextBytes`.
 ## Path examples
 
 ```text
-product/surfaces/<surface>/CMP-*/<slug>/{id}.bundle.yaml   # patch here
-product/surfaces/<surface>/CMP-*/<slug>/ir/*.yaml          # read-only — from split
+surfaces/<surface>/CMP-*/<slug>/{id}.bundle.yaml   # patch here
+surfaces/<surface>/CMP-*/<slug>/ir/*.yaml          # read-only — from split
 # Plans: https://github.com/raintr91/base_test (open tests hub; no sibling path)
 ```
 

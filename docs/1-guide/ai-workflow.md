@@ -92,7 +92,7 @@ pnpm forge:dev         # Mở giao diện VitePress Local
 Output (cùng leaf với bundle):
 
 ```text
-product/surfaces/<surface>/CMP-*/<NN…>/
+surfaces/<surface>/CMP-*/<NN…>/
   <slug>.bundle.yaml
   ir/design.yaml
   ir/spec.yaml

@@ -33,7 +33,7 @@ testkit cases:check -- …
 ## Target / ID Resolution Rule
 
 - User prompt MAY specify a screen ID, module ID, or short slug (e.g. `W-AD-AUTH-001`, `CMP-ADM-000`, `login`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search under `TESTKIT_DOCS_ROOT` / `product/surfaces/...`) to resolve target paths.
+- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search under `TESTKIT_DOCS_ROOT` / `surfaces/...`) to resolve target paths.
 - Docs tech SSOT for screens: **Read the entire `ir/design.yaml`**. `FLOW-*` is process markdown (`architecture/03-business-process/` or `…/common/processes/`), not `ir/design.yaml`.
 - If story/copy/acceptance is missing for a case, that is a **docs gap**: STOP and hand off to docs-hub `/grill-dev` or `/update-spec`. Do **not** Write docs hub files (`ir/*`, `*.bundle.yaml`). Do **not** read `ir/spec.yaml` for testcase authoring.
 - Do not Read generated `*.md`.
@@ -41,9 +41,9 @@ testkit cases:check -- …
 
 ## Directory Mirroring Rule (Docs SSOT)
 
-Testkit acts as a reflection of the Docs SSOT. Mirror the function folder under `product/surfaces/`, **strip** that prefix only (not a legacy `product/common/` tree):
+Testkit acts as a reflection of the Docs SSOT. Mirror the function folder under `surfaces/`, **strip** that prefix only (not a legacy `common/` tree):
 - **Cases:** `cases/<relative-path>/` next to the screen/API folder.
-  - Docs `product/surfaces/admin/CMP-ADM-002/02/01/login/` → `cases/admin/CMP-ADM-002/02/01/login/TC-*.yaml`
+  - Docs `surfaces/admin/CMP-ADM-002/02/01/login/` → `cases/admin/CMP-ADM-002/02/01/login/TC-*.yaml`
   - Do not invent `cases/admin/auth/W-…` unless that is the real docs path.
 - Cross-flow plans → `/scenario` (mirror `common/processes/FLOW-*` or `architecture/03-business-process/FLOW-*`).
 

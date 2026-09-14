@@ -22,7 +22,7 @@ function resolveIrGlobRoots(options) {
   const docsRoot = process.env.CODEGENKIT_DOCS_ROOT || process.env.DOCSKIT_ROOT
   if (docsRoot) {
     const abs = path.resolve(docsRoot)
-    roots.push(path.join(abs, 'product', 'surfaces'))
+    roots.push(path.join(abs, 'surfaces'))
     roots.push(abs)
   }
   return [...new Set(roots)]

@@ -12,13 +12,13 @@ High-level approach: docs hub as arc42 TOC + C4 views; product Code under `CMP-*
 |-------|----------|
 | Docs structure | [ADR-001](../09-decisions/ADR-001-arc42-toc) — arc42 TOC over flat C4 folders |
 | Admin runtime | Admin Web + Admin API ([§07](../07-deployment/)) |
-| Auth entry | [CMP-01](/product/components/CMP-01-auth/) · [FLOW-login](../06-runtime/journeys/FLOW-login) |
+| Auth entry | [CMP-01](/surfaces/CMP-01-auth/) · [FLOW-login](../06-runtime/journeys/FLOW-login) |
 
 Further ADRs land in [§09](../09-decisions/).
 
 ## Out of scope
 
-Per-feature UI/API DSL (`product/**/code/`).
+Per-feature UI/API DSL (`surfaces/**/code/`).
 
 ## See also
 

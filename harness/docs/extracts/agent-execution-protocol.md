@@ -9,7 +9,7 @@
 ## Path / task SSOT
 
 ```text
-product/surfaces/<surface>/CMP-*/<slug>/     # no modules/ segment
+surfaces/<surface>/CMP-*/<slug>/     # no modules/ segment
 TODO.md (root)     # from Workflow + Accelerators ONLY, and quote Verification Checklist
 
 ```

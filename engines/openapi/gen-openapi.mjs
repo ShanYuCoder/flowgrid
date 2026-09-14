@@ -285,10 +285,10 @@ async function resolveSpecFiles(options, cwd) {
     }
     return [abs]
   }
-  const surfaces = path.join(cwd, 'product', 'surfaces')
+  const surfaces = path.join(cwd, 'surfaces')
   const found = await listBackendSpecs(surfaces)
   if (!found.length) {
-    throw new Error('No 01-backend-spec.yaml under product/surfaces. Pass --spec <path>.')
+    throw new Error('No 01-backend-spec.yaml under surfaces. Pass --spec <path>.')
   }
   return found
 }

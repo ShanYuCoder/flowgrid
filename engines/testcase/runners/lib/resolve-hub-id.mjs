@@ -155,7 +155,7 @@ function findFlowMarkdown(docsRoot, id) {
       }
     }
   }
-  walk(path.join(docsRoot, 'product', 'surfaces'))
+  walk(path.join(docsRoot, 'surfaces'))
   return hits[0] ?? null
 }
 

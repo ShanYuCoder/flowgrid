@@ -8,7 +8,7 @@ const SKIP_DIRS = new Set(['node_modules', '.git', 'ir', 'generated', 'dist', 'c
 
 function parseCli(argv) {
   const args = argv.slice(2)
-  let root = 'product'
+  let root = 'surfaces'
   let check = false
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--root' && args[i + 1]) {

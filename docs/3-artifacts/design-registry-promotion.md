@@ -35,7 +35,7 @@ Base không implement hết `planned` (DataFormPage, Repeater, …). Page đầu
 |-----------|-----------|
 | Component/shell **dùng lại** ở feature thứ 2 | Promote registry |
 | Là **widget/shell chuẩn** (Input, Repeater, DataFormPage) — không domain-only | Promote |
-| Pattern layout lặp (settings 2 cột, list + export block) | Promote `patterns` hoặc `shells.variants` + cân nhắc `product/surfaces/common/common-*.spec.yaml` |
+| Pattern layout lặp (settings 2 cột, list + export block) | Promote `patterns` hoặc `shells.variants` + cân nhắc `surfaces/common/common-*.spec.yaml` |
 | BA/legacy dùng từ mơ hồ lặp lại | Thêm `aliasIndex` |
 
 ## Khi nào **không** promote
@@ -59,7 +59,7 @@ Base không implement hết `planned` (DataFormPage, Repeater, …). Page đầu
 3. [ ] `pnpm portal:registry` — exit 0
 4. [ ] `pnpm portal:gen --spec ... --force` — slot wire sau khi file tồn tại
 5. [ ] Grill spec **mới**: canonical (`#widget:`, `#shell:`) thay `#needs-*` nếu đã implemented
-6. [ ] Pattern layout rộng → `product/surfaces/common/common-*.spec.yaml` (optional)
+6. [ ] Pattern layout rộng → `surfaces/common/common-*.spec.yaml` (optional)
 
 ---
 
@@ -97,4 +97,4 @@ Base không implement hết `planned` (DataFormPage, Repeater, …). Page đầu
 
 - [PAGE-LIFECYCLE.md](../7-architecture/page-lifecycle.md) — stage route (`prototype` / `wire`)
 - [E2E-TESTIDS.md](../5-testing/e2e-testids.md) — testId khi promote widget
-- `product/surfaces/common/index.md` — common YAML khi promote pattern UI
+- `surfaces/common/index.md` — common YAML khi promote pattern UI

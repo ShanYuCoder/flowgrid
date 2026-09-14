@@ -38,10 +38,10 @@ Optional: docs/integrations/{provider}/*.md (repo-local notes)
 > [!CAUTION] NO GROSS FILES / NO MARKDOWN CREATION
 > - **NEVER** combine multiple integration endpoints into a single gross file.
 > - **NEVER** write `.md` files directly. Markdown is generated ONLY by `pnpm docs:render`.
-> - **EVERY** contract MUST be scoped under `product/surfaces/integrations/<provider>/<slug>/`.
+> - **EVERY** contract MUST be scoped under `surfaces/integrations/<provider>/<slug>/`.
 
 ```text
-product/surfaces/integrations/<provider>/<slug>/api/<seq>/
+surfaces/integrations/<provider>/<slug>/api/<seq>/
 ├── 01-backend-spec.yaml    # feature.source.kind + integrationRefs (tech SSOT)
 ├── 02-openapi.yaml         # docskit openapi:gen from 01
 └── 03-mock-data.yaml
@@ -49,13 +49,13 @@ product/surfaces/integrations/<provider>/<slug>/api/<seq>/
 
 One 01 = one primary entity. Never dump every provider action into one file.
 
-Slug ví dụ: `product/surfaces/integrations/stripe/charge/api/01/`.
+Slug ví dụ: `surfaces/integrations/stripe/charge/api/01/`.
 
 
 ## STRICT API REUSE & EXPLICIT URI NAMING RULES
 
 > [!IMPORTANT] API REUSE BEFORE DEFINING NEW ENDPOINTS
-> - **Search First:** Agent MUST search existing integration endpoints under `product/surfaces/integrations/` using `docskit_route` or glob.
+> - **Search First:** Agent MUST search existing integration endpoints under `surfaces/integrations/` using `docskit_route` or glob.
 > - **Reuse Existing:** If an integration API endpoint already exists, reuse it instead of re-defining duplicate routes.
 
 > [!IMPORTANT] EXPLICIT ACTION SUFFIX URI NAMING (NO AMBIGUOUS RESTFUL PATHS)
@@ -73,7 +73,7 @@ Slug ví dụ: `product/surfaces/integrations/stripe/charge/api/01/`.
 ## Workflow
 
 1. Set `feature.source.kind`, `base: none`, `integrationRefs[]` — **empty** `portalRefs`
-2. **Check API Reuse & Explicit URIs:** Check `product/surfaces/integrations/` for existing endpoints and apply explicit action suffixes.
+2. **Check API Reuse & Explicit URIs:** Check `surfaces/integrations/` for existing endpoints and apply explicit action suffixes.
 3. `contexts.portalLayout: none`; document `contexts.auth` (API key, HMAC, OAuth)
 4. Inventory events/endpoints từ provider doc hoặc legacy code — mark `inferredFromCode` in `notes`
 5. Entities, idempotency keys, dedup, raw payload policy → `decisions` / `beOnlyRequirements`
@@ -88,7 +88,7 @@ Slug ví dụ: `product/surfaces/integrations/stripe/charge/api/01/`.
 14. Update `.harness/progress.md` when present
 
 ## Verification Checklist (Evidence Required)
-- [ ] **Folder Structure:** Trio under `product/surfaces/integrations/<provider>/<slug>/api/<seq>/` (no gross combined files; no 01 on the slug leaf).
+- [ ] **Folder Structure:** Trio under `surfaces/integrations/<provider>/<slug>/api/<seq>/` (no gross combined files; no 01 on the slug leaf).
 - [ ] **YAML Trio Generated:** Created `01-backend-spec.yaml`, `02-openapi.yaml`, and `03-mock-data.yaml` per folder.
 - [ ] **Error Matrix Documented:** Explicitly specified partner-facing error codes and `#err:*` tags in `01-backend-spec.yaml` and `02-openapi.yaml`.
 - [ ] **No Direct Markdown:** Did NOT write `.md` files directly.

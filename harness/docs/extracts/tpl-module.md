@@ -1,6 +1,6 @@
 # Module README template
 
-Path: `product/surfaces/<surface>/CMP-{NN}-{slug}/index.md` — **MD only** (yaml under `<function-slug>/code/`).
+Path: `surfaces/<surface>/CMP-{NN}-{slug}/index.md` — **MD only** (yaml under `<function-slug>/code/`).
 
 ```markdown
 # CMP-{NN} — Name

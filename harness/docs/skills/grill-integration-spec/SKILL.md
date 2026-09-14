@@ -1,6 +1,6 @@
 ---
 name: grill-integration-spec
-description: EXCLUSIVE /grill-integration-spec — ONLY for auditing backend integration contracts under product/surfaces/integrations/. DO NOT generate Markdown reports.
+description: EXCLUSIVE /grill-integration-spec — ONLY for auditing backend integration contracts under surfaces/integrations/. DO NOT generate Markdown reports.
 disable-model-invocation: true
 ---
 
@@ -23,11 +23,11 @@ Shared extracts: `.cursor/extracts/api-integration-spec.md`, `api-codegen-readin
 
 ## Workflow
 
-1. Resolve `product/surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`; never a 01 on the slug leaf
+1. Resolve `surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`; never a 01 on the slug leaf
 2. Audit auth, securitySchemes, idempotency, retry, and non-CRUD actions
 3. Enrich **01** with codegen tags (`#gen:*`, `#manual-service`, `#call-external`), `codegen.profile|entity|module`, `endpoints[].action`
 4. Run gates (docs hub):
-   `docskit api:check --spec product/surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`
+   `docskit api:check --spec surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`
    `docskit openapi:gen --spec …/01-backend-spec.yaml`
    `docskit openapi:render`
 5. Set `approval.status: reviewed` (or `approved`) in YAML

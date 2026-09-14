@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "Surface common UI specs under product/surfaces/<surface>/common/yaml/<slug>/ir.",
+  "description": "Surface common UI specs under surfaces/<surface>/common/yaml/<slug>/ir.",
   "skipSlugs": [
     "common-api",
     "backend-core-services"

@@ -1,6 +1,6 @@
 ---
 name: api-spec
-description: EXCLUSIVE /api-spec — ONLY for authoring backend API contract YAML trio per function slug under product/surfaces/. DO NOT merge multiple modules into single markdown files.
+description: EXCLUSIVE /api-spec — ONLY for authoring backend API contract YAML trio per function slug under surfaces/. DO NOT merge multiple modules into single markdown files.
 disable-model-invocation: true
 ---
 
@@ -11,7 +11,7 @@ disable-model-invocation: true
 # /api-spec — Backend API Contract
 
 > [!CRITICAL] TEMPLATE REQUIREMENT
-> You MUST read the template `.docskit/templates/api/backend-api.bundle.yaml` BEFORE generating any API spec.
+> You MUST read the template `.forgekit/templates/api/backend-api.bundle.yaml` BEFORE generating any API spec.
 > If this file is missing, you MUST STOP immediately and report an error to the user: "Template missing. Please run `docskit init` to generate templates." DO NOT attempt to guess the format or generate the YAML without it.
 
 **SSOT contract:** `…/api/<seq>/01-backend-spec.yaml` only. Do **not** write `bundle.spec.api`.
@@ -32,7 +32,7 @@ Hashtags (read extract when tag present):
 Portal leaf. **Read the entire `ir/design.yaml` first** (actions + nested items that call APIs). If `ir/` is missing, Read `*.bundle.yaml` `design.actions` / sections the same way. Do **not** invent endpoints from memory or from old `bundle.spec.api`.
 
 ```text
-product/surfaces/<surface>/CMP-*/<số>/<số>/…/   # leaf màn (NN = chuỗi số dưới CMP)
+surfaces/<surface>/CMP-*/<số>/<số>/…/   # leaf màn (NN = chuỗi số dưới CMP)
   ir/design.yaml     # inventory: actions[].apiRefs | tags #reuse-api + reuseFrom
   *.bundle.yaml      # authoring if not split yet
 ```
@@ -44,11 +44,11 @@ product/surfaces/<surface>/CMP-*/<số>/<số>/…/   # leaf màn (NN = chuỗi 
 > [!CAUTION] NO GROSS FILES / NO MARKDOWN CREATION
 > - **NEVER** combine multiple modules or multiple screens into a single gross file (e.g. `04-api-spec-cmp-adm-000-and-009.md`).
 > - **NEVER** write `.md` files directly. Markdown is generated ONLY by `pnpm docs:render`.
-> - **EVERY** API contract MUST be scoped under its corresponding `product/surfaces/...` directory.
+> - **EVERY** API contract MUST be scoped under its corresponding `surfaces/...` directory.
 
 ```text
 # Function API — cùng leaf với FE bundle; trio KHÔNG sát leaf
-product/surfaces/<surface>/CMP-*/01/01/01/     # ví dụ CMP-ADM-009/01/01/01
+surfaces/<surface>/CMP-*/01/01/01/     # ví dụ CMP-ADM-009/01/01/01
   <slug>.bundle.yaml
   ir/design.yaml
   ir/spec.yaml
@@ -59,8 +59,8 @@ product/surfaces/<surface>/CMP-*/01/01/01/     # ví dụ CMP-ADM-009/01/01/01
   api/02/                      # API thứ hai của cùng màn (nếu có)
 
 # Common API (LCA common/yaml/ — xem common-scope.md)
-product/surfaces/<surface>/CMP-*/common/yaml/<component-slug>/
-# or …/CMP-*/<NN>/common/yaml/ or product/surfaces/<surface>/common/yaml/ or product/surfaces/common/yaml/
+surfaces/<surface>/CMP-*/common/yaml/<component-slug>/
+# or …/CMP-*/<NN>/common/yaml/ or surfaces/<surface>/common/yaml/ or surfaces/common/yaml/
 ├── 01-backend-spec.yaml
 ├── 02-openapi.yaml
 └── 03-mock-data.yaml
@@ -76,13 +76,13 @@ Member review: `pnpm docs:render` then `pnpm docs:dev`.
 
 > [!IMPORTANT] COMMON MIDDLEWARE & API RESOLUTION (MANDATORY)
 > Before authoring a new API spec, the Agent MUST:
-> 1. Scan `product/surfaces/<surface>/common/yaml/` and `product/surfaces/common/yaml/` for defined common middlewares or APIs.
+> 1. Scan `surfaces/<surface>/common/yaml/` and `surfaces/common/yaml/` for defined common middlewares or APIs.
 > 2. If the endpoint requires common cross-cutting logic (e.g. auth, rate-limit), inject `#middleware: <id>` instead of rewriting the logic.
 > 3. Verify `#reuse-api` before creating a new endpoint (see below).
 
 > [!IMPORTANT] API REUSE BEFORE DEFINING NEW ENDPOINTS
 > - **Search First:** Before any trio, scan existing `01-backend-spec.yaml` under:
->   1. Sibling screens on this CMP: `product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/`
+>   1. Sibling screens on this CMP: `surfaces/<surface>/CMP-*/<NN…>/api/<seq>/`
 >   2. LCA `common/yaml/` (cluster → module → surface → global)
 >   3. Other modules on the same surface
 >   Use `docskit_route` / glob, or ArtifactGraph when available. Walk **this screen’s** `ir/design.yaml` actions/items for `#reuse-api` / `reuseFrom` (grill-dev / `/spec` tags reuse on the **page action**, not on a removed `spec.api` block).
@@ -129,7 +129,7 @@ Member review: `pnpm docs:render` then `pnpm docs:dev`.
 - [ ] **No duplicate trio:** Did not generate `01/02/03` for `#reuse-api` or for an API that already lives on another màn / common.
 - [ ] **Folder Location (new APIs only):**
   - **Common APIs:** LCA `common/yaml/<slug>/`.
-  - **Function APIs:** `product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/` (never 01 on the FE leaf).
+  - **Function APIs:** `surfaces/<surface>/CMP-*/<NN…>/api/<seq>/` (never 01 on the FE leaf).
 - [ ] **YAML Trio Generated:** Only for **new** unique APIs (skip this item when the screen is 100% `#reuse-api`).
 - [ ] **Error Matrix Documented:** For **new** trios only — `#err:*` on 01 and `$ref` on generated 02.
 - [ ] **No Direct Markdown:** Did NOT write `.md` files directly (Markdown is generated by `pnpm docs:render`).

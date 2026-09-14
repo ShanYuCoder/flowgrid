@@ -16,7 +16,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
-import { inferSurfaceFromRepoPath } from './product-paths.js';
+import { inferSurfaceFromRepoPath } from './surface-paths.js';
 // ---------------------------------------------------------------------------
 // Glob helpers (no external glob library — use recursive readdir)
 // ---------------------------------------------------------------------------
@@ -73,7 +73,7 @@ function resolveSpecGlobs(repoRoot, cfg) {
         return [...new Set(collected)];
     }
     // Last resort: walk common product surfaces path
-    walkForSpecs(path.join(repoRoot, 'product', 'surfaces'), collected);
+    walkForSpecs(path.join(repoRoot, 'surfaces'), collected);
     return [...new Set(collected)];
 }
 // ---------------------------------------------------------------------------

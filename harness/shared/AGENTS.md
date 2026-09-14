@@ -9,7 +9,7 @@
 > **CẤM** dùng danh sách dưới đây như Verification Checklist thay cho TODO bóc từ `SKILL.md`.
 > TODO **BẮT BUỘC** derive từ **Workflow + Accelerators** của skill đang chạy — không cố định, không copy-paste checklist tĩnh.
 
-**Path SSOT:** `product/surfaces/<surface>/CMP-*/<slug>/` (không có `modules/`)  
+**Path SSOT:** `surfaces/<surface>/CMP-*/<slug>/` (không có `modules/`)  
 **Task SSOT:** `TODO.md` ở thư mục root (không dùng `.agents/tasks/` làm SSOT)  
 **Skill root:** `{{DOC_SKIT_AGENT_DIR}}/skills/<name>/SKILL.md`  
 **Tools:** read=`{{DOC_SKIT_READ_TOOL}}` · write=`{{DOC_SKIT_WRITE_TOOL}}`

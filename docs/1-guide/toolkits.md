@@ -66,8 +66,8 @@ Trên Repo đóng vai trò **Document Hub**, bộ kỹ năng của Forgekit cung
 | Command | Trỏ tới | Phân hệ |
 |---------|---------|---------|
 | `/architecture` | Router duy nhất → overview, surfaces, business-process, module... | Bộ Docs |
-| `/overview` | `product/overview/` — purpose, actors, operational areas | Bộ Docs |
-| `/surfaces` | `product/surfaces/` — actor + action + channel | Bộ Docs |
+| `/overview` | `overview/` — purpose, actors, operational areas | Bộ Docs |
+| `/surfaces` | `surfaces/` — actor + action + channel | Bộ Docs |
 | `/spec` / `/grill-docs` | `…/CMP-*/<NN…>/` (`*.bundle.yaml` + `ir/` + `api/`) | Bộ Docs |
 | `/artifactgraph` | Phân tích local `.artifactgraph/` index | Common |
 

@@ -1,6 +1,6 @@
 ---
 name: decision
-description: /decision — arc42 §09 ADRs (ADR-*); product/system decisions.
+description: /decision — arc42 §09 ADRs (ADR-*); system decisions.
 disable-model-invocation: true
 extractBundle: architecture-core
 ---
@@ -15,7 +15,7 @@ extractBundle: architecture-core
 
 ## Do not
 
-- Put ADRs back under `product/shared/adr` (redirect stub only)
+- Put ADRs back under `shared/adr` (redirect stub only)
 - Move `api-catalog` / `data-model` into §09
 - Platform process howto → `platform/` handbook
 
@@ -31,7 +31,7 @@ Prefer `docskit_list_ids` kind `ADR` and `docskit_validate_links` after a new AD
 
 ```text
 if Docskit available: targeted docskit_* tools for IDs / deps / journeys / links
-else: Glob/search under architecture/ and product/, then Read scoped Markdown
+else: Glob/search under architecture/ and surfaces/, then Read scoped Markdown
 
 Missing Docskit never blocks authoring.
 Missing ArtifactGraph never blocks Docskit or architecture skills.

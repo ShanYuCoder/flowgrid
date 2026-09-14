@@ -80,19 +80,13 @@ export function isNumericSeq(name) {
 }
 
 export function isFunctionLeaf(dir) {
-  const hasBundle = listDir(dir).some((e) => e.isFile() && /\.bundle\.ya?ml$/i.test(e.name))
-  return hasBundle || existsSync(path.join(dir, 'ir', 'spec.yaml'))
+  return existsSync(path.join(dir, 'ir', 'spec.yaml'))
 }
 
 export function pageIdFromLeaf(dir) {
   const specFile = path.join(dir, 'ir', 'spec.yaml')
   if (existsSync(specFile)) {
     const id = pageIdFromYamlText(readText(specFile))
-    if (id) return id
-  }
-  for (const ent of listDir(dir)) {
-    if (!ent.isFile() || !/\.bundle\.ya?ml$/i.test(ent.name)) continue
-    const id = pageIdFromYamlText(readText(path.join(dir, ent.name)))
     if (id) return id
   }
   return path.basename(dir)
@@ -127,6 +121,10 @@ export function walkSurfacesNav(dir, toHref) {
     if (isNumericSeq(ent.name) && isFunctionLeaf(full)) {
       const pageId = pageIdFromLeaf(full)
       const specMd = path.join(full, 'ir', 'generated', 'spec.md')
+      
+      // Bỏ qua nếu chưa chạy split (chưa có spec.md)
+      if (!existsSync(specMd)) continue
+      
       const href = toHref(specMd)
       children.push({
         text: `${ent.name} + ${pageId}`,

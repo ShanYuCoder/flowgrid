@@ -122,7 +122,7 @@ GitHub: README → `CATALOG.md` (platform / product / QA) → click mở trang M
 
 | Lệnh | Mục đích |
 |------|----------|
-| `pnpm spec:split:common` / `docs:render-common` | `product/surfaces/…/common/yaml` — split **phải** có `ir/design.yaml` |
+| `pnpm spec:split:common` / `docs:render-common` | `surfaces/…/common/yaml` — split **phải** có `ir/design.yaml` |
 | Bộ Code (Forgekit) `/gen-common` rồi `/prototype` | FE molecules trước screen |
 
 ## API (cùng leaf với FE)
@@ -176,7 +176,7 @@ GitHub: README → `CATALOG.md` (platform / product / QA) → click mở trang M
 ## Ví dụ
 
 ```bash
-pnpm spec:split -- product/surfaces/admin/CMP-01/01/01/01/<slug>.bundle.yaml
+pnpm spec:split -- surfaces/admin/CMP-01/01/01/01/<slug>.bundle.yaml
 pnpm forge:render
 pnpm forge:publish
 pnpm docs:dev

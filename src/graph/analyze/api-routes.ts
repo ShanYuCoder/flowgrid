@@ -19,7 +19,7 @@ import path from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import type { ArtifactgraphConfig } from '../types.js'
 import type { IndexStore, ApiRouteRow } from '../db/index-store.js'
-import { inferSurfaceFromRepoPath } from './product-paths.js'
+import { inferSurfaceFromRepoPath } from './surface-paths.js'
 
 export interface ApiRouteEntry {
   /** URI path, e.g. /api/v1/users/{id}/update */
@@ -96,7 +96,7 @@ function resolveSpecGlobs(repoRoot: string, cfg: ArtifactgraphConfig): string[] 
   }
 
   // Last resort: walk common product surfaces path
-  walkForSpecs(path.join(repoRoot, 'product', 'surfaces'), collected)
+  walkForSpecs(path.join(repoRoot, 'surfaces'), collected)
   return [...new Set(collected)]
 }
 

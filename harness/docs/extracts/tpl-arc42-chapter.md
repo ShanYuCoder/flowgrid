@@ -20,7 +20,7 @@ TBD — fill when active.
 
 ## Out of scope
 
-What belongs in other chapters / `product/` / `platform/`.
+What belongs in other chapters / các module/bề mặt khác.
 
 ## See also
 

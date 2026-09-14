@@ -7,7 +7,7 @@ export type HubId = {
     primary?: string;
 };
 /** Scan roots for MD (arc42 × product). */
-export declare const SCAN_MD_DIRS: readonly ["architecture", "product/overview", "product/surfaces"];
+export declare const SCAN_MD_DIRS: readonly ["architecture", "overview", "surfaces"];
 /** Canonical home for each ID kind (architecture-core). */
 export declare const CANONICAL_DIR: Partial<Record<IdKind, string>>;
 export declare function kindOf(id: string): IdKind;

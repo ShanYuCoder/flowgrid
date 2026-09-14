@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 async function main() {
   const args = process.argv.slice(2);
   let adapter = 'shadcn';
-  let input = 'templates/product-skeleton/surfaces/common/yaml/design-system.bundle.yaml';
+  let input = 'templates/project-skeleton/surfaces/common/yaml/design-system.bundle.yaml';
   let output = '';
 
   args.forEach(arg => {

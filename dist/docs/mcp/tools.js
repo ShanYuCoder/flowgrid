@@ -194,7 +194,7 @@ export function registerTools(server) {
                 missingCanonical,
                 missingInChapter,
                 catalogDraftOrTbd: catalogTbd,
-                note: 'Redirect stubs (landscape|context|containers|dynamics|deployments|product/shared/adr) are ignored. DYN-* not indexed.',
+                note: 'Redirect stubs (landscape|context|containers|dynamics|deployments|shared/adr) are ignored. DYN-* not indexed.',
             });
         }
         catch (err) {
@@ -230,7 +230,7 @@ export function registerTools(server) {
     }, async ({ topic }) => {
         return text({ ok: true, topic, routes: routeTopic(topic) });
     });
-    server.tool('docskit_business_processes', 'List FLOW-* under architecture/03-business-process and product/surfaces/**/common/processes', {
+    server.tool('docskit_business_processes', 'List FLOW-* under architecture/03-business-process and surfaces/**/common/processes', {
         docsRoot: z.string().optional(),
     }, async ({ docsRoot }) => {
         try {
@@ -257,13 +257,13 @@ export function registerTools(server) {
                 'architecture/containers',
                 'architecture/dynamics',
                 'architecture/deployments',
-                'product/shared/adr',
+                'shared/adr',
             ],
             idHomes: CANONICAL_DIR,
             scanDirs: SCAN_MD_DIRS,
             notes: [
                 'DEP is a heading inside chapter index.md — not separate files',
-                'FLOW-* under architecture/03-business-process/ and product/surfaces/**/common/processes/',
+                'FLOW-* under architecture/03-business-process/ and surfaces/**/common/processes/',
                 'ADR-* under architecture/09-decisions/',
                 'CMP/W/API/UI under Surfaces/ — never under architecture/05 code/',
                 'DYN-* deprecated — use FLOW-* + /business-process',
@@ -329,10 +329,10 @@ export function registerTools(server) {
         ...rootField,
     }, async ({ projectRoot }) => {
         const rootPath = projectRoot || process.cwd();
-        const isLowercase = fs.existsSync(path.join(rootPath, 'product', 'surfaces', 'common'));
-        const yamlRoot = isLowercase ? 'product/surfaces/common/yaml' : 'Surfaces/Common/yaml';
-        const mdRoot = isLowercase ? 'product/surfaces/common/md' : 'Surfaces/Common/md';
-        const legacyRoot = isLowercase ? 'product/surfaces/common' : 'Surfaces/Common';
+        const isLowercase = fs.existsSync(path.join(rootPath, 'surfaces', 'common'));
+        const yamlRoot = isLowercase ? 'surfaces/common/yaml' : 'Surfaces/Common/yaml';
+        const mdRoot = isLowercase ? 'surfaces/common/md' : 'Surfaces/Common/md';
+        const legacyRoot = isLowercase ? 'surfaces/common' : 'Surfaces/Common';
         return toolEngine('render', [], projectRoot, [
             '--yaml-root',
             yamlRoot,

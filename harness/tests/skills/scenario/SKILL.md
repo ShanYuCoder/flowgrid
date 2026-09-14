@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 Author cross-flow scenarios (SC) on the current tests hub. Design rules stay on the docs hub.
 
-Scenarios test a **business process** (`FLOW-*`) that spans multiple screens (`W-*`) or modules. They mirror the docs FLOW file **after** Docskit LCA `common/` placement (not a flat `product/common/` tree).
+Scenarios test a **business process** (`FLOW-*`) that spans multiple screens (`W-*`) or modules. They mirror the docs FLOW file **after** Docskit LCA `common/` placement (not a flat `common/` tree).
 
 ## Output Rules
 
@@ -25,10 +25,10 @@ Scenarios test a **business process** (`FLOW-*`) that spans multiple screens (`W
 
 - Agent MUST locate the **`FLOW-*.md`** file on the docs hub (`TESTKIT_DOCS_ROOT`) via `docskit_route` / `docskit_get_element` / glob. Filenames are `FLOW-…md`, not `flow-*`.
 - Search in this order (same LCA as Docskit `common-scope.md`):
-  1. `product/surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md` (cluster)
-  2. `product/surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` (module)
-  3. `product/surfaces/<surface>/common/processes/FLOW-*.md` (surface)
-  4. `product/surfaces/common/processes/FLOW-*.md` (cross-surface product common)
+  1. `surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md` (cluster)
+  2. `surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` (module)
+  3. `surfaces/<surface>/common/processes/FLOW-*.md` (surface)
+  4. `surfaces/common/processes/FLOW-*.md` (cross-surface product common)
   5. `architecture/03-business-process/FLOW-*.md` (org catalog only)
 - **Strict:** Only author a scenario if that `FLOW-*.md` exists. Missing FLOW → hand off to docs-hub `/business-process`, do not invent SC.
 - Do not treat `common/yaml/` or `common/patterns/` as scenario sources.
@@ -39,15 +39,15 @@ Mirror the FLOW file path onto the tests hub. Strip **only** these prefixes:
 
 | Docs FLOW path | Tests hub |
 |----------------|-----------|
-| `product/surfaces/<rest>/common/processes/FLOW-checkout.md` | `scenarios/<rest>/common/processes/FLOW-checkout/SC-*.yaml` |
+| `surfaces/<rest>/common/processes/FLOW-checkout.md` | `scenarios/<rest>/common/processes/FLOW-checkout/SC-*.yaml` |
 | `architecture/03-business-process/FLOW-checkout.md` | `scenarios/architecture/03-business-process/FLOW-checkout/SC-*.yaml` |
 
 Examples:
 
-- Docs `product/surfaces/admin/CMP-ADM-002/02/common/processes/FLOW-checkout.md` → `scenarios/admin/CMP-ADM-002/02/common/processes/FLOW-checkout/SC-*.yaml`
-- Docs `product/surfaces/admin/CMP-ADM-002/common/processes/FLOW-onboard.md` → `scenarios/admin/CMP-ADM-002/common/processes/FLOW-onboard/SC-*.yaml`
+- Docs `surfaces/admin/CMP-ADM-002/02/common/processes/FLOW-checkout.md` → `scenarios/admin/CMP-ADM-002/02/common/processes/FLOW-checkout/SC-*.yaml`
+- Docs `surfaces/admin/CMP-ADM-002/common/processes/FLOW-onboard.md` → `scenarios/admin/CMP-ADM-002/common/processes/FLOW-onboard/SC-*.yaml`
 
-Do **not** flatten to `scenarios/auth/…`. Do **not** use `product/common/` (legacy). Keep numeric cluster folders (`02/`) in the tests path.
+Do **not** flatten to `scenarios/auth/…`. Do **not** use `common/` (legacy). Keep numeric cluster folders (`02/`) in the tests path.
 
 ## Accelerators (optional)
 

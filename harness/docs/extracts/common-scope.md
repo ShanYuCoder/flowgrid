@@ -11,10 +11,10 @@ Walk consumers (functions / clusters / modules / surfaces). Place `common/` **ne
 | Consumers | Write here |
 |-----------|------------|
 | One function only | **No `common/`.** Keep rules on that function’s `*.bundle.yaml`. |
-| ≥2 functions in the **same cluster** (same numeric prefix, e.g. all under `CMP-…/02/`) | `product/surfaces/<surface>/<CMP-id>/02/common/` |
-| ≥2 clusters **inside one module** | `product/surfaces/<surface>/<CMP-id>/common/` |
-| ≥2 modules on **one surface** | `product/surfaces/<surface>/common/` |
-| ≥2 surfaces | `product/surfaces/common/` |
+| ≥2 functions in the **same cluster** (same numeric prefix, e.g. all under `CMP-…/02/`) | `surfaces/<surface>/<CMP-id>/02/common/` |
+| ≥2 clusters **inside one module** | `surfaces/<surface>/<CMP-id>/common/` |
+| ≥2 modules on **one surface** | `surfaces/<surface>/common/` |
+| ≥2 surfaces | `surfaces/common/` |
 
 **Cluster** = first numeric segment under the module (`02/`, `03/`, …) when the module uses hierarchical IDs. Deeper share (only `02/01/*`) → `…/02/01/common/`.
 
@@ -29,7 +29,7 @@ common/
 
 ## 2. Ambiguous scope
 
-If the prompt does not name consumers, **stop and ask** (propose the LCA from the table). Do not default to `product/surfaces/common` or to a random function folder.
+If the prompt does not name consumers, **stop and ask** (propose the LCA from the table). Do not default to `surfaces/common` or to a random function folder.
 
 If the same pattern already exists at a **narrower** `common/`, **reuse it** (reference `#pattern` / `#reuse-api`). Promote to a wider `common/` only when the user confirms **new consumers outside** that folder.
 
@@ -39,8 +39,8 @@ From the function folder, walk **up** and use the **nearest** hit. Do not skip a
 
 1. `…/<CMP>/<cluster…>/common/yaml/` (nearest ancestor `common/`)
 2. `…/<CMP>/common/yaml/`
-3. `product/surfaces/<surface>/common/yaml/`
-4. `product/surfaces/common/yaml/`
+3. `surfaces/<surface>/common/yaml/`
+4. `surfaces/common/yaml/`
 
 Same walk for `patterns/` Markdown.
 
@@ -49,9 +49,9 @@ Same walk for `patterns/` Markdown.
 | Scope of the flow | File |
 |-------------------|------|
 | Org / cross-surface / “hero” catalog | `architecture/03-business-process/FLOW-*.md` (MCP `docskit_business_processes`) |
-| Many modules, one surface | `product/surfaces/<surface>/common/processes/FLOW-*.md` |
-| Whole module, several clusters | `product/surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` |
-| One cluster / submodule only | `product/surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md` |
+| Many modules, one surface | `surfaces/<surface>/common/processes/FLOW-*.md` |
+| Whole module, several clusters | `surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` |
+| One cluster / submodule only | `surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md` |
 
 Do **not** drop `FLOW-*.md` beside a single `W-*` bundle. Do **not** write module-internal flows only under `architecture/03-business-process/` (optional **link** from the catalog to the product path).
 
@@ -62,4 +62,4 @@ Do **not** drop `FLOW-*.md` beside a single `W-*` bundle. Do **not** write modul
 - Creating `common/` from `/spec`
 - Textual slugs in the path (`auth/`, `cluster-name/`) except `common/` and `yaml/<bundle-slug>/`
 - Duplicate copies of the same bundle at two LCA levels
-- `Surfaces/Common` mixed case when the hub uses `product/surfaces/`
+- `Surfaces/Common` mixed case when the hub uses `surfaces/`

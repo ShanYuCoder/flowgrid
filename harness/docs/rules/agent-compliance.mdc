@@ -21,4 +21,4 @@ Khi chạy bất kỳ skill (`/spec`, `/grill`, `/grill-bqa`, …):
 7. **DSL / COMMON:** Người quyết định. Agent chỉ `/common`, `/common-spec`, `/docs-mark`, hoặc Confirm sau grill. `/spec` chỉ consume. **TUYỆT ĐỐI KHÔNG** sáng tác/ghi đè common.
 8. **ISOLATION:** Chỉ skill được gọi. **TUYỆT ĐỐI KHÔNG** merge sibling. **TUYỆT ĐỐI KHÔNG** fake Markdown reports khi skill yêu cầu YAML.
 
-**Path:** `product/surfaces/<surface>/CMP-*/<slug>/` (không `modules/`).
+**Path:** `surfaces/<surface>/CMP-*/<slug>/` (không `modules/`).

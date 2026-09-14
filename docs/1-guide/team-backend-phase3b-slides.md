@@ -72,7 +72,7 @@ Ví dụ `admin quản lý chain` thêm `setting chain` thì update spec `chain`
 Đọc từ hai hub, không suy đoán vị trí checkout:
 
 ```text
-base-docs: product/surfaces/…/CMP-*/<NN…>/
+base-docs: surfaces/…/CMP-*/<NN…>/
 base-tests: https://github.com/raintr91/base_test
 ```
 
@@ -83,7 +83,7 @@ Spec cho biết requirement và route. Testcase cho biết expected behavior, mo
 ## Step 1 Output
 
 ```text
-product/surfaces/…/CMP-*/<NN…>/api/<seq>/
+surfaces/…/CMP-*/<NN…>/api/<seq>/
 ├── 01-backend-spec.yaml
 ├── 02-openapi.yaml
 ├── 03-mock-data.yaml
@@ -194,9 +194,9 @@ Rule: có relationship thì ưu tiên Action/Query của entity cha.
 ## Step 2 Input
 
 ```text
-product/surfaces/…/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml
-product/surfaces/…/CMP-*/<NN…>/api/<seq>/02-openapi.yaml
-product/surfaces/…/CMP-*/<NN…>/api/<seq>/03-mock-data.yaml
+surfaces/…/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml
+surfaces/…/CMP-*/<NN…>/api/<seq>/02-openapi.yaml
+surfaces/…/CMP-*/<NN…>/api/<seq>/03-mock-data.yaml
 src/make_help.md
 ```
 
@@ -223,7 +223,7 @@ Source là YAML:
 
 ```text
 docs/openapi/api.yaml
-product/surfaces/…/CMP-*/<NN…>/api/<seq>/02-openapi.yaml
+surfaces/…/CMP-*/<NN…>/api/<seq>/02-openapi.yaml
 ```
 
 Không dùng decorator trong Laravel controller/resource.

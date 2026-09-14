@@ -23,7 +23,7 @@ disable-model-invocation: true
 ## Target / ID Resolution Rule
 
 - User prompt MAY specify a screen ID, function ID, or slug (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`, `login`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve target path under `product/surfaces/...`.
+- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve target path under `surfaces/...`.
 - Do NOT demand full surface/module filesystem paths from the user.
 
 ## Load policy
@@ -54,7 +54,7 @@ If `ir/` is missing, Read the **entire** `*.bundle.yaml` once (first `/spec` not
 0. Create/update `TODO.md` ở root + plan. Deferred gaps: `.cursor/extracts/qa-inbox.md` (`qa/open/QA-<page-id>-NNNN.yaml`, `#tech-debt:QA-…`).
 1. Compare `design.zones/behavior/actions` vs `legacy.ui` vs common UI. **UI Metrics SSOT:** Ensure basic CSS properties (font-size, colors) are NOT redundantly specified in feature specs unless they are explicit overrides of the Design System (`common/yaml/design-system.bundle.yaml`).
 2. **Audit Business & Stakeholder Focus:** Đảm bảo `summary` kể được câu chuyện nghiệp vụ theo chuẩn Arc42 (mục tiêu nghiệp vụ, kịch bản người dùng) bằng ngôn ngữ 100% Non-tech. Kiểm tra xem `spec.requirements` đã định nghĩa đủ: (1) Field Validations, (2) State Machine, (3) UI Permissions, (4) Edge Cases chưa. Nếu thiếu, reject & yêu cầu bổ sung.
-3. **Cross-check Common Patterns:** Walk up from the function: nearest `common/patterns/` then module, surface, `product/surfaces/common/patterns/` (`.cursor/extracts/common-scope.md`).
+3. **Cross-check Common Patterns:** Walk up from the function: nearest `common/patterns/` then module, surface, `surfaces/common/patterns/` (`.cursor/extracts/common-scope.md`).
 4. **Audit UI Error Handling Flows:** Ensure every user action/API call in `design.yaml` has detailed specifications for Success, Common Global Error, and Specific Errors.
 4. Patch **bundle** (`design`, `review`, `spec` requirements) → `docskit_bundle_split` / `docskit split` (fallback `pnpm docs:split`).
 5. Set `grillStatus.bqaFacts: done`.

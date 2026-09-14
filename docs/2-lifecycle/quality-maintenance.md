@@ -401,7 +401,7 @@ flowchart TD
 id: QA-cmp-adm-002-02-01-02-0001
 kind: tech-debt
 target:
-  path: product/surfaces/…/<slug>.bundle.yaml
+  path: surfaces/…/<slug>.bundle.yaml
 question: |
   Full permission matrix?
 ```

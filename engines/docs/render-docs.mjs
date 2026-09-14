@@ -23,10 +23,10 @@ function cliBool(name) {
   return process.argv.includes(`--${name}`)
 }
 
-const hasSurfaces = fs.existsSync(path.resolve('product/surfaces'))
-const defaultYamlRoot = hasSurfaces ? path.resolve('product/surfaces') : path.join(featuresDir, 'yaml')
-const defaultMdRoot = hasSurfaces ? path.resolve('product/surfaces') : path.join(featuresDir, 'md')
-const defaultLegacyRoot = hasSurfaces ? path.resolve('product/surfaces') : featuresDir
+const hasSurfaces = fs.existsSync(path.resolve('surfaces'))
+const defaultYamlRoot = hasSurfaces ? path.resolve('surfaces') : path.join(featuresDir, 'yaml')
+const defaultMdRoot = hasSurfaces ? path.resolve('surfaces') : path.join(featuresDir, 'md')
+const defaultLegacyRoot = hasSurfaces ? path.resolve('surfaces') : featuresDir
 
 const yamlRoot = cliFlag('yaml-root') ? path.resolve(cliFlag('yaml-root')) : defaultYamlRoot
 const mdRoot = cliFlag('md-root') ? path.resolve(cliFlag('md-root')) : defaultMdRoot
@@ -71,7 +71,7 @@ async function main() {
 
   // Also render Backend API specs if present
   try {
-    const backendSpecFiles = await listBackendSpecFiles(path.resolve('product/surfaces'))
+    const backendSpecFiles = await listBackendSpecFiles(path.resolve('surfaces'))
     for (const beSpecFile of backendSpecFiles) {
       await renderFeatureBackendSpec(beSpecFile)
     }

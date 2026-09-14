@@ -51,7 +51,7 @@ export function registerTools(server) {
         docsRoot: z.string().optional(),
         argv: z.array(z.string()).optional(),
     };
-    server.tool('common_gen', 'Inventory and stub shared UI from product/surfaces/<surface>/common or CMP-*/common.', commonGenShape, async (input) => {
+    server.tool('common_gen', 'Inventory and stub shared UI from surfaces/<surface>/common or CMP-*/common.', commonGenShape, async (input) => {
         try {
             const result = runCommonGen({
                 adapter: resolveFeAdapter(input.adapter),

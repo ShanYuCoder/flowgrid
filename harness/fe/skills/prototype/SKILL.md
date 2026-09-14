@@ -11,12 +11,12 @@ disable-model-invocation: true
 ## Artifact & Target ID Resolution Rule
 
 - User prompt MAY specify a screen ID, function ID, or slug (e.g. `W-AD-AUTH-001`, `login`).
-- Agent MUST use `--id` or resolve `product/surfaces/<surface>/CMP-*/<NN…>/ir/design.yaml` via `CODEGENKIT_DOCS_ROOT` or `docskit_route` (same leaf as the bundle; API trio is sibling `api/<seq>/`, not this file).
-- Prerequisite: `/gen-common` when `product/surfaces/<surface>/common` (or `CMP-*/common`) exists — generate shared molecules/shells **before** this skill.
+- Agent MUST use `--id` or resolve `surfaces/<surface>/CMP-*/<NN…>/ir/design.yaml` via `CODEGENKIT_DOCS_ROOT` or `docskit_route` (same leaf as the bundle; API trio is sibling `api/<seq>/`, not this file).
+- Prerequisite: `/gen-common` when `surfaces/<surface>/common` (or `CMP-*/common`) exists — generate shared molecules/shells **before** this skill.
 - Do NOT demand full filesystem paths from the user if an ID is given.
 
 ```text
-product/surfaces/<surface>/CMP-*/<NN…>/ir/design.yaml
+surfaces/<surface>/CMP-*/<NN…>/ir/design.yaml
 # e.g. …/CMP-ADM-009/01/01/01/ir/design.yaml
 ```
 

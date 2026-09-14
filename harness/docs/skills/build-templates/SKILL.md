@@ -19,11 +19,11 @@ disable-model-invocation: true
    - **Backend (be):** Quét các router/controller và cấu trúc dữ liệu dùng chung (ví dụ: Base Response, Paging Request) để nắm bắt chuẩn API.
 
 3. **Sinh EJS Templates tùy biến:**
-   - Viết các file template EJS vào thư mục `.docskit/templates/` (ví dụ: `.docskit/templates/default-layout.ejs`, `.docskit/templates/breadcrumb-flow.ejs`).
+   - Viết các file template EJS vào thư mục `.forgekit/templates/` (ví dụ: `.forgekit/templates/default-layout.ejs`, `.forgekit/templates/breadcrumb-flow.ejs`).
    - Các file EJS này phải được sinh cấu trúc HTML/Markdown và các thẻ component giả lập (hoặc thực tế) khớp chính xác với UI Kit của dự án (ví dụ nếu dùng Vuetify thì sinh các thẻ component mô phỏng kiểu Vuetify, nếu dùng Shadcn thì sinh theo phong cách thiết kế phẳng).
 
 4. **Đồng bộ file Đặc tả dùng chung (Common Specs):**
-   - Tạo hoặc cập nhật các file đặc tả YAML dùng chung trong `product/surfaces/common/yaml/` khớp với cấu trúc code dùng chung vừa quét được ở bước 2.
+   - Tạo hoặc cập nhật các file đặc tả YAML dùng chung trong `surfaces/common/yaml/` khớp với cấu trúc code dùng chung vừa quét được ở bước 2.
 
 5. **Biên dịch thử nghiệm:**
    - Yêu cầu người dùng hoặc tự động chạy lệnh `pnpm docs:render` để biên dịch toàn bộ spec và đảm bảo các template EJS mới tạo hoạt động hoàn hảo không bị lỗi cú pháp.

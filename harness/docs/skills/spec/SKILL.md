@@ -24,7 +24,7 @@ disable-model-invocation: true
 **Extracts:** `extractBundle: spec-requirement` → `.cursor/extracts/extract-registry.json`
 
 > [!CRITICAL] TEMPLATE REQUIREMENT
-> You MUST read the template `.docskit/templates/feature.bundle.yaml` and rules `.docskit/templates/bundle-authoring.md` BEFORE generating any spec.
+> You MUST read the template `.forgekit/templates/feature.bundle.yaml` and rules `.forgekit/templates/bundle-authoring.md` BEFORE generating any spec.
 > If these files are missing, you MUST STOP immediately and report an error to the user: "Template missing. Please run `docskit init` to generate templates." DO NOT attempt to guess the format or generate the YAML without them.
 
 ## Load policy
@@ -35,15 +35,15 @@ Tree: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/guide/SYSTEM-
 
 ## Scope
 
-**In:** Code bundle / `--id` under `product/surfaces/.../CMP-*/<slug>`, `pnpm docs:split`, `pnpm docs:render` (design MD only), harness notes.
+**In:** Code bundle / `--id` under `surfaces/.../CMP-*/<slug>`, `pnpm docs:split`, `pnpm docs:render` (design MD only), harness notes.
 
-**Out:** E2E plans → **`base-tests` `/testcase`**. UI → `/prototype` after grill-docs. product/overview / CTR → `product/architecture` children.
+**Out:** E2E plans → **`base-tests` `/testcase`**. UI → `/prototype` after grill-docs. overview / CTR → `architecture` children.
 
 ## Target / ID Resolution Rule
 
 - User prompt MAY specify a screen ID, module ID, slug (e.g. `CMP-ADM-000`, `W-AD-AUTH-001`, `login`), or Draft ID (e.g., `1-1`, `2-1-1`).
 - If a Draft ID is provided, Agent MUST split it into numeric segments (e.g., `1-1-1` -> `01/01/01/`) to resolve the exact numeric target folder.
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve the exact target folder under `product/surfaces/.../CMP-*/<numeric-path>/`.
+- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve the exact target folder under `surfaces/.../CMP-*/<numeric-path>/`.
 - Do NOT force the user to provide the full filesystem surface/module path if an ID, Draft ID or short slug is given.
 
 ## Workflow
@@ -55,7 +55,7 @@ Tree: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/guide/SYSTEM-
    - **Draft ID Mapping:** Nếu có Draft ID (`1-1-1`, `2-1-2`), padding số 0 vào từng đốt (`01-01-01`, `02-01-02`).
    - **Bundle ID:** Lắp tiền tố của module cha với các đốt vừa pad (vd: Module `CMP-ADM-002` + `02-01-02` -> `page-id: cmp-adm-002-02-01-02`). Split ghi `page-id` lên `ir/spec.yaml`.
    - **Numeric Folder Path:** Cấu trúc thư mục BẮT BUỘC phản ánh chính xác các đốt số, KHÔNG ĐƯỢC chứa text. Draft ID có 3 đốt (vd `2-1-2`) thì sinh đúng 3 cấp thư mục: `02/01/02/`.
-   - **Bundle Name:** File `.bundle.yaml` BẮT BUỘC phải mang tên chức năng (textual slug), vd: `login.bundle.yaml`. Do đó path cuối cùng sẽ là: `product/surfaces/<surface>/CMP-*/02/01/02/login.bundle.yaml`.
+   - **Bundle Name:** File `.bundle.yaml` BẮT BUỘC phải mang tên chức năng (textual slug), vd: `login.bundle.yaml`. Do đó path cuối cùng sẽ là: `surfaces/<surface>/CMP-*/02/01/02/login.bundle.yaml`.
    - **Textual Info:** Tất cả các mô tả (cluster-name, submodule-name, function-name) phải được ghi vào các trường YAML (title, name, summary, sidebar, breadcrumb), KHÔNG đưa vào đường dẫn vật lý. Create this `*.bundle.yaml` with `specOrigin: requirement`. Do NOT write Markdown.
 4. Incremental blocks per extracts when needed.
 5. Apply **existing** common UI / spec-split extracts (consume only — do not invent or overwrite common SSOT; promote via `/common-spec` or confirmed grill).
@@ -77,7 +77,7 @@ Tree: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/guide/SYSTEM-
 
 ### Common Pattern Resolution (MANDATORY)
 Before authoring a new Spec, you MUST:
-1. Scan **upward** from the function folder: nearest `common/yaml/` then module `common/yaml/`, then `product/surfaces/<surface>/common/yaml/`, then `product/surfaces/common/yaml/` (see `.cursor/extracts/common-scope.md`). **Consume only** — do not create/overwrite common here.
+1. Scan **upward** from the function folder: nearest `common/yaml/` then module `common/yaml/`, then `surfaces/<surface>/common/yaml/`, then `surfaces/common/yaml/` (see `.cursor/extracts/common-scope.md`). **Consume only** — do not create/overwrite common here.
 2. Read `templates/shared/patterns/*.pattern.yaml` to identify which `commonSpecs` are associated with each pattern.
 3. From the prompt (structural cues only — not invented business fields), propose appropriate pattern tags:
    - Screen has >8 columns → suggest `#split-hook:columns`
@@ -112,8 +112,8 @@ Before authoring a new Spec, you MUST:
 Khi người dùng gọi `... /legacy /spec`, Agent PHẢI:
 - Đọc source từ `legacy-repos.local.json` thay vì source hiện tại.
 - Trích xuất function logic từ source code cũ.
-- Viết/cập nhật `product/legacy-dynamics/{module}/_legacy.dynamics.yaml` (`portal-legacy-dynamics/v1`).
-- Viết `*.bundle.yaml` cho function đó vào `product/surfaces/<surface>/CMP-*/<slug>/` với `specOrigin: legacy`.
+- Viết/cập nhật `legacy-dynamics/{module}/_legacy.dynamics.yaml` (`portal-legacy-dynamics/v1`).
+- Viết `*.bundle.yaml` cho function đó vào `surfaces/<surface>/CMP-*/<slug>/` với `specOrigin: legacy`.
 - **Không** tạo codegen tags. Hỗ trợ chạy validate: `legacy_dynamics_validate` / `pnpm legacy-dynamics:validate`.
 
 ## Tools (required after docskit init)
@@ -145,7 +145,7 @@ Deduplicate retries and report only actual `fileReads` / `contextBytes`.
 
 ## Verification Checklist
 - [ ] Harness TODO + plan written under `TODO.md` ở root and kept in sync with evidence.
-- [ ] Strict adherence to scope boundaries and module CMP mapping (`product/surfaces/<surface>/CMP-*/<slug>/`).
+- [ ] Strict adherence to scope boundaries and module CMP mapping (`surfaces/<surface>/CMP-*/<slug>/`).
 - [ ] Brainstormed business text (context, input, output). Missing **keys** filled or deferred as `qa/open/QA-<page-id>-NNNN` + `#missing_info QA-…`. Short prose is member review, not a QA file.
 - [ ] Screen inventory complete when info exists: nested `design.sections[]` (kind/visual/tags) or `zones[].items[]`, plus `spec.ui.list|form|detail`. App pages include `design.nav` sidebar/breadcrumb when a left menu exists.
 - [ ] Common/DSL only consumed (not invented); output MUST be a `.bundle.yaml` (Do NOT write `.md` directly).

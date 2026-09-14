@@ -302,8 +302,8 @@ Phases `api:unit-gen`: `stub` · `enriched` · `behavioral` · `all` (default).
 ## Lệnh mẫu
 
 ```bash
-Bộ Code (Forgekit) api-gen -- --spec product/surfaces/…/api/01/01-backend-spec.yaml
-Bộ Code (Forgekit) api-unit-gen -- --spec product/surfaces/…/api/01/01-backend-spec.yaml --force
+Bộ Code (Forgekit) api-gen -- --spec surfaces/…/api/01/01-backend-spec.yaml
+Bộ Code (Forgekit) api-unit-gen -- --spec surfaces/…/api/01/01-backend-spec.yaml --force
 
 cd src && php artisan test --testsuite=ModuleChain --filter=Hotel
 cd src && php artisan test --coverage --testsuite=ModuleChain

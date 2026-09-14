@@ -109,7 +109,7 @@ export function registerTools(server: McpServer): void {
         .string()
         .optional()
         .describe(
-          'Path to ir/spec.yaml, e.g. product/surfaces/<surface>/CMP-*/<slug>/code/{W-*|API-*}/ir/spec.yaml (legacy .../modules/CMP-*/ also accepted)',
+          'Path to ir/spec.yaml, e.g. surfaces/<surface>/CMP-*/<slug>/code/{W-*|API-*}/ir/spec.yaml (legacy .../modules/CMP-*/ also accepted)',
         ),
       bullets: z.string().optional().describe('Free-text bullets when IR does not exist yet'),
     },
@@ -166,7 +166,7 @@ export function registerTools(server: McpServer): void {
         .string()
         .optional()
         .describe(
-          'CMP module root, e.g. product/surfaces/admin-web/CMP-01-auth/ (legacy .../modules/CMP-01-auth/ also accepted)',
+          'CMP module root, e.g. surfaces/admin-web/CMP-01-auth/ (legacy .../modules/CMP-01-auth/ also accepted)',
         ),
       findingsPath: z.string().optional().describe('YAML/JSON with parityFindings[] from cloud'),
       findingsJson: z.string().optional().describe('Inline JSON: { parityFindings: [...] }'),

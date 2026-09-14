@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart TB
-  subgraph leaf["product/surfaces/&lt;surface&gt;/CMP-*/&lt;NN…&gt;/"]
+  subgraph leaf["surfaces/&lt;surface&gt;/CMP-*/&lt;NN…&gt;/"]
     BUNDLE["&lt;slug&gt;.bundle.yaml\nauthoring SSOT"]
     IRD["ir/design.yaml"]
     IRS["ir/spec.yaml"]
@@ -33,7 +33,7 @@ flowchart TB
 | `ir/generated/<slug>.md` | Markdown site / GitHub catalog |
 | `api/<seq>/01-backend-spec.yaml` | **API SSOT** (một API / một primary entity) |
 | `api/<seq>/02-openapi.yaml` | `Bộ Docs (Forgekit) openapi:gen` |
-| `product/surfaces/…/common/yaml/` | LCA common (FE bundle + `ir/design.yaml`; API common = trio tại slug) |
+| `surfaces/…/common/yaml/` | LCA common (FE bundle + `ir/design.yaml`; API common = trio tại slug) |
 | `architecture/03-business-process/FLOW-*.md` | Catalog FLOW; module-internal: `…/common/processes/FLOW-*.md` |
 | `qa/open/` · `qa/index.md` | Inbox + list (render luôn ghi list, kể cả rỗng) |
 | `CATALOG.md` | Mục lục GitHub — `pnpm forge:publish` |

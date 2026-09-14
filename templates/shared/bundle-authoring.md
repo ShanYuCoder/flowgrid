@@ -164,7 +164,7 @@ actions:
     trigger: button_click
     apiRefs: [ feature.create ]
     # tags: ["#reuse-api"]
-    # reuseFrom: product/surfaces/admin/CMP-01/auth/01/01/01/api/01/01-backend-spec.yaml
+    # reuseFrom: surfaces/admin/CMP-01/auth/01/01/01/api/01/01-backend-spec.yaml
     onSuccess:
       - Navigate to list page
       - Show success toast "Created successfully"

@@ -1,6 +1,6 @@
 # ArtifactGraph — docs hooks
 
-- Treat this docs repo as the canonical full registry/parity hub (`product/surfaces/...`).
+- Treat this docs repo as the canonical full registry/parity hub (`surfaces/...`).
 - Use path hints from `registries/docs-index.json` when available.
 - Use local vocabulary suggestions for specs and documentation marks.
 - Before `/api-spec`, `/api-integration-spec`, `/grill-with-docs`, or `/bqa-grill-docs`,

@@ -6,7 +6,7 @@ import { SKIP_NAV_DIRS, markdownNavText, walkSurfacesNav } from '../vitepress/su
 /** Hub roots included in GitHub CATALOG.md (VitePress still has architecture). */
 const CATALOG_ROOTS = ['platform', 'product']
 
-/** Skip these names when walking inside platform/ or product/. */
+/** Skip these names when walking inside platform/ or surfaces/. */
 const SKIP_NEST = new Set(['node_modules', '.git', 'code', 'dist', 'cache', 'registries', '.cursor'])
 
 const README_MARKER = '<!-- docskit-catalog -->'
@@ -43,7 +43,7 @@ function listDir(dir) {
 }
 
 function walkTree(dir, root) {
-  if (path.resolve(dir) === path.resolve(root, 'product', 'surfaces')) {
+  if (path.resolve(dir) === path.resolve(root, 'surfaces')) {
     return walkSurfacesNav(dir, (abs) => posixRel(root, abs)).map(function catalogize(n) {
       return {
         text: n.text,

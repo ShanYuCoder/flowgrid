@@ -161,7 +161,7 @@ export interface ArtifactgraphConfig {
     /**
      * Glob patterns for OpenAPI / backend-spec YAML files to index as API routes.
      * Defaults: derived from specRoots by matching **\/{01-backend-spec,02-openapi}.yaml.
-     * Example: ["product/surfaces/**\/code\/**\/01-backend-spec.yaml"]
+     * Example: ["surfaces/**\/code\/**\/01-backend-spec.yaml"]
      */
     apiSpecRoots?: string[];
     /** @deprecated Standalone runtime ignores external hubs. */

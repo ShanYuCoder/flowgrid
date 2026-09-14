@@ -22,7 +22,7 @@ Goals and scope of this **docs hub** architecture narrative (*why* we document) 
 
 ## Out of scope
 
-- Feature Code (`W-*`/`API-*`) and grill/codegen detail → `product/`
+- Feature Code (`W-*`/`API-*`) and grill/codegen detail → `surfaces/`
 - Day-to-day toolchain how-to → `platform/`
 - Full E2E/`TC-*` plans → `base-tests`
 

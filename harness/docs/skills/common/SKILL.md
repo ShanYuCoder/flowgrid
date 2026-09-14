@@ -25,7 +25,7 @@ Markdown rules for a **named scope** (cluster / module / surface / global). Not 
 ## Target / ID Resolution Rule
 
 - Prompt MUST name **consumers** (CMP id, cluster `NN`, surface, or “all surfaces”). Ambiguous → ask; propose one LCA from `common-scope.md`.
-- Scaffold `common/patterns/` at that LCA only. Do not create `product/surfaces/common` unless ≥2 surfaces share the rule.
+- Scaffold `common/patterns/` at that LCA only. Do not create `surfaces/common` unless ≥2 surfaces share the rule.
 - Surface-wide with no `common/` yet: `/surfaces <name> common` then write `patterns/` there.
 
 ## Rules for Markdown Content
@@ -35,6 +35,6 @@ Markdown rules for a **named scope** (cluster / module / surface / global). Not 
 3. Do NOT output fake i18n tables or framework prose. Focus on the actual rules (e.g., "Confirm dialog must always block background").
 
 ## Verification Checklist (Evidence Required)
-- [ ] **Surface Resolved:** Resolved the target surface to `product/surfaces/[Surface]/`.
+- [ ] **Surface Resolved:** Resolved the target surface to `surfaces/[Surface]/`.
 - [ ] **Common Directory Exists:** Verified that `common/` exists.
 - [ ] **Markdown Output:** Wrote `.md` under the LCA `common/patterns/` from `common-scope.md` (not beside a single function).

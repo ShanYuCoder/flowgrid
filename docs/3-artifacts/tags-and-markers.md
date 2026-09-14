@@ -28,7 +28,7 @@ pnpm platform-common:registry show
 | UI | `registries/design.registry.json` | `#needs-component:`, `#needs-ui:`, `#shell:`, `#ui:` |
 | Logic | `registries/common.registry.json` | `#common:*`, `#needs-common:*` |
 
-Common UI bundles: `product/surfaces/common/` (list-page, status-chip, …).
+Common UI bundles: `surfaces/common/` (list-page, status-chip, …).
 
 ## Mark kinds (tóm tắt)
 
@@ -40,9 +40,9 @@ Common UI bundles: `product/surfaces/common/` (list-page, status-chip, …).
 | needs-common | `#needs-common:{id}` | Logic chưa implement — HANDOFF |
 | call-external | `#call-external` | HTTP ngoài integration / BFF |
 | cross-entity-service | `#cross-entity-service` | 2 aggregate sync |
-| call-external | `#call-external` | Outbound / third-party — SSOT [`product/surfaces/common/integrations/call-external.md`](#) |
-| cross-entity-service | `#cross-entity-service` | Multi-aggregate sync — SSOT [`product/surfaces/common/integrations/cross-entity-service.md`](#) |
-| derived-data | `#derived-data` | Field spec-only / BE-only — SSOT [`product/surfaces/common/data-model/derived-data.md`](#) |
+| call-external | `#call-external` | Outbound / third-party — SSOT [`surfaces/common/integrations/call-external.md`](#) |
+| cross-entity-service | `#cross-entity-service` | Multi-aggregate sync — SSOT [`surfaces/common/integrations/cross-entity-service.md`](#) |
+| derived-data | `#derived-data` | Field spec-only / BE-only — SSOT [`surfaces/common/data-model/derived-data.md`](#) |
 
 ## Spec — `marks[]` trên `ir/spec.yaml`
 

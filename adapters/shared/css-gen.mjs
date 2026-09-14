@@ -10,7 +10,7 @@ async function main() {
   const args = process.argv.slice(2);
   // Default to shadcn for FE apps
   let adapterId = 'nextjs'; 
-  let input = 'templates/product-skeleton/surfaces/common/yaml/design-system.bundle.yaml';
+  let input = 'templates/project-skeleton/surfaces/common/yaml/design-system.bundle.yaml';
   let output = '';
 
   args.forEach(arg => {

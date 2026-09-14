@@ -36,7 +36,7 @@ Prefer `docskit_list_ids` kind `DEP`; refuse inventing nodes not already in MD.
 
 ```text
 if Docskit available: targeted docskit_* tools for IDs / deps / journeys / links
-else: Glob/search under architecture/ and product/, then Read scoped Markdown
+else: Glob/search under architecture/ and surfaces/, then Read scoped Markdown
 
 Missing Docskit never blocks authoring.
 Missing ArtifactGraph never blocks Docskit or architecture skills.

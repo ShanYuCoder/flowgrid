@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Validate _legacy.dynamics.yaml (pointer-only archaeology).
- * Usage: pnpm legacy-dynamics:validate -- product/legacy-dynamics/{module}/_legacy.dynamics.yaml
+ * Usage: pnpm legacy-dynamics:validate -- legacy-dynamics/{module}/_legacy.dynamics.yaml
  */
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'

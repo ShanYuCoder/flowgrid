@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 export function packageRoot() {
     return pkgRoot;
 }
@@ -18,7 +18,7 @@ export function looksLikeHub(abs) {
     }
     catch { }
     try {
-        if (fs.statSync(path.join(abs, 'product', 'architecture')).isDirectory())
+        if (fs.statSync(path.join(abs, 'architecture')).isDirectory())
             return true;
     }
     catch { }

@@ -23,7 +23,7 @@ Các repo runtime được checkout độc lập; docs hub không resolve chúng
 
 | Artifact | Owner | Path |
 |----------|-------|------|
-| FE bundle + `ir/design.yaml` | **base-docs** | `product/surfaces/…/CMP-*/NN…/` |
+| FE bundle + `ir/design.yaml` | **base-docs** | `surfaces/…/CMP-*/NN…/` |
 | BE trio | **base-docs** | `…/api/<seq>/01-backend-spec.yaml` |
 | `@portal/models` (Zod) | **portal** | `packages/models/` · `pnpm contract:gen` |
 | Next app + E2E | **portal** | `src/` · `tests/e2e/` |
@@ -45,7 +45,7 @@ Các repo runtime được checkout độc lập; docs hub không resolve chúng
 ## 3. Feature folder (mỗi repo)
 
 ```text
-product/surfaces/<surface>/CMP-*/<NN…>/
+surfaces/<surface>/CMP-*/<NN…>/
   <slug>.bundle.yaml
   ir/design.yaml
   ir/spec.yaml

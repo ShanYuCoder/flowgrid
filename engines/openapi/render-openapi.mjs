@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process'
 
 const projectRoot = process.cwd()
 const docsDir = path.join(projectRoot, 'docs')
-const surfacesDir = path.join(projectRoot, 'product', 'surfaces')
+const surfacesDir = path.join(projectRoot, 'surfaces')
 const featuresDir = path.join(docsDir, 'features')
 const baseFile = path.join(docsDir, 'openapi', 'base.yaml')
 const outputFile = path.join(docsDir, 'openapi', 'api.yaml')

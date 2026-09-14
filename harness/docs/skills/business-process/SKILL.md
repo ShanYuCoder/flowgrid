@@ -9,13 +9,14 @@ extractBundle: architecture-core
 **Guidelines:** Use standard MD + Mermaid `flowchart` or `sequenceDiagram`. Model the process by business actions on surfaces, not by repo/service topology.
 
 **Placement (mandatory): Business-process MUST be documented across 2 distinct perspectives:**
-1. **When co-activated with `/common` skill:**
-   - Write pure Markdown describing the business logic at the UI surface.
-   - The deeper the path goes into the module structure, the more exhaustively you must describe every detail and edge case of the UI flow.
+1. **When co-activated with `/common` or for `surfaces`:**
+   - Write pure Markdown (and simple flows) describing the business logic AT THE UI SURFACE level.
+   - Use user/business language. Model the interaction strictly as `[Actor] <-> [Surface] <-> [Representative System/3rd Party Name]`.
+   - DO NOT include hidden backend services, database operations, or deep technical interactions with 3rd parties.
    - Placement: `surfaces/**/common/` (e.g. `surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` or `surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md`).
 2. **When co-activated with `/architecture` skill:**
-   - Focus on pure technical Mermaid sequence diagrams (`sequenceDiagram`).
-   - Dig deep into backend services, database interactions, external APIs, and 3rd-party services (e.g., S3, Redis).
+   - Focus on pure technical Mermaid sequence diagrams (`sequenceDiagram`) representing the ENTIRE long-running technical flow.
+   - Dig deep into backend services, database interactions, internal routing, cronjobs, external APIs, and detailed 3rd-party handshakes.
    - Placement: `architecture/03-business-process/`.
 
 **Additional routing rules:**

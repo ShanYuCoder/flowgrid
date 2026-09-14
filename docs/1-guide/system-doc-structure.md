@@ -39,7 +39,7 @@ Cây chuẩn (khớp [Start now](./getting-started.md)):
 | Home | Vai trò | Độ sâu |
 |------|---------|--------|
 | `architecture/03-business-process/FLOW-*.md` | Tổng quan các flow **chính** của hệ thống | Sơ sài, curated |
-| Common theo scope (`product/surfaces/common/…`, `product/surfaces/<surface>/common/…`, `…/CMP-*/common/…`) | Chi tiết business-process của scope đó | Đầy đủ actor/action/outcome/exception |
+| Common theo scope (`surfaces/common/…`, `surfaces/<surface>/common/…`, `…/CMP-*/common/…`) | Chi tiết business-process của scope đó | Đầy đủ actor/action/outcome/exception |
 
 - Cùng một `FLOW-*` có thể được điều hướng từ Common? và Architecture.
 - **Không** nhân bản nội dung mâu thuẫn: Architecture = overview; Common = detail.
@@ -50,7 +50,7 @@ Cây chuẩn (khớp [Start now](./getting-started.md)):
 Nav label = `Functions`. **Không** tạo thư mục tên `functions/`.
 
 ```text
-product/surfaces/<owner-surface>/CMP-*/
+surfaces/<owner-surface>/CMP-*/
 ├─ index.md                          # module README (MD only)
 ├─ common?/                          # yaml/ + processes/FLOW-* (optional)
 └─ <NN>/<NN>/…/                      # cluster số, ví dụ 01/01/01
@@ -68,19 +68,19 @@ product/surfaces/<owner-surface>/CMP-*/
 
 | Scope | Path |
 |-------|------|
-| System | `product/surfaces/common/` |
-| Surface | `product/surfaces/<surface>/common/` |
-| Module | `product/surfaces/<owner-surface>/CMP-*/common/` |
+| System | `surfaces/common/` |
+| Surface | `surfaces/<surface>/common/` |
+| Module | `surfaces/<owner-surface>/CMP-*/common/` |
 
-- **Cấm** `product/shared/`, `product/common/`, `docs/common/`, `docs/features/`.
+- **Cấm** `shared/`, `common/`, `docs/common/`, `docs/features/`.
 - Data model / integrations dùng Common theo scope (`/db-erd`, `/cross-service`).
 
 ### Common IDs (registry)
 
 | Prefix | Ý nghĩa | Path chuẩn |
 |--------|---------|------------|
-| `UI-CMN-*` | Common UI (shell, empty, shared molecule) | `product/surfaces/common/code/UI-CMN-*` |
-| `API-CMN-*` | Common API (health, shared contract) | `product/surfaces/common/code/API-CMN-*` |
+| `UI-CMN-*` | Common UI (shell, empty, shared molecule) | `surfaces/common/code/UI-CMN-*` |
+| `API-CMN-*` | Common API (health, shared contract) | `surfaces/common/code/API-CMN-*` |
 
 - Registry `docs-index.json` → `codeIds` phải resolve bằng path có **`/code/`** (không `…/common/UI-*` trực tiếp).
 - Common theo surface/module scope không bắt buộc ID `*-CMN-*`; dùng path scoped `…/common/` + ID riêng nếu cần.
@@ -100,7 +100,7 @@ product/surfaces/<owner-surface>/CMP-*/
 
 ### Overview
 
-- Home: `product/overview/` (+ `operational-areas/`).
+- Home: `overview/` (+ `operational-areas/`).
 - Skill: `/overview`.
 - **Không** dùng `LND-*` / landscape ID trong contract này.
 
@@ -246,14 +246,14 @@ Prefer `flowchart` / `sequenceDiagram`.
 
 | Node | Technical home | Skill |
 |------|----------------|-------|
-| Overview | `product/overview/` | `/overview` |
-| Operational areas | `product/overview/operational-areas/` | `/overview` |
+| Overview | `overview/` | `/overview` |
+| Operational areas | `overview/operational-areas/` | `/overview` |
 | business-process overview | `architecture/03-business-process/FLOW-*.md` | `/business-process` |
 | business-process detail | Common theo scope | `/business-process` |
-| Module | `product/surfaces/<owner-surface>/CMP-*/` | `/module` |
+| Module | `surfaces/<owner-surface>/CMP-*/` | `/module` |
 | Function / screen | `…/CMP-*/<NN…>/` (`*.bundle.yaml` + `ir/`) | `/spec` · grill |
 | API contract | `…/CMP-*/<NN…>/api/<seq>/` | `/api-spec` |
-| Common / DB | `product/surfaces/common/` · scoped `…/common/` | `/db-erd` |
+| Common / DB | `surfaces/common/` · scoped `…/common/` | `/db-erd` |
 | Cross-service | Common theo scope | `/cross-service` |
 | Deployment | `architecture/07-deployment/` | `/deployment` |
 
@@ -275,7 +275,7 @@ README / index chỉ highlight Active `03` + `07`; không liệt kê `01…12` n
 
 ## 6. Skills compliance
 
-1. `/overview` owns `product/overview/` and operational areas.
+1. `/overview` owns `overview/` and operational areas.
 2. `/architecture` is the only architecture router.
 3. `/business-process` owns product `FLOW-*` (overview + detail by target path).
 4. `/module` owns each module once under its owner surface.
@@ -289,11 +289,11 @@ Router: `/architecture` → overview / surfaces / business-process / module / fu
 ## 7. Pilot shape — Auth
 
 ```text
-overview                 → product/overview/
+overview                 → overview/
 operational area         → Admin operations
 owner surface            → admin-web
 business-process overview→ architecture/03-business-process/FLOW-login
-module Auth              → product/surfaces/admin-web/CMP-01/
+module Auth              → surfaces/admin-web/CMP-01/
   leaf                   → …/01/01/01/  (bundle + ir/ + api/01/)
 deployment               → DEP-* (chỉ khi placement matters)
 ```

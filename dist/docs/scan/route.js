@@ -4,7 +4,7 @@ const ROUTES = [
         keys: ['intro', 'introduction', '01', 'scope', 'overview'],
         hit: {
             chapter: '01',
-            path: 'product/overview/',
+            path: 'overview/',
             skill: '/overview',
             note: 'product overview',
         },
@@ -32,11 +32,11 @@ const ROUTES = [
     },
     {
         keys: ['component', 'cmp', 'module'],
-        hit: { chapter: 'module', path: 'product/surfaces/', skill: '/module' },
+        hit: { chapter: 'module', path: 'surfaces/', skill: '/module' },
     },
     {
         keys: ['surface', 'channel'],
-        hit: { chapter: 'surface', path: 'product/surfaces/', skill: '/surfaces' },
+        hit: { chapter: 'surface', path: 'surfaces/', skill: '/surfaces' },
     },
     {
         keys: ['deploy', 'dep', '07'],

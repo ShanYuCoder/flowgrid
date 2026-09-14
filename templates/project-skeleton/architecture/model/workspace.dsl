@@ -1,6 +1,6 @@
 /*
  * Structurizr DSL — pilot skeleton (Phase B).
- * SSOT for prose/IDs remains MD under architecture/ + product/ (see MODEL.md).
+ * SSOT for prose/IDs remains MD under architecture/ + surfaces/ (see MODEL.md).
  * IDs mirror docs hub: admin, web, CMP-01.
  */
 workspace "base-docs platform" "arc42 × C4 pilot model" {

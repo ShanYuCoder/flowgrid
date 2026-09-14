@@ -32,14 +32,17 @@ Tree + standards: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/g
 - Format: MD + Mermaid (`flowchart` / `sequenceDiagram`)
   - **MANDATORY ERROR FLOWS:** Any Mermaid diagram (node flowchart or sequence diagram) MUST explicitly model error paths and exception handling loops (e.g., Redirect on 401/403 IDOR, validation fail states).
 - Treat `Surfaces` as business surfaces, not projects or repos.
-- Product Code (`W-*`/`API-*`) stays in `product/surfaces/<surface>/CMP-*/<slug>/code/`
+- Product Code (`W-*`/`API-*`) stays in `surfaces/<surface>/CMP-*/<slug>/code/`
 - API endpoint/contract belongs to Function detail.
 - One concern per edit.
+- **Architecture vs Business Spec Boundary:**
+  - Architecture is PURELY technical: system topology, internal services, cronjobs, database infrastructure, and long cross-cutting technical flows (e.g., the entire Auth system).
+  - `architecture/01-introduction` MUST NOT repeat Personas or detailed user use-cases. It should only lightly mention the user entry point (e.g., "Users access via Web Portal built with Next.js") and jump straight into technical system composition, cloud services, and backend communication.
 
 ## Target / ID Resolution Rule
 
 - User prompt MAY specify an ID, Operational Area, Surface, or CMP ID (e.g. `CMP-ADM-000`, `Admin Portal`).
-- Agent MUST use `docskit_route`, `docskit_list_ids`, or `docskit_get_element` (or glob search) to resolve target paths under `product/surfaces/...` or `product/overview/`.
+- Agent MUST use `docskit_route`, `docskit_list_ids`, or `docskit_get_element` (or glob search) to resolve target paths under `surfaces/...` or `overview/`.
 
 ## After route
 
@@ -51,7 +54,7 @@ Prefer `docskit_route` then `docskit_list_ids` / `docskit_validate_links` / `doc
 
 ```text
 if Docskit available: targeted docskit_* tools for IDs / deps / processes / links
-else: Glob/search under architecture/ and product/, then Read scoped Markdown
+else: Glob/search under architecture/ and surfaces/, then Read scoped Markdown
 
 When ArtifactGraph is missing, follow `/docskit` fallback evidence: continue
 with plain read tools and ID greps.

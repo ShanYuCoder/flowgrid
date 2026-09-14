@@ -1,3 +1,7 @@
+<!-- docskit-catalog -->
+**[Danh mục tài liệu](CATALOG.md)**
+<!-- /docskit-catalog -->
+
 # Forgekit (Unified AI Toolkit)
 
 **Trạng thái:** Đã hợp nhất thành công từ 5 repository cũ (`codegenkit`, `docskit`, `testkit`, `platform-dna`, `artifactgraph`).

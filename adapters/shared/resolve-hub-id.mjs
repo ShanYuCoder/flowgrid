@@ -48,7 +48,7 @@ export function loadDocsIndex(docsRoot) {
 function buildDocsIndexFallback(docsRoot) {
   const codeIds = {}
   const modules = []
-  const surfacesDir = path.join(docsRoot, 'product', 'surfaces')
+  const surfacesDir = path.join(docsRoot, 'surfaces')
 
   function scanSurfaces(dir) {
     if (!existsSync(dir)) return
@@ -184,7 +184,7 @@ export function findCmpFolder(docsRoot, id) {
       else walk(full)
     }
   }
-  walk(path.join(docsRoot, 'product', 'surfaces'))
+  walk(path.join(docsRoot, 'surfaces'))
   return hits[0] ?? null
 }
 

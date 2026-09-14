@@ -125,7 +125,7 @@ for (const file of mdFiles) {
     const baseName = path.basename(linkPath);
     
     // Check if it's a known placeholder product surface
-    if (linkPath.includes('product/surfaces')) {
+    if (linkPath.includes('surfaces')) {
       return `[${text}](#)`;
     }
     

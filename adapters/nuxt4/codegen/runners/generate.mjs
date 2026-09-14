@@ -20,13 +20,13 @@ const yamlRootFlag = process.argv.includes('--yaml-root')
   : null
 function resolveDocsSurfacesRoot() {
   const env = process.env.CODEGENKIT_DOCS_ROOT || process.env.DOCSKIT_ROOT
-  if (env) return path.join(path.resolve(env), 'product', 'surfaces')
+  if (env) return path.join(path.resolve(env), 'surfaces')
   if (process.env.CODEGENKIT_YAML_ROOT) return path.resolve(process.env.CODEGENKIT_YAML_ROOT)
   try {
-    return path.join(resolveProjectRoot(root, 'docs'), 'product', 'surfaces')
+    return path.join(resolveProjectRoot(root, 'docs'), 'surfaces')
   } catch {
     try {
-      return path.join(resolveProjectRoot(root, 'base-docs'), 'product', 'surfaces')
+      return path.join(resolveProjectRoot(root, 'base-docs'), 'surfaces')
     } catch {
       throw new Error(
         'Set CODEGENKIT_DOCS_ROOT or pass --yaml-root; no sibling docs hub is assumed',

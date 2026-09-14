@@ -28,7 +28,7 @@ Prefer `docskit_route` for §08 topics and `docskit_validate_links` after a new 
 
 ```text
 if Docskit available: targeted docskit_* tools for IDs / deps / journeys / links
-else: Glob/search under architecture/ and product/, then Read scoped Markdown
+else: Glob/search under architecture/ and surfaces/, then Read scoped Markdown
 
 Missing Docskit never blocks authoring.
 Missing ArtifactGraph never blocks Docskit or architecture skills.

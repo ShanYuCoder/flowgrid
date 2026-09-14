@@ -14,7 +14,7 @@ Flat `architecture/{landscape,context,containers,dynamics,deployments}` answered
 
 - `architecture/01`…`12` follow **arc42** as TOC.
 - C4 IDs (`LND`/`CTX`/`CTR`/`FLOW`/`DEP`) live **inside** chapters.
-- Product Code (`CMP`/`W`/`API`) stays under `product/`.
+- Product Code (`CMP`/`W`/`API`) stays under `surfaces/`.
 - Journeys use `FLOW-*` + `/journey`; `DYN-*`/`/dynamics` are deprecated aliases.
 
 ## Consequences

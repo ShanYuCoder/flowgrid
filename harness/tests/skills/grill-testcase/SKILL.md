@@ -18,11 +18,11 @@ query a workspace-parent graph.
 ## Target / ID Resolution Rule
 
 - User prompt MAY specify a screen ID, module ID, or short slug (e.g. `W-AD-AUTH-001`, `CMP-ADM-000`, `login`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search under `TESTKIT_DOCS_ROOT` / `product/surfaces/...`) to resolve target paths.
+- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search under `TESTKIT_DOCS_ROOT` / `surfaces/...`) to resolve target paths.
 - **Read the entire `ir/design.yaml`** (do not filter keys). Do not load `*.bundle.yaml`.
 - If stories/acceptance in design are too thin, **enrich design** (docs-hub `/update-spec` / grill-dev + split). Do **not** audit against `ir/spec.yaml` prose.
 - Do not Read generated `*.md`.
-- If auditing **SC-***, the YAML/MD path MUST mirror the docs `FLOW-*.md` (cluster/module/surface `common/processes/` or `architecture/03-business-process/`). Flag `scenarios/auth/…` or `product/common/` leftovers.
+- If auditing **SC-***, the YAML/MD path MUST mirror the docs `FLOW-*.md` (cluster/module/surface `common/processes/` or `architecture/03-business-process/`). Flag `scenarios/auth/…` or `common/` leftovers.
 
 ## Audit Rules
 

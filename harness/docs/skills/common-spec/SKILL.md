@@ -27,13 +27,13 @@ Docskit supports multiple surface types (Web, WinForms, Mobile, Gateway). You MU
 - Use the `design.shell.tag` to denote surface type (e.g., `#shell: DataListPage`, `#shell: KioskCheckIn`, `#shell: OtAdapter`).
 - Populate `spec.clients` if applicable.
 
-**Templates are optional seeds:** There are 16 bundle templates in `templates/product-skeleton/surfaces/common/yaml/` (mostly for Web Portal CRUD).
+**Templates are optional seeds:** There are 16 bundle templates in `templates/project-skeleton/surfaces/common/yaml/` (mostly for Web Portal CRUD).
 - If the user asks for a known Web pattern (e.g., `confirm-dialog`), you can ask if they want to inherit from the seed.
 - If the user specifies a non-Web surface (e.g., `line-client-hmi`), you MUST generate a new bundle tailored to that requirement. Do not force them to inherit from Web templates.
 
 ## Workflow
 
-1. **Read** `.cursor/extracts/common-scope.md`. List consumers → one LCA `common/yaml/<slug>/`. Example module-local: `product/surfaces/admin/CMP-ADM-002/common/yaml/confirm-dialog/confirm-dialog.bundle.yaml`. Example cluster: `…/CMP-ADM-002/02/common/yaml/…`. Surface/global only when consumers span modules/surfaces.
+1. **Read** `.cursor/extracts/common-scope.md`. List consumers → one LCA `common/yaml/<slug>/`. Example module-local: `surfaces/admin/CMP-ADM-002/common/yaml/confirm-dialog/confirm-dialog.bundle.yaml`. Example cluster: `…/CMP-ADM-002/02/common/yaml/…`. Surface/global only when consumers span modules/surfaces.
 2. Generate the `.bundle.yaml` using the `portal-feature-bundle/v1` schema.
 3. Instruct the user to run `docskit split -- <path>` (or `pnpm docs:split`) followed by `docskit render` (or `pnpm docs:render`). Split **must** emit `ir/design.yaml` (thin is OK). `docskit split --check` fails if that file is missing. Codegenkit `/gen-common` does not invent YAML.
 

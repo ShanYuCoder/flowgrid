@@ -1,6 +1,6 @@
 ---
 name: grill-api-spec
-description: EXCLUSIVE /grill-api-spec — ONLY for auditing backend API contract YAML in product/surfaces/ after /api-spec. DO NOT generate Markdown reports.
+description: EXCLUSIVE /grill-api-spec — ONLY for auditing backend API contract YAML in surfaces/ after /api-spec. DO NOT generate Markdown reports.
 disable-model-invocation: true
 ---
 
@@ -32,7 +32,7 @@ Shared extracts: `.cursor/extracts/spec-evolution.md`, `api-spec-sync.md`, `enti
 4. Enrich spec: `codegen.profile|entity|module`, `api.endpoints[].action`, `#gen:*` tags, `approval` (see `api-codegen-readiness.md`). One 01 = one entity.
 5. Fix clear gaps in YAML/OpenAPI/mock **in scope**
 6. Run gates (docs hub):
-   `docskit api:check --spec product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml`
+   `docskit api:check --spec surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml`
    `docskit openapi:gen --spec …/01-backend-spec.yaml`
    `docskit openapi:render`
 7. Ask user only for product decisions; use codebase/Portal evidence otherwise

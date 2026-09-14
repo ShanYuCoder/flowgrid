@@ -9,7 +9,7 @@ import {
 
 const projectRoot = process.cwd()
 const docsDir = path.join(projectRoot, 'docs')
-const surfacesDir = path.join(projectRoot, 'product', 'surfaces')
+const surfacesDir = path.join(projectRoot, 'surfaces')
 const featuresDir = path.join(docsDir, 'features')
 
 export { renderFeatureBackendSpec, listBackendSpecFiles }

@@ -36,8 +36,8 @@ flowchart LR
 | `{module}` | `CMP-01-auth` |
 | `{slug}` | `login`, `hotel-list` |
 | `{id}` | `W-AD-AUTH-001`, `API-AD-AUTH-001` |
-| Spec path | `product/surfaces/<surface>/CMP-*/<NN…>/` |
-| Common ID | `product/surfaces/common/code/{UI-CMN-*\|API-CMN-*}/` |
+| Spec path | `surfaces/<surface>/CMP-*/<NN…>/` |
+| Common ID | `surfaces/common/code/{UI-CMN-*\|API-CMN-*}/` |
 
 ---
 
@@ -47,8 +47,8 @@ flowchart LR
 Một session = một command. Chỉ làm đúng scope command này.
 
 Surface: {admin-web} · Module: {CMP-…} · Function slug: {hotel-list}
-Spec: prefer `--id` → `product/surfaces/.../CMP-*/<NN…>/ir/design.yaml`
-Common UI: --id {UI-CMN-*} → product/surfaces/common/code/UI-CMN-*/
+Spec: prefer `--id` → `surfaces/.../CMP-*/<NN…>/ir/design.yaml`
+Common UI: --id {UI-CMN-*} → surfaces/common/code/UI-CMN-*/
 
 Ràng buộc:
 - Tuân agent-discipline: sửa tối thiểu, không refactor ngoài scope
@@ -83,8 +83,8 @@ Scope:
 - 1 màn = 1 leaf `CMP-*/<NN…>/` (bundle + ir/ + api/seq)
 
 Output:
-- product/surfaces/<surface>/CMP-*/<NN…>/
-- product/legacy-dynamics/…/_legacy.dynamics.yaml khi cần archaeology
+- surfaces/<surface>/CMP-*/<NN…>/
+- legacy-dynamics/…/_legacy.dynamics.yaml khi cần archaeology
 - pnpm forge:render && pnpm forge:publish
 - Evidence: inferredFromCode | qa/open — không bịa business intent
 
@@ -106,7 +106,7 @@ Function slug: {hotel-list}
 Requirement: {mô tả ngắn: list + search + pagination + row actions}
 
 Tham chiếu:
-- Common UI: --id {UI-CMN-*} (product/surfaces/common/code/…)
+- Common UI: --id {UI-CMN-*} (surfaces/common/code/…)
 - 1 slug = 1 function; không gộp create/update vào cùng folder
 
 Scope IN: `base-docs` + `base-tests`, harness notes
@@ -141,7 +141,7 @@ Chỉ scope create form + validation + API POST. Link dependency trong notes c�
 /grill-docs
 
 Target: --id {W-*}
-Path: product/surfaces/<surface>/CMP-*/<NN…>/
+Path: surfaces/<surface>/CMP-*/<NN…>/
 
 Focus batch này (chọn 1–2 chủ đề, không hỏi lan):
 - [ ] actors + permissions
@@ -183,7 +183,7 @@ Spec: prefer `--id {W-*}`
 Order:
 1. Read spec tags — `#needs-component` inventory (Mo* names from grill)
 2. Implement missing Mo* molecules in /prototype (gen does not emit stubs)
-3. Registry promote if common — DESIGN-REGISTRY-PROMOTION.md · UI-CMN-* under product/surfaces/common/code/
+3. Registry promote if common — DESIGN-REGISTRY-PROMOTION.md · UI-CMN-* under surfaces/common/code/
 4. pnpm portal:gen --id {W-*} --force
 5. HANDOFF *Prototype next* = remaining slots only; wire-only / manual-composable
 
@@ -259,7 +259,7 @@ Handoff: /wire hoặc /unit (parser) sau khi có API thật
 
 Function slug: {hotel-list}
 Portal spec: prefer `--id {API-*}`
-Path: product/surfaces/<surface>/CMP-*/<NN…>/api/<seq>/
+Path: surfaces/<surface>/CMP-*/<NN…>/api/<seq>/
 
 Resolve backend từ platform-repos — stop nếu thiếu config.
 Đọc ir/spec + testcase; align key với Portal models/.

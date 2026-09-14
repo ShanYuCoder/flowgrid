@@ -29,8 +29,8 @@ const ID_RE =
 /** Scan roots for MD (arc42 × product). */
 export const SCAN_MD_DIRS = [
   'architecture',
-  'product/overview',
-  'product/surfaces',
+  'overview',
+  'surfaces',
 ] as const
 
 /** Canonical home for each ID kind (architecture-core). */
@@ -38,10 +38,10 @@ export const CANONICAL_DIR: Partial<Record<IdKind, string>> = {
   FLOW: 'architecture/03-business-process',
   DEP: 'architecture/07-deployment',
   ADR: 'architecture/09-decisions',
-  CMP: 'product/surfaces',
-  W: 'product/surfaces',
-  API: 'product/surfaces',
-  UI: 'product/surfaces',
+  CMP: 'surfaces',
+  W: 'surfaces',
+  API: 'surfaces',
+  UI: 'surfaces',
 }
 
 export function kindOf(id: string): IdKind {
@@ -128,8 +128,8 @@ export function indexIds(docsRoot: string): Map<string, HubId> {
       add(map, base, f) // ADR-001-arc42-toc slug form
     }
 
-    // Hub path: product/surfaces/<surface>/CMP-*/...
-    // Legacy: product/surfaces/<surface>/modules/CMP-*/...
+    // Hub path: surfaces/<surface>/CMP-*/...
+    // Legacy: surfaces/<surface>/modules/CMP-*/...
     const cmpFolder = f.match(
       /[\\/]product[\\/]surfaces[\\/][^\\/]+[\\/](?:modules[\\/])?(CMP-[A-Za-z0-9][A-Za-z0-9_-]*)[\\/]/i,
     )
@@ -139,7 +139,7 @@ export function indexIds(docsRoot: string): Map<string, HubId> {
       if (short) add(map, short[1], f)
     }
 
-    // Code folders: product/surfaces/.../CMP-*/<slug>/code/{W|API|UI}-*
+    // Code folders: surfaces/.../CMP-*/<slug>/code/{W|API|UI}-*
     const codeFolder = f.match(/[\\/]code[\\/]((?:W|API|UI)-[A-Z]{2}-[A-Z0-9]+-\d{3})[\\/]/i)
     if (codeFolder) add(map, codeFolder[1], f)
   }
@@ -191,7 +191,7 @@ export function listFlowProcessFiles(docsRoot: string): ReturnType<typeof flowMe
       byId.set(meta.id, meta)
     }
   }
-  const surfaces = path.join(docsRoot, 'product/surfaces')
+  const surfaces = path.join(docsRoot, 'surfaces')
   const walk = (dir: string) => {
     if (!fs.existsSync(dir)) return
     for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -234,7 +234,7 @@ export function expectedCanonicalPath(docsRoot: string, id: string): string | nu
     return null // Too expensive to find canonical CMP here since it's nested deep in surfaces
   }
   if (kind === 'W' || kind === 'API' || kind === 'UI') {
-    // Prefer folder under product/surfaces/**/code/<id>/
+    // Prefer folder under surfaces/**/code/<id>/
     const hits: string[] = []
     const walkCode = (dir: string) => {
       if (!fs.existsSync(dir)) return
@@ -248,7 +248,7 @@ export function expectedCanonicalPath(docsRoot: string, id: string): string | nu
       }
     }
     walkCode(path.join(docsRoot, 'product'))
-    walkCode(path.join(docsRoot, 'product/surfaces'))
+    walkCode(path.join(docsRoot, 'surfaces'))
     return hits[0] ?? null
   }
   // DEP lives as a heading inside chapter index — return chapter file

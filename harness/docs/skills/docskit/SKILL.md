@@ -80,7 +80,7 @@ else: continue with Docskit tools + direct Markdown inspection
 
 Docskit never requires ArtifactGraph.
 ArtifactGraph must not index or own architecture Markdown.
-If this MCP is not connected: Glob/search under architecture/ and product/,
+If this MCP is not connected: Glob/search under architecture/ and surfaces/,
 then Read scoped Markdown. Authoring is never blocked.
 ```
 

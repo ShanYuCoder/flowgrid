@@ -2,8 +2,8 @@
 name: gen-common
 description: >-
   /gen-common — generate shared UI from Docskit common specs before
-  /prototype. Covers surface common (product/surfaces/<surface>/common) and
-  module common (product/surfaces/<surface>/CMP-*/common). Use when
+  /prototype. Covers surface common (surfaces/<surface>/common) and
+  module common (surfaces/<surface>/CMP-*/common). Use when
   bootstrapping DataListPage, MoStatusChip, or CMP-level shared widgets.
 disable-model-invocation: true
 ---
@@ -17,9 +17,9 @@ Skill is **`/gen-common`**, not `/common` — `common` is the docs folder name (
 
 | Scope | Docs path | Flag |
 |-------|-----------|------|
-| Platform | `product/surfaces/common` | `--surface=common` |
-| Surface | `product/surfaces/<surface>/common` | `--surface=admin-web` |
-| Module | `product/surfaces/<surface>/<CMP-*>/common` | `--module=CMP-ADM-009` |
+| Platform | `surfaces/common` | `--surface=common` |
+| Surface | `surfaces/<surface>/common` | `--surface=admin-web` |
+| Module | `surfaces/<surface>/<CMP-*>/common` | `--module=CMP-ADM-009` |
 
 Run **surface** first, then **module**, then `/prototype` for screens.
 
