@@ -13,7 +13,7 @@ import {
 import ejs from 'ejs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const defaultTemplatesDir = path.resolve(__dirname, '../../../templates/shared/templates')
+const defaultTemplatesDir = path.resolve(__dirname, '../../../templates/shared')
 
 /**
  * Resolves a template file by name.

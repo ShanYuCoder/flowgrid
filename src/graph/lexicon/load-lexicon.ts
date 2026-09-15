@@ -193,6 +193,26 @@ export function parseRegistryTagsLexicon(absPath: string): RegistryTagsLexicon {
         keywordHints[key] = '#needs-endpoint'
       } else if (/dto|request|response|payload|validator/i.test(p) && /API|BE|data/i.test(section)) {
         keywordHints[key] = '#needs-dto'
+      } else if (p.startsWith('v-') || p.startsWith('mat-')) {
+        let shadcnComp = '';
+        if (p.includes('btn') || p.includes('button')) shadcnComp = 'Button';
+        else if (p.includes('dialog') || p.includes('modal')) shadcnComp = 'Dialog';
+        else if (p.includes('snackbar') || p.includes('toast')) shadcnComp = 'Toast';
+        else if (p.includes('text-field') || p.includes('input')) shadcnComp = 'Input';
+        else if (p.includes('data-table') || p.includes('table')) shadcnComp = 'DataTable';
+        else if (p.includes('checkbox')) shadcnComp = 'Checkbox';
+        else if (p.includes('radio')) shadcnComp = 'RadioGroup';
+        else if (p.includes('switch') || p.includes('slide-toggle')) shadcnComp = 'Switch';
+        else if (p.includes('select')) shadcnComp = 'Select';
+        else if (p.includes('chip') || p.includes('badge')) shadcnComp = 'Badge';
+        else if (p.includes('tabs') || p.includes('tab')) shadcnComp = 'Tabs';
+        else if (p.includes('expansion-panel')) shadcnComp = 'Accordion';
+        
+        if (shadcnComp) {
+          keywordHints[key] = `#component: ${shadcnComp} (mapped from ${p})`;
+        } else {
+          keywordHints[key] = `#style: shadcn/ui`;
+        }
       }
     }
   }

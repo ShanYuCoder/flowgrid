@@ -8,8 +8,6 @@ disable-model-invocation: true
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Physical interlocks: `AGENTS.md` + `SSOT_AGENT_PROTOCOL.md` (Đạo luật 1–7). Chat-only done = FAILED.
 > - ĐẠO LUẬT 1: First action **BẮT BUỘC** `{{DOC_SKIT_READ_TOOL}}` this entire `SKILL.md`. **TUYỆT ĐỐI KHÔNG** dựa trí nhớ.
-> - ĐẠO LUẬT 2: **BẮT BUỘC** `TODO.md` ở root bóc **toàn bộ Workflow + Accelerators** → `- [ ]`. **TUYỆT ĐỐI KHÔNG** chỉ copy Verification Checklist. **TUYỆT ĐỐI KHÔNG** gộp/tick hàng loạt.
-> - ĐẠO LUẬT 3–4: **BẮT BUỘC** gộp plan vào `TODO.md` (quote nguyên văn từng dòng Verification Checklist) trước khi write bundle; mọi kết quả bền ghi disk **NGAY** (No RAM).
 > - ĐẠO LUẬT 5: Data lấy từ User prompt | ArtifactGraph. **BẮT BUỘC brainstorm bổ sung text business (bối cảnh bài toán, input, output, mô tả chức năng màn hình theo ngôn ngữ business) cho đội Non-tech hiểu.** Core rules thiếu: AskQuestion, hoặc treo `qa/open/QA-<page-id>-NNNN` + `#missing_info QA-…`.
 > - ĐẠO LUẬT 6–7: Grill Confirm trước khi vá gap; common/DSL chỉ `/common`|`/common-spec`|`/docs-mark`|Confirm — `/spec` chỉ consume.
 > - You MUST follow ALL Workflow steps below; verify via harness TODO evidence, not a static AGENTS checklist.
@@ -25,7 +23,7 @@ disable-model-invocation: true
 
 > [!CRITICAL] TEMPLATE REQUIREMENT
 > You MUST read the template `.forgekit/templates/feature.bundle.yaml` and rules `.forgekit/templates/bundle-authoring.md` BEFORE generating any spec.
-> If these files are missing, you MUST STOP immediately and report an error to the user: "Template missing. Please run `docskit init` to generate templates." DO NOT attempt to guess the format or generate the YAML without them.
+> If these files are missing, you MUST STOP immediately and report an error to the user: "Template missing. Please run `forgekit init` to generate templates." DO NOT attempt to guess the format or generate the YAML without them.
 
 ## Load policy
 
@@ -44,17 +42,17 @@ Tree: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/guide/SYSTEM-
 - User prompt MAY specify a screen ID, module ID, slug (e.g. `CMP-ADM-000`, `W-AD-AUTH-001`, `login`), or Draft ID (e.g., `1-1`, `2-1-1`).
 - If a Draft ID is provided, Agent MUST split it into numeric segments (e.g., `1-1-1` -> `01/01/01/`) to resolve the exact numeric target folder.
 - Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve the exact target folder under `surfaces/.../CMP-*/<numeric-path>/`.
+- **CRITICAL INPUT DISCOVERY**: Before generating a new spec, Agent MUST proactively search for an input markdown file named `<numeric-path>.md` (e.g. `01/01/02.md`) at the resolved module path `surfaces/<surface>/CMP-*/<numeric-path>.md`. If found, Agent MUST read this file as the primary source of business bullets/requirements instead of saying "I cannot hallucinate" or asking the user for input. Do NOT wait for the user to explicitly tell you to read it.
 - Do NOT force the user to provide the full filesystem surface/module path if an ID, Draft ID or short slug is given.
 
 ## Workflow
 
-0. Create/update `TODO.md` ở root (all steps below + Accelerator if/else items + plan).
 1. Confirm **module (`CMP-*`) exists**, its operational-area mapping is known, and the implementing `CTR-*` is identified — otherwise stop for lead/owner.
 2. If bundle exists, verify gaps: actors, fields, validations, routes, actions, edge cases, acceptance. API contracts live in **`api/<seq>/01`** (`/api-spec`), not `spec.api`. Unknown facts → AskQuestion (Other chưa chốt → `qa-inbox.md`; đóng sau **`/qa-resolve`**); do not invent.
-3. If new, draft from user bullets. **CRITICAL: BẮT BUỘC brainstorm 2 mảng: (1) Mặt Business cho Stakeholder (Chuẩn Arc42: Mục tiêu nghiệp vụ, Các bên liên quan, Kịch bản người dùng - bằng ngôn ngữ đời thường 100% Non-tech); (2) Mặt Kỹ thuật cho Dev/QA (Bắt buộc định nghĩa Field Validations, State Machine, UI Permissions, Edge Cases). TUYỆT ĐỐI KHÔNG viết các khối text chung chung ở ngoài (vd: "Field Validations: Username...", "State Machine: ..."). BẮT BUỘC map mọi rule/validation vào chính xác item tương ứng thông qua các thuộc tính `validation`, `messages`, `states` (disabledWhen, visibleWhen, etc.), `action` (onSuccess, onCommonError, onSpecificError) trong `design.sections[]`.** Map every visible control into nested `design.sections[]` (or flat `zones[]`) and `spec.ui.list|form|detail` (widget required). App pages: `design.nav.sidebar.levels` + breadcrumb. Phân vân: **AskQuestion** (Recommended + **Other**) rồi **STOP**. Picks A/B/Other-with-text → ghi field thật. Other **chưa chốt** → `qa-inbox.md` (sau **`/qa-resolve`**). Summary đủ **key**; câu ngắn = member review. API endpoints → `/api-spec` `01`, không `spec.api`.
+3. If new, draft from user bullets or from the automatically discovered input `.md` file (e.g. `01/01/02.md`). **CRITICAL: BẮT BUỘC brainstorm 2 mảng: (1) Mặt Business cho Stakeholder (Chuẩn Arc42: Mục tiêu nghiệp vụ, Các bên liên quan, Kịch bản người dùng - bằng ngôn ngữ đời thường 100% Non-tech); (2) Mặt Kỹ thuật cho Dev/QA (Bắt buộc định nghĩa Field Validations, State Machine, UI Permissions, Edge Cases). TUYỆT ĐỐI KHÔNG viết các khối text chung chung ở ngoài (vd: "Field Validations: Username...", "State Machine: ..."). BẮT BUỘC map mọi rule/validation vào chính xác item tương ứng thông qua các thuộc tính `validation`, `messages`, `states` (disabledWhen, visibleWhen, etc.), `action` (onSuccess, onCommonError, onSpecificError) trong `design.sections[]`.** Map every visible control into nested `design.sections[]` (or flat `zones[]`) and `spec.ui.list|form|detail` (widget required). App pages: `design.nav.sidebar.levels` + breadcrumb. Phân vân: **AskQuestion** (Recommended + **Log as Tech Debt**) rồi **STOP**. Picks A/B/Other-with-text → ghi field thật. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (sau **`/qa-resolve`**). Summary đủ **key**; câu ngắn = member review. API endpoints → `/api-spec` `01`, không `spec.api`.
    - **Draft ID Mapping:** Nếu có Draft ID (`1-1-1`, `2-1-2`), padding số 0 vào từng đốt (`01-01-01`, `02-01-02`).
    - **Bundle ID:** Lắp tiền tố của module cha với các đốt vừa pad (vd: Module `CMP-ADM-002` + `02-01-02` -> `page-id: cmp-adm-002-02-01-02`). Split ghi `page-id` lên `ir/spec.yaml`.
-   - **Numeric Folder Path:** Cấu trúc thư mục BẮT BUỘC phản ánh chính xác các đốt số, KHÔNG ĐƯỢC chứa text. Draft ID có 3 đốt (vd `2-1-2`) thì sinh đúng 3 cấp thư mục: `02/01/02/`.
+   - **Numeric Folder Path:** Cấu trúc thư mục BẮT BUỘC phản ánh chính xác các đốt số, KHÔNG ĐƯỢC chứa text. Draft ID có 3 đốt (vd `2-1-2`) thì sinh đúng 3 cấp thư mục: `02/01/02/`. **Agent MUST automatically create this directory (and any missing parent directories) if it does not exist.**
    - **Bundle Name:** File `.bundle.yaml` BẮT BUỘC phải mang tên chức năng (textual slug), vd: `login.bundle.yaml`. Do đó path cuối cùng sẽ là: `surfaces/<surface>/CMP-*/02/01/02/login.bundle.yaml`.
    - **Textual Info:** Tất cả các mô tả (cluster-name, submodule-name, function-name) phải được ghi vào các trường YAML (title, name, summary, sidebar, breadcrumb), KHÔNG đưa vào đường dẫn vật lý. Create this `*.bundle.yaml` with `specOrigin: requirement`. Do NOT write Markdown.
 4. Incremental blocks per extracts when needed.
@@ -116,7 +114,7 @@ Khi người dùng gọi `... /legacy /spec`, Agent PHẢI:
 - Viết `*.bundle.yaml` cho function đó vào `surfaces/<surface>/CMP-*/<slug>/` với `specOrigin: legacy`.
 - **Không** tạo codegen tags. Hỗ trợ chạy validate: `legacy_dynamics_validate` / `pnpm legacy-dynamics:validate`.
 
-## Tools (required after docskit init)
+## Tools (required after forgekit init)
 
 Prefer MCP/CLI when Docskit is installed:
 
@@ -144,7 +142,6 @@ Deduplicate retries and report only actual `fileReads` / `contextBytes`.
 - Design bundle coherent · split + docs:render pass · plans handoff → `/testcase` on tests hub.
 
 ## Verification Checklist
-- [ ] Harness TODO + plan written under `TODO.md` ở root and kept in sync with evidence.
 - [ ] Strict adherence to scope boundaries and module CMP mapping (`surfaces/<surface>/CMP-*/<slug>/`).
 - [ ] Brainstormed business text (context, input, output). Missing **keys** filled or deferred as `qa/open/QA-<page-id>-NNNN` + `#missing_info QA-…`. Short prose is member review, not a QA file.
 - [ ] Screen inventory complete when info exists: nested `design.sections[]` (kind/visual/tags) or `zones[].items[]`, plus `spec.ui.list|form|detail`. App pages include `design.nav` sidebar/breadcrumb when a left menu exists.

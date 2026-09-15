@@ -6,8 +6,8 @@
  * and optional dsl.lanes pointers. Registry JSON payloads stay in product git.
  */
 import type { ArtifactgraphConfig } from '../types.js';
-export declare const CONFIG_NAME = "artifactgraph.json";
-export declare const INDEX_DIR = ".artifactgraph";
+export declare const CONFIG_NAME = ".forgekit/config.json";
+export declare const INDEX_DIR = ".forgekit";
 export declare function parseRepoConfig(input: unknown): ArtifactgraphConfig;
 /** Standalone defaults when a repo has not been initialized yet. */
 export declare function defaultRepoConfig(projectId?: string): ArtifactgraphConfig;

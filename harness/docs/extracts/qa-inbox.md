@@ -4,11 +4,11 @@ There is **no** `openQuestions` on YAML. Gaps use **AskQuestion** in the skill s
 
 ## Wizard (always)
 
-AskQuestion: 2–5 options, mark **Recommended**, always include **Other**. **STOP**.
+AskQuestion: MUST include your Recommended options AND an explicit "Log as Tech Debt (Pending)" option. (The UI automatically provides the 3rd "Other" option). **STOP**.
 
-- Member picks A/B/C → write that fact into the real spec field (`design`, `01`, …).
-- Member picks **Other** and types a **decision** → write that text into the spec field.
-- Member picks **Other** and has **not decided** (empty / “chưa chốt” / “để sau”) → create a QA file (below). Do not invent the answer.
+- Member picks A/B/C (Recommended) → write that fact into the real spec field (`design`, `01`, …).
+- Member picks **Log as Tech Debt (Pending)** → create a QA file (below). Do not invent the answer.
+- Member picks **Other** and types a decision → write that text into the spec field.
 
 ## When to create a file
 
@@ -34,4 +34,3 @@ Unknown answer → grill / `/api-spec`, not this extract.
 
 - ADR → `architecture/09-decisions`
 - Lasting product risk → `architecture/11-risks`
-- Session TODOs → `TODO.md`

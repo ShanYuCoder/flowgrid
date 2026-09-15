@@ -384,7 +384,8 @@ See `.cursor/extracts/spec-update-tags.md` and `spec-update-delta.md`.
 
 ```mermaid
 flowchart TD
-  Q["qa/open/QA-<bundle.id>-NNNN.yaml\n#tech-debt:QA-…"] --> G["Grill /qa-resolve"]
+  START["Wizard AskQuestion Tech Debt"] --> Q["qa/open/QA-<bundle.id>-NNNN.yaml\n#tech-debt:QA-…"]
+  Q --> G["Grill /qa-resolve"]
   G --> R{"Resolved?"}
   R -->|yes| X["Delete qa/open file + tag"]
   R -->|no| D["Keep until member Confirm"]

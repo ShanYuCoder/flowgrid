@@ -7,7 +7,6 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Materialize `TODO.md` ở root from every Workflow step + optional Accelerators before other durable writes.
 > - For `#missing_info` / open gaps: ArtifactGraph re-check → micro-scope → propose (Recommended) on **Chat Thread** → **STOP for member confirm** before patching settled SSOT and updating **Artifact Registry**.
 > - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
 > - Do NOT perform a shallow check. Verify against the **Verification Checklist** via harness TODO evidence.
@@ -51,7 +50,6 @@ If `ir/` is missing, Read the **entire** `*.bundle.yaml` once (first `/spec` not
 
 **Step A — fact-lock** (`grillStatus.bqaFacts`)
 
-0. Create/update `TODO.md` ở root + plan. Deferred gaps: `.cursor/extracts/qa-inbox.md` (`qa/open/QA-<page-id>-NNNN.yaml`, `#tech-debt:QA-…`).
 1. Compare `design.zones/behavior/actions` vs `legacy.ui` vs common UI. **UI Metrics SSOT:** Ensure basic CSS properties (font-size, colors) are NOT redundantly specified in feature specs unless they are explicit overrides of the Design System (`common/yaml/design-system.bundle.yaml`).
 2. **Audit Business & Stakeholder Focus:** Đảm bảo `summary` kể được câu chuyện nghiệp vụ theo chuẩn Arc42 (mục tiêu nghiệp vụ, kịch bản người dùng) bằng ngôn ngữ 100% Non-tech. Kiểm tra xem `spec.requirements` đã định nghĩa đủ: (1) Field Validations, (2) State Machine, (3) UI Permissions, (4) Edge Cases chưa. Nếu thiếu, reject & yêu cầu bổ sung.
 3. **Cross-check Common Patterns:** Walk up from the function: nearest `common/patterns/` then module, surface, `surfaces/common/patterns/` (`.cursor/extracts/common-scope.md`).
@@ -62,8 +60,8 @@ If `ir/` is missing, Read the **entire** `*.bundle.yaml` once (first `/spec` not
 
 **Step B — member wizard** (`grillStatus.bqaOpen`) — **chat/AskQuestion only; complete spec**
 
-7. Gaps: Cursor **AskQuestion** (2–5 options, Recommended, **Other**). Batches ≤5. **STOP**.
-8. After **member** picks a named option or Other **with** a decision: apply into `design` / `review`. Other **chưa chốt** → `qa-inbox.md`. Close later with **`/qa-resolve`**. Never invent.
+7. Gaps: Cursor **AskQuestion**. Options MUST include: 1. Your Recommended option(s), 2. An explicit "Log as Tech Debt (Pending)" option. (The UI automatically adds "Other"). Batches ≤5. **STOP**.
+8. After **member** picks a named option or Other **with** a decision: apply into `design` / `review`. If member selects "Log as Tech Debt" → `qa-inbox.md`. Close later with **`/qa-resolve`**. Never invent.
 9. `grillStatus.bqaOpen: done` when this pass’s answers **or** QA pointers are on disk. Leftover `#missing_info` **with** a `QA-…` id is allowed (does not block).
 10. User: `docs_render` / `docskit render` (fallback `pnpm docs:render`).
 
@@ -97,7 +95,6 @@ retries and report only actual `fileReads` / `contextBytes`.
 → `/grill-dev`
 
 ## Verification Checklist
-- [ ] Harness TODO under `TODO.md` ở root kept in sync with evidence.
 - [ ] Strict compliance with Load Policy (did not load out-of-scope files like codegen or legacy source code).
 - [ ] **UI Error Flow Detailed:** Every API call/user action in `design.yaml` has explicit On Success, On Common Error, and On Specific Error handling specified.
 - [ ] `#missing_info` / proposals used the hard confirmation gate (no silent overwrite of settled SSOT), updated Artifact Registry after confirm.

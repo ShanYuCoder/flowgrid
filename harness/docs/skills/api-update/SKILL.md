@@ -75,5 +75,5 @@ Common APIs: `…/common/yaml/<slug>/01-backend-spec.yaml` (one trio per API).
 
 - Do not split slug folder for child functions in same bounded context
 - Do not rename API fields for FE convenience
-- External integrations → AskQuestion then write into `01`; treo → `qa-inbox.md`, close later **`/qa-resolve`**; grill adds `#call-external`
+- External integrations → AskQuestion (MUST include "Log as Tech Debt" option) then write into `01`; if member selects "Log as Tech Debt" → `qa-inbox.md`, close later **`/qa-resolve`**; grill adds `#call-external`
 - Export/import/custom → add endpoint stub + `pendingTechDebt.expectedWhenDone` if not merging this session

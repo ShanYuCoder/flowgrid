@@ -251,8 +251,16 @@ async function main() {
       }
     }
 
+    if (!keepRegistry) {
+      const artifactGraphDir = path.join(process.cwd(), 'artifactgraph');
+      if (fs.existsSync(artifactGraphDir)) {
+        fs.rmSync(artifactGraphDir, { recursive: true, force: true });
+        console.log('  - Đã xóa hoàn toàn thư mục backup artifactgraph/');
+      }
+    }
+
     if (!keepAgents) {
-      const dirs = ['.agents', '.gemini', '.cursor'];
+      const dirs = ['.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo'];
       for (const d of dirs) {
         const p = path.join(process.cwd(), d);
         if (fs.existsSync(p)) {
@@ -282,6 +290,28 @@ async function main() {
           }
         }
       } catch (e) {}
+    }
+
+
+
+    const gitignorePath = path.join(process.cwd(), '.gitignore');
+    if (fs.existsSync(gitignorePath)) {
+      let gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
+      const ignoresToRemove = [];
+      if (!keepAgents) ignoresToRemove.push('.forgekit', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo');
+      
+      let modifiedIgnore = false;
+      for (const ignore of ignoresToRemove) {
+        const regex = new RegExp(`^\\/?${ignore}\\/?$(\\r?\\n)?`, 'gm');
+        if (regex.test(gitignoreContent)) {
+          gitignoreContent = gitignoreContent.replace(regex, '');
+          modifiedIgnore = true;
+        }
+      }
+      if (modifiedIgnore) {
+        fs.writeFileSync(gitignorePath, gitignoreContent);
+        console.log('  - Đã dọn dẹp các thư mục liên quan khỏi .gitignore');
+      }
     }
 
     outro(pc.green('Đã dọn dẹp Forgekit thành công!'));
@@ -548,7 +578,17 @@ async function main() {
 
   // Copy shared templates and schemas
   console.log(pc.blue(`[INFO] Syncing global templates & schemas...`));
-  copyRecursive(path.join(forgekitRoot, 'templates'), path.join(targetDir, 'templates'));
+  const tplSrc = path.join(forgekitRoot, 'templates');
+  const tplDest = path.join(targetDir, 'templates');
+  if (fs.existsSync(path.join(tplSrc, 'shared'))) {
+    copyRecursive(path.join(tplSrc, 'shared'), tplDest);
+  }
+  const otherTpls = ['schemas'];
+  for (const t of otherTpls) {
+    if (fs.existsSync(path.join(tplSrc, t))) {
+      copyRecursive(path.join(tplSrc, t), path.join(tplDest, t));
+    }
+  }
   copyRecursive(path.join(forgekitRoot, 'schemas'), path.join(targetDir, 'schemas'));
   
   if (selectedAgents.length > 0) {
@@ -774,6 +814,26 @@ async function main() {
     console.log('  + Đã build SQLite cache thành công tại .forgekit/index.db');
   } catch (e) {
     console.log(pc.yellow('  ! Không thể khởi tạo SQLite cache (chưa có specs/registry): ' + e.message));
+  }
+
+  // Khởi tạo thư mục chứa backup DSL (nếu chưa có)
+  const dslBackupDir = path.join(process.cwd(), 'artifactgraph');
+  if (!fs.existsSync(dslBackupDir)) {
+    fs.mkdirSync(dslBackupDir, { recursive: true });
+    fs.mkdirSync(path.join(dslBackupDir, 'registries'), { recursive: true });
+    fs.mkdirSync(path.join(dslBackupDir, 'specs'), { recursive: true });
+    console.log(pc.blue('\n[INFO] Đã tạo thư mục backup DSL tại artifactgraph/'));
+  }
+
+  // Mồi sẵn (seed) lexicon tags và testcase vào thư mục backup nếu chưa có
+  const destLexicon = path.join(dslBackupDir, 'lexicon');
+  if (!fs.existsSync(destLexicon)) {
+    fs.mkdirSync(destLexicon, { recursive: true });
+    const srcLexicon = path.join(forgekitRoot, 'lexicon');
+    if (fs.existsSync(srcLexicon)) {
+      copyRecursive(srcLexicon, destLexicon);
+      console.log(pc.blue('  + Đã mồi (seed) lexicon mặc định vào artifactgraph/lexicon/'));
+    }
   }
 
   if (['Frontend', 'Backend', 'Fullstack'].includes(selectedType)) {

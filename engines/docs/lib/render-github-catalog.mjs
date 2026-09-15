@@ -4,7 +4,7 @@ import { writeQaList } from './render-qa-list.mjs'
 import { SKIP_NAV_DIRS, markdownNavText, walkSurfacesNav } from '../vitepress/surfaces-nav.mjs'
 
 /** Hub roots included in GitHub CATALOG.md (VitePress still has architecture). */
-const CATALOG_ROOTS = ['platform', 'product']
+const CATALOG_ROOTS = ['platform', 'product', 'docs']
 
 /** Skip these names when walking inside platform/ or surfaces/. */
 const SKIP_NEST = new Set(['node_modules', '.git', 'code', 'dist', 'cache', 'registries', '.cursor'])

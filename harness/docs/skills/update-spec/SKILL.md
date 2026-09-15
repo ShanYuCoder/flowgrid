@@ -7,8 +7,7 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Materialize `TODO.md` at root from Workflow before durable writes; plan before patching the bundle.
-> - Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (no `modules/` segment). Gaps → AskQuestion or `qa/open/` (`qa-inbox.md`); do not invent business data.
+> - Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (no `modules/` segment). Gaps → AskQuestion (MUST include "Log as Tech Debt" option); if selected → `qa/open/` (`qa-inbox.md`); do not invent business data.
 > - Protocol: `extracts/agent-execution-protocol.md` + host `AGENTS.md` / `agent-compliance`.
 
 # /update-spec — Controlled spec delta

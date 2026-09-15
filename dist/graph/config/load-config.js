@@ -9,15 +9,15 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
 import { packageRoot } from './platform-repos.js';
-export const CONFIG_NAME = 'artifactgraph.json';
-export const INDEX_DIR = '.artifactgraph';
+export const CONFIG_NAME = '.forgekit/config.json';
+export const INDEX_DIR = '.forgekit';
 const artifactgraphConfigSchema = z.object({
     version: z.number().int().positive().optional(),
-    stack: z.string().min(1),
-    mode: z.enum(['brownfield', 'greenfield']),
+    stack: z.string().optional(),
+    mode: z.enum(['brownfield', 'greenfield']).optional(),
     projectId: z.string().optional(),
-    commands: z.record(z.string(), z.array(z.string())),
-    registries: z.array(z.string()),
+    commands: z.record(z.string(), z.array(z.string())).optional(),
+    registries: z.array(z.string()).optional(),
     gapSources: z.array(z.string()).optional(),
     specRoots: z.array(z.string()).optional(),
     hubs: z
@@ -45,9 +45,9 @@ export function defaultRepoConfig(projectId = path.basename(process.cwd())) {
         mode: 'brownfield',
         projectId,
         commands: {},
-        registries: [],
+        registries: ['artifactgraph/registries'],
         gapSources: [],
-        specRoots: [],
+        specRoots: ['artifactgraph/specs'],
         vocabularies: {
             registryTags: 'artifactgraph/lexicon/registry-tags.en.txt',
         },
@@ -62,7 +62,11 @@ export function loadRepoConfig(repoRoot) {
 }
 /** Load local config or standalone generic defaults. */
 export function loadEffectiveRepoConfig(repoRoot) {
-    return loadRepoConfig(repoRoot) ?? defaultRepoConfig(path.basename(repoRoot));
+    const loaded = loadRepoConfig(repoRoot);
+    const defaults = defaultRepoConfig(path.basename(repoRoot));
+    if (!loaded)
+        return defaults;
+    return { ...defaults, ...loaded };
 }
 /** Require config or throw (used by gen / analyze when project must be wired). */
 export function requireRepoConfig(repoRoot) {

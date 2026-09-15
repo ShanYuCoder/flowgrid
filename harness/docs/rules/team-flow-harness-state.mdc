@@ -8,7 +8,6 @@ alwaysApply: false
 
 SSOT for run tracking lives under `.harness/` (not `.agents/tasks/`).
 
-- `TODO.md` (in workspace root) — live TODO derived from skill Workflow (+ optional Accelerators) AND detailed plan before authoring durable YAML/MD. Mark `[x]` only with evidence. Do not create TODOs in `tasks/`. Do not create separate plan or proposal files.
 - `feature_list.json` — scope; do not mark done without verify.
 - `progress.md` — handoff for the next session.
 - `registries/page-lifecycle.registry.json` + `base-docs/platform/toolchain/PAGE-LIFECYCLE.md` — highest stage per route when present; `portal:gen` / `portal:remove` / `portal:lifecycle sync` update these.

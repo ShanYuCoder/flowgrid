@@ -27,7 +27,7 @@ disable-model-invocation: true
 ## Workflow
 
 0. Deferred gaps: `.cursor/extracts/qa-inbox.md`. Close a known id with **`/qa-resolve`**, not this skill.
-1. Resolve spec ↔ legacyEvidence ↔ design conflicts in **bundle**. Member pick now → AskQuestion then write the spec. Member **treo** → QA file + pointer — **no** `openQuestions`.
+1. Resolve spec ↔ legacyEvidence ↔ design conflicts in **bundle**. Member pick now → AskQuestion (MUST include "Log as Tech Debt" option) then write the spec. Nếu member chọn "Log as Tech Debt" → QA file + pointer — **no** `openQuestions`.
 2. **Reconcile Common Patterns & Code Size:** Verify that the feature bundle inherits and complies with the common patterns specified by both BQA (business flows) and Dev (`#pattern`, `#split-hook:` codegen tags).
 3. **Reconcile API & Tech Decisions (`#reuse-api`):** Verify Dev tags on **page actions/items** (`#reuse-api` + `reuseFrom`) against BQA flows. Duplicate contracts must not get a new `api/<seq>/`.
 4. **Codegen gate:** `bundle.gen.codegen.profile` (and entity/module when required) must be set. Login/forgot/reset = `auth`, not `create`. If missing or wrong, **do not** set `grillStatus.full: done` — report and hand back to `/grill-dev`.

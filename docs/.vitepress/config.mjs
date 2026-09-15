@@ -61,6 +61,91 @@ export default withMermaid(
           ]
         },
         {
+          text: 'AI Skills (Phase 1)',
+          items: [
+            { text: '/spec', link: '/6-reference/skills/spec' },
+            { text: '/grill-bqa', link: '/6-reference/skills/grill-bqa' },
+            { text: '/grill-dev', link: '/6-reference/skills/grill-dev' },
+            { text: '/grill-docs', link: '/6-reference/skills/grill-docs' },
+            { text: '/update-spec', link: '/6-reference/skills/update-spec' },
+            { text: '/qa-resolve', link: '/6-reference/skills/qa-resolve' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 2)',
+          items: [
+            { text: '/docskit & CLI', link: '/6-reference/skills/docskit' },
+            { text: '/build-templates', link: '/6-reference/skills/build-templates' },
+            { text: '/openapi', link: '/6-reference/skills/openapi' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 2a - Scaffold FE)',
+          items: [
+            { text: '/prototype', link: '/6-reference/skills/prototype' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 2b - Tests)',
+          items: [
+            { text: '/test', link: '/6-reference/skills/test' },
+            { text: '/grill-test', link: '/6-reference/skills/grill-test' },
+            { text: 'testcase:gen', link: '/6-reference/skills/testcase' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 2c - Backend Unit)',
+          items: [
+            { text: '/unit', link: '/6-reference/skills/unit' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 3 - API & Wire)',
+          items: [
+            { text: '/api', link: '/6-reference/skills/api' },
+            { text: '/grill-api', link: '/6-reference/skills/grill-api' },
+            { text: '/api-spec', link: '/6-reference/skills/api-spec' },
+            { text: '/grill-api-spec', link: '/6-reference/skills/grill-api-spec' },
+            { text: '/api-update', link: '/6-reference/skills/api-update' },
+            { text: '/api-integration', link: '/6-reference/skills/api-integration' },
+            { text: '/grill-integration-spec', link: '/6-reference/skills/grill-integration-spec' },
+            { text: '/wire', link: '/6-reference/skills/wire' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 4)',
+          items: [
+            { text: '/decision', link: '/6-reference/skills/decision' },
+            { text: '/architecture', link: '/6-reference/skills/architecture' },
+            { text: '/architecture-grill', link: '/6-reference/skills/architecture-grill' },
+            { text: '/overview', link: '/6-reference/skills/overview' },
+            { text: '/surfaces', link: '/6-reference/skills/surfaces' },
+            { text: '/module', link: '/6-reference/skills/module' },
+            { text: '/business-process', link: '/6-reference/skills/business-process' },
+            { text: '/db-erd', link: '/6-reference/skills/db-erd' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 5)',
+          items: [
+            { text: '/grill', link: '/6-reference/skills/grill' },
+            { text: '/call-external', link: '/6-reference/skills/call-external' },
+            { text: '/common', link: '/6-reference/skills/common' },
+            { text: '/common-spec', link: '/6-reference/skills/common-spec' },
+            { text: '/grill-common-spec', link: '/6-reference/skills/grill-common-spec' },
+            { text: '/cross-service', link: '/6-reference/skills/cross-service' },
+            { text: '/cross-entity-service', link: '/6-reference/skills/cross-entity-service' },
+            { text: '/cross-cutting', link: '/6-reference/skills/cross-cutting' },
+            { text: '/deployment', link: '/6-reference/skills/deployment' }
+          ]
+        },
+        {
+          text: 'AI Skills (Phase 6)',
+          items: [
+            { text: '/business-impact-review', link: '/6-reference/skills/business-impact-review' }
+          ]
+        },
+        {
           text: 'Kiến Trúc (Architecture)',
           items: [
             { text: 'Portal Architecture', link: '/7-architecture/portal-architecture' },

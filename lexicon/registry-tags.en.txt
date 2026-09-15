@@ -38,11 +38,12 @@ DataListPage · DataDetailPage · DataFormPage · DashboardPage · WizardPage ·
 B. UI — layout / controls
 ================================================================================
 Header / Sidebar / Breadcrumb / Toolbar / Filters / Content / Footer
-Drawer / Modal / Dialog / Popover / Toast / Banner / Tabs / Accordion
-Text field / Textarea / Number / Currency / Date / Select / Combobox
-Checkbox / Radio / Switch / File upload / Password / Search field
-Data table / Grid / Kanban / Calendar / Chart / KPI card
-Status chip / Badge / Pill
+Drawer / v-navigation-drawer / mat-drawer / Modal / Dialog / v-dialog / mat-dialog / Popover / v-menu / Toast / Snackbar / v-snackbar / mat-snackbar / Banner / Tabs / v-tabs / mat-tab / Accordion / v-expansion-panels / mat-expansion-panel
+Text field / v-text-field / mat-input / Textarea / v-textarea / Number / Currency / Date / Select / v-select / mat-select / Combobox / v-combobox
+Checkbox / v-checkbox / mat-checkbox / Radio / v-radio / mat-radio / Switch / v-switch / mat-slide-toggle / File upload / v-file-input / Password / Search field
+Data table / v-data-table / mat-table / Grid / Kanban / Calendar / Chart / KPI card
+Status chip / Badge / Pill / v-chip / mat-chip / v-badge / mat-badge
+Button / v-btn / mat-button / IconButton / mat-icon-button
 Pagination / Sort control / Bulk actions / Row actions
 
 ================================================================================

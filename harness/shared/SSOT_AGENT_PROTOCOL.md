@@ -4,7 +4,6 @@
 > Đây là **KHÓA VẬT LÝ**, không phải lời nhắc.
 > Vi phạm bất kỳ đạo luật nào → run **FAILED**. Chat-only "done" = **KHÔNG ĐƯỢC CHẤP NHẬN**.
 >
-> Tracker SSOT: `TODO.md` ở thư mục root (không dùng `.agents/tasks/` làm SSOT).
 > Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (không có segment `modules/`).
 
 ---
@@ -27,7 +26,6 @@ Chưa `{{DOC_SKIT_READ_TOOL}}` / read `SKILL.md` → **CẤM** tạo TODO, plan,
 
 Ngay sau Pref-light, bước tiếp theo Agent **BẮT BUỘC** tạo file:
 
-`TODO.md` ở thư mục root (Ghi đè hoàn toàn nếu chuyển sang skill mới, cập nhật tiếp status nếu đang chat dở skill cũ)
 
 **QUAN TRỌNG — Checklist KHÔNG ĐƯỢC cố định:**
 
@@ -44,17 +42,6 @@ Verification Checklist ở cuối skill chỉ dùng **sau** để map evidence l
 ## ĐẠO LUẬT 3 — CRITICAL RULE FOR EXECUTION (Plan trước khi write)
 
 **Mục tiêu:** Không cho sinh YAML/code ngay trên RAM.
-
-Trước khi gọi tool ghi bất kỳ file YAML/Code/product Markdown nào, Agent **BẮT BUỘC** ghi file vật lý:
-
-`TODO.md` (ở thư mục root)
-
-Trong file `TODO.md` này, Agent **BẮT BUỘC** kết hợp cả TODO và Plan:
-
-1. Trích dẫn **nguyên văn** từng dòng của phần Verification Checklist trong `SKILL.md`.
-2. Viết kế hoạch thực thi chi tiết cho **từng** dòng đó (file nào, tool nào, evidence nào).
-
-Chỉ khi file plan đã ghi xong toàn bộ → mới được quyền gọi `{{DOC_SKIT_WRITE_TOOL}}` / write tool cho product SSOT.
 
 **TUYỆT ĐỐI KHÔNG** làm gộp. **TUYỆT ĐỐI KHÔNG** tạo thêm file plan rời (`*-plan.md`).
 
@@ -130,8 +117,6 @@ Agent chỉ là Thư ký — được đăng ký/cập nhật DSL/Common chỉ t
 
 ```text
 1) {{DOC_SKIT_READ_TOOL}} SKILL.md          → Đạo luật 1
-2) write TODO.md từ Workflow + Accelerators → Đạo luật 2
-3) write TODO.md (quote Verification Checklist) → Đạo luật 3
 4) mỗi kết quả bền → write file ngay (No RAM) → Đạo luật 4
 5) data chỉ từ User | ArtifactGraph; gap → #missing_info → Đạo luật 5
 6) grill → 4 bước + STOP chờ Confirm → Đạo luật 6

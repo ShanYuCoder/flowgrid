@@ -7,14 +7,13 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Materialize `TODO.md` at root from every Workflow step + optional Accelerators before other durable writes.
 > - For `#missing_info` / open gaps: ArtifactGraph re-check → micro-scope → propose → **STOP for member confirm** before overwriting settled SSOT.
 > - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
 > - Do NOT perform a shallow check. Verify against the **Verification Checklist** via harness TODO evidence.
 
 # /grill-dev — Dev / codegen grill
 
-Ambiguous codegen/API facts: **AskQuestion** (Recommended + **Other**), then write **`bundle.gen`** and **`api/<seq>/01-backend-spec.yaml`**. Member Other chưa chốt → `qa-inbox.md` (đóng **`/qa-resolve`**). Empty `codegen.profile` / required `entity`/`module` / 01 endpoint `action` still block `grillStatus.dev: done`.
+Ambiguous codegen/API facts: **AskQuestion** (MUST include "Log as Tech Debt" option), then write **`bundle.gen`** and **`api/<seq>/01-backend-spec.yaml`**. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (đóng **`/qa-resolve`**). Empty `codegen.profile` / required `entity`/`module` / 01 endpoint `action` still block `grillStatus.dev: done`.
 
 **Hard gate (codegenkit input):** Do **not** set `grillStatus.dev: done` until `bundle.gen` has:
 
@@ -33,9 +32,7 @@ gen:
     composition: null
     testIds: null
 ```
-
-Missing `gen.codegen.profile` **or** (for list/create/admin-crud/auth/change-password/public) empty `entity`/`module` **or** sibling `01` endpoints without `action` + path suffix → **STOP**, report to member, keep `grillStatus.dev: pending`. Split **fails** if you mark `done` without those fields. Do **not** author `bundle.spec.api`.
-
+Missing `gen.codegen.profile` **or** (for list/create/admin-crud/auth/change-password/public) empty `entity`/`module` **or** sibling `01` endpoints without `action` + path suffix → **You MUST proactively brainstorm logical suggestions based on the business context (e.g. if it's a login page, suggest module: auth, entity: user). Use the `ask_question` tool to present a wizard to the member.** The options MUST include: 1. Your (Recommended) suggestion(s). 2. An explicit option named "Log as Tech Debt (Pending)". (The UI automatically provides a 3rd write-in "Other" option). If the member selects the "Log as Tech Debt" option, ONLY THEN MUST you generate a `qa/open/QA-<bundle.id>-NNNN.yaml` tech debt file and keep `grillStatus.dev: pending`. Split **fails** if you mark `done` without those fields. Do **not** author `bundle.spec.api`.
 **Profile → layout (do not use `create` for auth):**
 | profile | Pages | Next.js output |
 |---------|--------|----------------|

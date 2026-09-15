@@ -1,1 +1,4 @@
 node_modules
+
+# Auto-generated CLI test snapshots
+test/forgekit-test-cli-*.mjs

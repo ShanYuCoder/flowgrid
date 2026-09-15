@@ -38,6 +38,9 @@ Role deny
 Happy path transition
 Illegal transition
 Concurrent edit
+Mock / Stub / Spy / Fixture
+AAA pattern (Arrange, Act, Assert)
+Snapshot match
 
 ================================================================================
 LEVEL 3 — TEST CASE NAMING
@@ -55,9 +58,11 @@ state-transition     Legal and illegal status changes
 exception            Errors, timeouts, and surfaced failures
 concurrency          Multi-user / multi-tab behavior
 audit                Audit and logging outcomes
-accessibility        Keyboard, screen reader, contrast, focus
+accessibility        Keyboard, screen reader, color contrast, focus management, aria-labels, axe-core
 localization         Timezone, currency, language, date format
 data-integrity       Visible consistency after operations
+integration          Cross-module / Integration flow
+e2e                  End-to-End / Browser test / Playwright / Cypress
 
 ================================================================================
 THREE FILTER DIMENSIONS

@@ -285,6 +285,7 @@ flowchart TD
 
   GW["/grill-docs\noptional"]
   US["/update-spec"]
+  QA["Wizard AskQuestion Tech Debt"]
 
   LEG --> BUNDLE
   SPEC --> BUNDLE
@@ -292,6 +293,8 @@ flowchart TD
   DEV -.->|optional| GW --> DRY
   BQA -.->|gap| US
   DEV -.->|gap| US
+  BQA -.->|Tech Debt| QA
+  DEV -.->|Tech Debt| QA
   US --> BQA
 
   classDef entry fill:#A7F3D0,stroke:#047857,color:#064E3B
@@ -299,12 +302,14 @@ flowchart TD
   classDef out fill:#ECFDF5,stroke:#10B981,color:#065F46
   classDef opt fill:#FEF3C7,stroke:#B45309,color:#78350F
   classDef gap fill:#FECDD3,stroke:#BE123C,color:#881337
+  classDef qa fill:#FDE68A,stroke:#D97706,color:#92400E
 
   class LEG,SPEC entry
   class BUNDLE,SPLIT,BQA,DEV,DRY core
   class PR,GEN,GP,NEXT out
   class GW opt
   class US gap
+  class QA qa
 ```
 
 Tint trong gam emerald: **Entry** đậm hơn · **Core** giữa · **Out** nhạt hơn · optional grill-with = amber (không phải bước default) · gap = rose.

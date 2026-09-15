@@ -30,7 +30,6 @@ Chưa `{{DOC_SKIT_READ_TOOL}}` `SKILL.md` → **CẤM** mọi bước sau (TODO,
 
 Ngay sau Pref-light, Agent **BẮT BUỘC** tạo file:
 
-`TODO.md` ở thư mục root (Ghi đè hoàn toàn nếu chuyển sang skill mới, cập nhật tiếp status nếu đang chat dở skill cũ)
 
 **QUAN TRỌNG:**
 
@@ -45,15 +44,6 @@ Verification Checklist chỉ để map evidence **sau** — không phải nguồ
 ---
 
 ## ĐẠO LUẬT 3 — CRITICAL RULE FOR EXECUTION (Plan trước khi write)
-
-Trước khi sinh / ghi bất kỳ file YAML/Code/product nào, Agent **BẮT BUỘC** ghi file vật lý:
-
-`TODO.md` (ở thư mục root)
-
-Trong file `TODO.md` này, Agent **BẮT BUỘC** kết hợp cả TODO và Plan: trích dẫn **nguyên văn từng dòng** của Verification Checklist trong `SKILL.md` và viết kế hoạch thực thi chi tiết cho **từng** dòng.
-
-Chỉ khi viết xong toàn bộ plan file → mới được quyền gọi `{{DOC_SKIT_WRITE_TOOL}}` cho product SSOT.
-
 **TUYỆT ĐỐI KHÔNG** làm gộp. **TUYỆT ĐỐI KHÔNG** tạo thêm file plan rời (`*-plan.md`).
 
 ---
@@ -118,8 +108,6 @@ Agent chỉ là Thư ký — được đăng ký/cập nhật DSL/Common chỉ k
 
 ```text
 {{DOC_SKIT_READ_TOOL}} SKILL.md
-  → {{DOC_SKIT_WRITE_TOOL}} TODO.md  (Workflow + Accelerators)
-  → {{DOC_SKIT_WRITE_TOOL}} TODO.md  (quote Verification Checklist)
   → mỗi kết quả bền: {{DOC_SKIT_WRITE_TOOL}} NGAY (No RAM)
   → data: User | ArtifactGraph only; gap → #missing_info
   → grill: 4 bước + STOP chờ Confirm trước khi ghi SSOT
