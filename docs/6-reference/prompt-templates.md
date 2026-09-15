@@ -438,12 +438,12 @@ Không thay /unit
 
 ## Utility
 
-### `platform-base` — Convention chung (tránh lạm dụng)
+### `framework-rules` — Convention chung (tránh lạm dụng)
 
 Chỉ khi **không** fit command cụ thể (shared component, review architecture).
 
 ```text
-@platform-base skill
+@framework-rules skill
 
 Task: {thêm testId cho FormField suffix pattern mới}
 Scope: components/molecules/MoFormField.vue only
@@ -498,7 +498,7 @@ Session mới: *"Đọc .harness/progress.md, tiếp tục /wire cho slug hotel-
 |------|--------|
 | Scope | Một command, một slug, một scenario |
 | Context | Trỏ path spec — không paste cả YAML vào chat |
-| Skill | Không @ `platform-base/reference.md` trừ khi cần template |
+| Skill | Không @ `framework-rules/reference.md` trừ khi cần template |
 | Model Cursor | Auto cho `/model`, `/wire`, `/prototype`; Premium cho grill/debug |
 | Session | Chat mới khi đổi phase; harness thay vì kể lại chat cũ |
 | Scaffold | `pnpm portal:gen --spec ...` trước `/prototype`; agent chỉ HANDOFF + diff |

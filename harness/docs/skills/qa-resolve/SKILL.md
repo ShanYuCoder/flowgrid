@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Prompt already has a **solution** → that is Confirm. **Do not** AskQuestion again. Missing solution → AskQuestion (MUST include "Log as Tech Debt" option) then **STOP**.
+> - Prompt already has a **solution** → that is Confirm. **Do not** AskQuestion again. Missing solution → **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt" then **STOP**.
 > - You MUST follow ALL workflow steps; verify via the Verification Checklist with evidence.
 
 # /qa-resolve — Close one open QA
@@ -40,7 +40,7 @@ Giữ copy legacy cho title.
 
 1. `qa/open/<id>.yaml`. If missing, glob `qa/open/<id>.yaml` and `qa/open/QA-*-NNNN.yaml` whose `id:` matches. Zero hits → **STOP**, list `qa/open/` ids. Many hits → **STOP**, ask which file.
 2. Read `target.path`, `target.at`, `kind`, `skill`, `question`.
-3. If the user gave **no** solution: AskQuestion (MUST include "Log as Tech Debt" option + options from `options[]` if present + Recommended) → **STOP**.
+3. If the user gave **no** solution: **AskQuestion** wizard form với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt" (+ options from `options[]` if present) → **STOP**.
 4. If the user gave a solution: treat as Confirm. Do not re-open the wizard.
 
 ## Patch (one SSOT)

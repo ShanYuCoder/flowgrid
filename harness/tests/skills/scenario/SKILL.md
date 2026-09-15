@@ -30,7 +30,7 @@ Scenarios test a **business process** (`FLOW-*`) that spans multiple screens (`W
   3. `surfaces/<surface>/common/processes/FLOW-*.md` (surface)
   4. `surfaces/common/processes/FLOW-*.md` (cross-surface product common)
   5. `architecture/03-business-process/FLOW-*.md` (org catalog only)
-- **Strict:** Only author a scenario if that `FLOW-*.md` exists. Missing FLOW → hand off to docs-hub `/business-process`, do not invent SC.
+- **Strict:** Only author a scenario if that `FLOW-*.md` exists. Missing FLOW or thin business rules → hand off to docs-hub `/business-process` or `/update-spec`, do not invent SC. **CRITICAL:** When handing off, you MUST output a comprehensive gap report (formatted as a complete, ready-to-use prompt starting with `@docskit`) detailing exactly what flows or business rules are missing, so the user can copy-paste it directly to run the docs-hub skill.
 - Do not treat `common/yaml/` or `common/patterns/` as scenario sources.
 
 ## Directory Mirroring Rule (Docs SSOT)

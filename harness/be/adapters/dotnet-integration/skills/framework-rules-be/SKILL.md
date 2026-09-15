@@ -1,5 +1,5 @@
 ---
-name: platform-base-be
+name: framework-rules-be
 description: .NET Integration BE conventions — gen-first, clear boundaries
 disable-model-invocation: true
 ---

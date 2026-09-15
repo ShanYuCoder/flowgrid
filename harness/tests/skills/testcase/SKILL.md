@@ -35,7 +35,7 @@ testkit cases:check -- …
 - User prompt MAY specify a screen ID, module ID, or short slug (e.g. `W-AD-AUTH-001`, `CMP-ADM-000`, `login`).
 - Agent MUST use `docskit_route` or `docskit_get_element` (or glob search under `TESTKIT_DOCS_ROOT` / `surfaces/...`) to resolve target paths.
 - Docs tech SSOT for screens: **Read the entire `ir/design.yaml`**. `FLOW-*` is process markdown (`architecture/03-business-process/` or `…/common/processes/`), not `ir/design.yaml`.
-- If story/copy/acceptance is missing for a case, that is a **docs gap**: STOP and hand off to docs-hub `/grill-dev` or `/update-spec`. Do **not** Write docs hub files (`ir/*`, `*.bundle.yaml`). Do **not** read `ir/spec.yaml` for testcase authoring.
+- If story/copy/acceptance is missing for a case, that is a **docs gap**: STOP and hand off to docs-hub `/grill-dev`, `/grill-bqa`, or `/update-spec`. **CRITICAL:** When handing off, you MUST output a comprehensive gap report in the Chat Thread. This report must be formatted as a complete, ready-to-use prompt starting with `@docskit` (e.g., `@docskit /update-spec [details...]`) detailing exactly what business rules or acceptance criteria are missing, so the user can copy-paste it directly to run the docs-hub skill. Do **not** Write docs hub files (`ir/*`, `*.bundle.yaml`). Do **not** read `ir/spec.yaml` for testcase authoring.
 - Do not Read generated `*.md`.
 - Do NOT demand full surface/module filesystem paths from the user if an ID or short slug is given.
 

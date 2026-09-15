@@ -1,5 +1,5 @@
 ---
-name: platform-base-be
+name: framework-rules-be
 description: Laravel BE conventions — modules-v1, gen-first, thin controllers
 disable-model-invocation: true
 ---

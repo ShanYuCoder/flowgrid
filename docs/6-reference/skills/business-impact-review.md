@@ -18,11 +18,15 @@
   - Danh sách các symbols/functions bị ảnh hưởng.
   - Phân tích Caller theo chiều ngang (Horizontal callers).
   - Phân tích Luồng quy trình theo chiều dọc (Vertical process paths).
+  - **Báo cáo tác động ranh giới (Cross-Boundary Impact - FE/BE & Surfaces).**
   - Rủi ro/Nợ kỹ thuật còn sót (Residual risks).
   - Kế hoạch Test tập trung (Targeted test plan).
 
 ## Description / Ý nghĩa
 - Kỹ năng phân tích rủi ro hệ thống trước khi Deploy hoặc khi thay đổi lõi nghiệp vụ.
+- **Quét xuyên biên giới (Cross-Boundary Scan):**
+  - **Cross-repo (FE ↔ BE):** Nếu sửa API ở BE, phải quét xem FE gọi API đó có bị gãy contract không. Ngược lại, nếu FE đổi form payload, phải xem BE có parse lỗi không.
+  - **Cross-surface (Surface A ↔ Surface B):** Nếu sửa logic ở module A (vd: phát sinh event mới hoặc đổi DB schema), phải dùng CodeGraph truy vết xem module B (listener/consumer) có dính side-effect hay không.
 - **Trace luồng dọc (Vertical Path Trace):** Agent sẽ truy vết từ `Client/FE -> Route -> Auth/Middleware -> Controller -> Service -> DB -> Event -> API bên ngoài`.
 - **Phân loại rủi ro (Risk Classes):** Đánh giá các lỗ hổng về phân quyền (AuthZ/IDOR), thiếu xác thực dữ liệu rỗng (Null/Empty), nuốt lỗi (Error collapsing), hoặc logic bất đồng bộ (Async idempotency).
 - Kỹ năng này không sinh ra tài liệu kiến trúc (Architecture Docs) thông thường, mà nó là một dạng "Kiểm toán viên trước giờ G" để đảm bảo không làm sập các hệ thống khác (nhất là trong môi trường Microservices hoặc nhiều repo liên kết).

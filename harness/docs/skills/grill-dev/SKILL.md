@@ -13,7 +13,7 @@ disable-model-invocation: true
 
 # /grill-dev — Dev / codegen grill
 
-Ambiguous codegen/API facts: **AskQuestion** (MUST include "Log as Tech Debt" option), then write **`bundle.gen`** and **`api/<seq>/01-backend-spec.yaml`**. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (đóng **`/qa-resolve`**). Empty `codegen.profile` / required `entity`/`module` / 01 endpoint `action` still block `grillStatus.dev: done`.
+Ambiguous codegen/API facts: **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt", then write **`bundle.gen`** and **`api/<seq>/01-backend-spec.yaml`**. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (đóng **`/qa-resolve`**). Empty `codegen.profile` / required `entity`/`module` / 01 endpoint `action` still block `grillStatus.dev: done`.
 
 **Hard gate (codegenkit input):** Do **not** set `grillStatus.dev: done` until `bundle.gen` has:
 

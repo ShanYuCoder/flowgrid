@@ -73,7 +73,7 @@ Khối óc trung tâm (Docskit SSOT). Nơi diễn ra 90% việc phân tích hệ
 
 ### 4. Test Skills (`harness/tests/`)
 Chuyên thiết kế testplan và kịch bản E2E Playwright.
-- **Kỹ năng cốt lõi:** `scenario`, `testcase`, `platform-base`.
+- **Kỹ năng cốt lõi:** `scenario`, `testcase`.
 - **Review (Grill):** `grill-testcase`.
 
 ### 5. Common/Shared Skills (`harness/common/` & `harness/shared/`)

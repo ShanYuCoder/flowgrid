@@ -1,12 +1,14 @@
 ---
 name: business-impact-review
-description: Business-process blast-radius review across vertical request/job paths and horizontal callers.
+description: Đánh giá bán kính ảnh hưởng (Blast-radius) toàn diện xuyên suốt các kho lưu trữ (Cross-repo) và các phân hệ (Cross-surface).
 disable-model-invocation: true
 ---
 
 # /business-impact-review
 
 Read-only analysis by default. Do not implement fixes unless explicitly asked.
+
+**Owner:** Common Hub (Cross-Boundary Inspector)
 
 ## Checkout resolution
 
@@ -25,8 +27,9 @@ matches → ask or Gaps.
 
 1. Scope changed public/protected methods, routes, Jobs, Events, Listeners,
    Commands and Schedules from diff/user files.
-2. Search every direct and indirect caller; follow one hop beyond
-   facade/dispatch/proxy boundaries.
+2. **[CRITICAL] Phân tích chéo (Cross-Boundary Analysis):**
+   - **Cross-repo (FE ↔ BE):** Quét toàn bộ các nhánh FE/Mobile đang gọi API bị thay đổi để đảm bảo contract (payload/response) không bị gãy.
+   - **Cross-surface (BE Surface A ↔ BE Surface B):** Truy vết các Event, Job, DB Schema để xem các Listener/Consumer ở Surface khác có bị side-effect làm sập hệ thống không.
 3. Trace each reachable vertical path:
 
 ```text
@@ -44,7 +47,7 @@ Client/FE or Scheduler/Webhook
 4. Apply `risk-classes.md`: authZ/IDOR, request bag, trust boundary,
    over-broad parse, null/empty, error collapsing, hardcode/magic,
    async context/idempotency, business rules, transactions and compatibility.
-5. Report evidence and unsearched repos explicitly.
+5. Yêu cầu dùng CodeGraph (`codegraph-<key>`) và ArtifactGraph theo chuẩn Đạo luật 8 để nhảy repo.
 
 ## Required report
 
@@ -53,6 +56,7 @@ Summary / ship recommendation
 Changed symbols
 Horizontal callers
 Vertical process paths
+Cross-Boundary Impact (FE/BE & Surfaces)  <-- BẮT BUỘC BÁO CÁO TƯỜNG MINH
 Findings: severity · class · evidence · impact · verify
 Unsearched repos / residual risks
 Targeted test plan
@@ -82,9 +86,4 @@ else: model review from scoped evidence
 ```
 
 Missing accelerators never block the review. Assign one stable `runId` at run
-start. For each unavailable optional MCP, use targeted local search/read and
-count successful file reads plus exact raw bytes read into context. After that
-optional's fallback completes, emit exactly one
-`processkit.missing-optional` JSON event for the `runId` + optional pair using
-`.cursor/schemas/processkit/missing-optional-event.schema.json`; deduplicate retries. Report only
-actual `fileReads` and `contextBytes`, never invented token claims.
+start. Report only actual `fileReads` and `contextBytes`, never invented token claims.

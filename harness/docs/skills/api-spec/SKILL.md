@@ -120,7 +120,7 @@ Member review: `pnpm docs:render` then `pnpm docs:dev`.
 5. Reuse detail API for detail + edit initial data; `select-items` for dropdowns
 6. **Endpoint Error Storming:** Classify errors per endpoint nature using `#err:*` tags. Include `errorStorming` in `01-backend-spec.yaml` and corresponding `$ref` responses in `02-openapi.yaml`.
 7. Request/response, validation, filters, errors; then `docskit openapi:gen --spec …/api/<seq>/01-backend-spec.yaml` for `02-openapi.yaml` (OpenAPI 3.0.3). Refine `01` and re-gen rather than a second stack-specific generator.
-8. Không đoán: **AskQuestion** (MUST include "Log as Tech Debt" option) rồi ghi `01`. Không `openQuestions`. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (`QA-<feature.id>-NNNN`). `pendingTechDebt[].id` = cùng id đó khi Confirm defer.
+8. Không đoán: **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other (nhập text tự do), và (3) "Log as Tech Debt (Pending)" rồi ghi `01`. Không `openQuestions`. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (`QA-<feature.id>-NNNN`). `pendingTechDebt[].id` = cùng id đó khi Confirm defer.
 9. Domain tags only (`#call-external`, `#cross-entity-service`, `#err:*`) — **no** `#gen:*` or `codegen` block (grill adds those)
 10. Update `.harness/progress.md` when present
 

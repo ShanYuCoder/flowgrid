@@ -84,7 +84,7 @@ Slug ví dụ: `surfaces/integrations/stripe/charge/api/01/`.
 10. Domain tags only: `#webhook-inbound`, `#webhook-outbound`, `#partner-api`, `#public-api`, `#call-external`, `#err:*`
 11. **No** `codegen`, **no** `#gen:*`, **no** `approval` beyond `draft` — grill adds
 12. `integrationBacklog[]` cho event/endpoint defer (thay `pendingTechDebt` portal)
-13. Signature, retry, retention: AskQuestion (MUST include "Log as Tech Debt" option) + ghi `01` / `decisions`. Nếu member chọn "Log as Tech Debt" → `qa/open/QA-<feature.id>-NNNN.yaml`. Không `openQuestions`.
+13. Signature, retry, retention: **AskQuestion** wizard form với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt (Pending)" + ghi `01` / `decisions`. Nếu member chọn "Log as Tech Debt" → `qa/open/QA-<feature.id>-NNNN.yaml`. Không `openQuestions`.
 14. Update `.harness/progress.md` when present
 
 ## Verification Checklist (Evidence Required)

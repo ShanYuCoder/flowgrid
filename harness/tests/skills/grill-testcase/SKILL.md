@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 **Owner:** Testkit (`--type=tests`)
 
-Audit plans only. Spec holes hand off to docs-hub `/update-spec` (Docskit), never invent acceptance.
+Audit plans only. Spec holes hand off to docs-hub `/update-spec` or `/grill-bqa` (Docskit), never invent acceptance. **CRITICAL:** When handing off, you MUST output a comprehensive gap report in the Chat Thread formatted as a complete, ready-to-use prompt starting with `@docskit` (e.g., `@docskit /update-spec [details...]`). This prompt must detail exactly what business rules or coverage are missing, enabling the user to copy-paste it directly to run the docs-hub skill.
 
 Route Functions/W-* evidence through Docskit and symbol/call-graph evidence
 for repo X through its Platform DNA-wired `codegraph-<repo-key>` server. Use

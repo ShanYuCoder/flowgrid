@@ -1,5 +1,5 @@
 ---
-name: platform-base
+name: framework-rules
 description: .NET Line (WinForms) client conventions — gen-first, thin UI, clear boundaries
 disable-model-invocation: true
 ---

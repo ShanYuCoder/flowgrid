@@ -1,5 +1,5 @@
 ---
-name: platform-base-be
+name: framework-rules-be
 description: FastAPI BE conventions — modules, gen-first, thin routers; see stack docs
 disable-model-invocation: true
 ---

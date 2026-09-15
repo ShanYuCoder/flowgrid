@@ -1,5 +1,5 @@
 ---
-name: platform-base
+name: framework-rules
 description: Nuxt 4 FE conventions — layers, testId, gen-first; see invariants (glob)
 disable-model-invocation: true
 ---
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 Auth-first Nuxt 4 · Pinia · vee-validate+Zod · shadcn · Playwright.
 
-**Rules (FE globs):** `platform-invariants.mdc` · `platform-contract-naming.mdc` · `platform-base-*` · size/split/import · design-vocab (product repo).
+**Rules (FE globs):** `platform-invariants.mdc` · `platform-contract-naming.mdc` · `framework-rules-*` · size/split/import · design-vocab (product repo).
 
 ## Gen trước (code)
 

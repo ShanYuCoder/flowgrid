@@ -121,6 +121,30 @@ Agent chỉ là Thư ký — được đăng ký/cập nhật DSL/Common chỉ t
 
 ---
 
+---
+
+## ĐẠO LUẬT 8 — CRITICAL RULE FOR ARTIFACTGRAPH MCP & CROSS-REPO ROUTING
+
+**1. Boundaries & Ownership:**
+- ArtifactGraph chỉ quản lý `artifactgraph.json`, `registries/*.json`, `templates`, và `lexicon/` tại repo hiện tại.
+- Nó **KHÔNG** quản lý Architecture Markdown (thuộc Docskit), Code Generators (thuộc Codegenkit/Testkit), hay Symbol Indexes (thuộc CodeGraph).
+
+**2. Cross-repo Routing (Phân luồng truy xuất):**
+- **Tuyệt đối không** dùng ArtifactGraph để quét chéo (cross-repo) hay quét toàn bộ workspace. Khi cần dữ liệu ngoài repo hiện tại, phải phân luồng:
+  - Architecture ID / C4 path → Giao cho **Docskit** (`DOCSKIT_ROOT`).
+  - IR / registry / generation → Giao cho **Owning Kit** (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
+  - Tra cứu Symbol / Call-graph của repo X → Dùng **CodeGraph MCP** của riêng repo đó (`codegraph-<key>`).
+
+**3. Protocol Sử Dụng MCP:**
+- **Status & Rebuild:** Dùng `artifactgraph_status`. Nếu stale, gọi `artifactgraph_rebuild`.
+- **Analyze:** Ưu tiên `artifactgraph_analyze`, `artifactgraph_grill_check`, hoặc `artifactgraph_parity_check` thay vì đọc toàn bộ registry.
+- **Remember:** Chỉ dùng `artifactgraph_remember` SAU KHI member đã Confirm lựa chọn ở bước Grill.
+- **Handoff:** Dùng `artifactgraph_allowlist_check` + `artifactgraph_recommend_command` để lấy lệnh cho phép, sau đó bàn giao cho kit/script tương ứng chạy. Tuyệt đối không dùng `artifactgraph_gen`.
+- **Cloud Prompt:** Chỉ gửi `cloudPromptSlice` cho các unresolved work.
+- **Setup:** Nếu thiếu index, hướng dẫn member chạy `artifactgraph init` (với `--type=` phù hợp).
+
+---
+
 ## Thứ tự khóa bắt buộc mỗi skill run
 
 ```text

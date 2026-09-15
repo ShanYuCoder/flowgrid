@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (no `modules/` segment). Gaps → AskQuestion (MUST include "Log as Tech Debt" option); if selected → `qa/open/` (`qa-inbox.md`); do not invent business data.
+> - Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (no `modules/` segment). Gaps → **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt"; if selected → `qa/open/` (`qa-inbox.md`); do not invent business data.
 > - Protocol: `extracts/agent-execution-protocol.md` + host `AGENTS.md` / `agent-compliance`.
 
 # /update-spec — Controlled spec delta

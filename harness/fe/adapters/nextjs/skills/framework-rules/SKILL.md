@@ -1,5 +1,5 @@
 ---
-name: platform-base
+name: framework-rules
 description: Next.js FE conventions — layers, testId, gen-first; see invariants (glob)
 disable-model-invocation: true
 ---
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 Auth-first Next.js · App Router · shadcn · Playwright. Code under `src/`.
 
-**Rules (FE globs):** `platform-invariants.mdc` · contract-naming · `platform-base-*` · size/split/import · design-vocab (product repo).
+**Rules (FE globs):** `platform-invariants.mdc` · contract-naming · `framework-rules-*` · size/split/import · design-vocab (product repo).
 
 ## Gen trước (code)
 
