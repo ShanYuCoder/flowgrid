@@ -10,7 +10,7 @@ disable-model-invocation: true
 > - ĐẠO LUẬT 1: First action **BẮT BUỘC** `{{DOC_SKIT_READ_TOOL}}` this entire `SKILL.md`. **TUYỆT ĐỐI KHÔNG** dựa trí nhớ.
 > - ĐẠO LUẬT 5: Data lấy từ User prompt | ArtifactGraph. **BẮT BUỘC brainstorm bổ sung text business (bối cảnh bài toán, input, output, mô tả chức năng màn hình theo ngôn ngữ business) cho đội Non-tech hiểu.** Core rules thiếu: AskQuestion, hoặc treo `qa/open/QA-<page-id>-NNNN` + `#missing_info QA-…`.
 > - ĐẠO LUẬT 6–7: Grill Confirm trước khi vá gap; common/DSL chỉ `/common`|`/common-spec`|`/docs-mark`|Confirm — `/spec` chỉ consume.
-> - You MUST follow ALL Workflow steps below; verify via harness TODO evidence, not a static AGENTS checklist.
+> - You MUST follow ALL Workflow steps below; verify via the Verification Checklist with evidence, not a static AGENTS checklist.
 
 # /spec — Function detail (design)
 
@@ -58,7 +58,7 @@ Tree: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/guide/SYSTEM-
 4. Incremental blocks per extracts when needed.
 5. Apply **existing** common UI / spec-split extracts (consume only — do not invent or overwrite common SSOT; promote via `/common-spec` or confirmed grill).
 6. `pnpm docs:split -- <bundle>` (emits `ir/*`). `pnpm docs:render` writes **`ir/generated/spec.md` only**. VitePress/publish menu: module MD uses **Mã tài liệu**; function folder is `NN + <page-id>` → that spec.md (no handoff/generate/API extra items).
-7. Update `.harness/progress.md` when present; keep harness TODO in sync (`[x]` + evidence).
+7. Update `.harness/progress.md` when present; keep checklist in sync (`[x]` + evidence).
 8. Handoff plans: open **base-tests** → `/testcase` from acceptance.
 
 ## Output

@@ -16,26 +16,34 @@ Dù Thread mới hay cũ, ngay khi User yêu cầu chạy một skill/tính năn
 
 **TUYỆT ĐỐI KHÔNG** dựa vào trí nhớ mường tượng từ context/thread trước.
 
-Chưa `{{DOC_SKIT_READ_TOOL}}` / read `SKILL.md` → **CẤM** tạo TODO, plan, hay bất kỳ file product nào.
+Chưa `{{DOC_SKIT_READ_TOOL}}` / read `SKILL.md` → **CẤM** tạo plan, hay bất kỳ file product nào.
 
 ---
 
-## ĐẠO LUẬT 2 — CRITICAL RULE FOR TODO TRACKING (Anti Flat-Check)
+## ĐẠO LUẬT 2 — CRITICAL RULE FOR TASK TRACKING (Anti Flat-Check)
 
 **Mục tiêu:** Trị "viết 10 làm 7" / flat-check.
 
-Ngay sau Pref-light, bước tiếp theo Agent **BẮT BUỘC** tạo file:
+Ngay sau Pre-flight, Agent **BẮT BUỘC** derive checklist từ **Workflow + Accelerators** của `SKILL.md`:
 
+- **Task nhỏ (≤5 items):** Liệt kê checklist (`- [ ]`) trực tiếp trong **chat thread**. Làm xong bước nào → đánh `[x]` + evidence.
+- **Task lớn (>5 items hoặc multi-phase):** Tạo `implementation_plan.md` trong **brain dir**. Mỗi Phase đi từng file một — **TUYỆT ĐỐI KHÔNG** dùng script Python/JS để chạy tắt hàng loạt.
 
-**QUAN TRỌNG — Checklist KHÔNG ĐƯỢC cố định:**
+**Quy tắc Question (bắt buộc cả trong chat thread lẫn implementation_plan):**
 
-- File TODO này **TUYỆT ĐỐI KHÔNG** chỉ copy mục "Verification Checklist" ở cuối `SKILL.md`.
-- Agent **BẮT BUỘC** bóc tách **toàn bộ** mục **Workflow** và **Accelerators** trong `SKILL.md` vừa đọc thành các gạch đầu dòng TODO chưa check (`- [ ]`).
-- Mỗi bước Workflow = một dòng TODO. Mỗi nhánh Accelerator = một dòng `if available / else fallback`.
-- Làm xong bước nào → dùng tool **ghi đè** file TODO để đánh `[x]` kèm evidence (path/diff/CLI).
-- **TUYỆT ĐỐI KHÔNG** gộp bước. **TUYỆT ĐỐI KHÔNG** tick hàng loạt. **TUYỆT ĐỐI KHÔNG** in checklist tĩnh từ `AGENTS.md` thay cho TODO bóc từ skill.
+- Mọi question **BẮT BUỘC** đánh số rõ ràng (`Question 1`, `Question 2`...).
+- Mọi question **BẮT BUỘC** có **≥3 lựa chọn** bao gồm: (1) Option cụ thể + dán nhãn `(Recommended)`, (2) Option `Other` (nhập text tự do), và (3) Option `Log as Tech Debt (Pending)`. (Lưu ý: ask_question tool tự thêm Other, nhưng trong Markdown plan phải viết đủ).
+- **Task đơn (1 màn hình, nhiều gaps):** Hiển thị wizard form trong chat thread — từng question một, chờ Member trả lời xong mới chuyển question tiếp.
+- **Task lớn (multi-screen/module):** Gom questions vào `implementation_plan.md` đánh số đầy đủ.
 
-Verification Checklist ở cuối skill chỉ dùng **sau** để map evidence lên các dòng TODO đã derive từ Workflow — không phải nguồn sinh TODO.
+**QUAN TRỌNG — KHÔNG tạo file vật lý:**
+
+- **TUYỆT ĐỐI KHÔNG** tạo file `TODO.md` vật lý trong repo đích.
+- **TUYỆT ĐỐI KHÔNG** chỉ copy mục "Verification Checklist" ở cuối `SKILL.md`.
+- Mỗi bước Workflow = một dòng checklist. Mỗi nhánh Accelerator = một dòng `if available / else fallback`.
+- **TUYỆT ĐỐI KHÔNG** gộp bước. **TUYỆT ĐỐI KHÔNG** tick hàng loạt. **TUYỆT ĐỐI KHÔNG** in checklist tĩnh từ `AGENTS.md` thay cho Workflow bóc từ skill.
+
+Verification Checklist ở cuối skill chỉ dùng **sau** để map evidence lên các dòng checklist đã derive từ Workflow — không phải nguồn sinh checklist.
 
 ---
 
@@ -51,7 +59,7 @@ Verification Checklist ở cuối skill chỉ dùng **sau** để map evidence l
 
 **Mục tiêu:** Triệt thiếu hụt do tràn context.
 
-Bất cứ khi nào Agent sinh ra một kết quả bền (TODO, plan, proposal, bundle, summary bước), Agent **KHÔNG ĐƯỢC PHÉP** giữ nó dưới dạng ngữ cảnh lơ lửng trong RAM/chat.
+Bất cứ khi nào Agent sinh ra một kết quả bền (plan, proposal, bundle, summary bước), Agent **KHÔNG ĐƯỢC PHÉP** giữ nó dưới dạng ngữ cảnh lơ lửng trong RAM/chat.
 
 **BẮT BUỘC** dùng tool ghi thẳng thành file vật lý **NGAY LẬP TỨC**.
 
@@ -88,7 +96,7 @@ Khi rà `#missing_info` / lỗ hổng, Grill **BẮT BUỘC** 4 bước:
 
 1. **Check lại ArtifactGraph** (nếu available) — Member khác có thể vừa cập nhật.
 2. **Micro-scoping:** Chỉ suy luận đúng Block/Field thiếu. **TUYỆT ĐỐI** sửa lan man phần đã chốt.
-3. **Đề xuất:** 1 hoặc nhiều phương án; chỉ định **Recommended**. Hiển thị câu hỏi/đề xuất trực tiếp trên **Chat Thread** để Member review.
+3. **Đề xuất:** Dạng **wizard form** trong **Chat Thread** — hiển thị **từng question một**, chờ Member trả lời xong mới chuyển question tiếp. Mỗi question **BẮT BUỘC** có **≥3 lựa chọn** (Recommended, Other, Tech Debt).
 4. **Hard Confirmation Gate:** Agent **BẮT BUỘC** chờ Member trả lời trên chat. Chỉ sau khi Member **chốt / Confirm**, Agent mới được phép cập nhật thẳng vào product SSOT (`.bundle.yaml`) và **Artifact Registry**.
 
 ---

@@ -8,7 +8,7 @@ disable-model-invocation: true
 > [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
 > - Prompt already has a **solution** → that is Confirm. **Do not** AskQuestion again. Missing solution → AskQuestion (MUST include "Log as Tech Debt" option) then **STOP**.
-> - You MUST follow ALL workflow steps; verify via harness TODO evidence.
+> - You MUST follow ALL workflow steps; verify via the Verification Checklist with evidence.
 
 # /qa-resolve — Close one open QA
 

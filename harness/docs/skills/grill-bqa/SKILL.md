@@ -9,7 +9,7 @@ disable-model-invocation: true
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
 > - For `#missing_info` / open gaps: ArtifactGraph re-check → micro-scope → propose (Recommended) on **Chat Thread** → **STOP for member confirm** before patching settled SSOT and updating **Artifact Registry**.
 > - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform a shallow check. Verify against the **Verification Checklist** via harness TODO evidence.
+> - Do NOT perform a shallow check. Verify against the **Verification Checklist** with evidence.
 
 # /grill-bqa — Spec Validation (BQA / UI)
 
@@ -60,7 +60,7 @@ If `ir/` is missing, Read the **entire** `*.bundle.yaml` once (first `/spec` not
 
 **Step B — member wizard** (`grillStatus.bqaOpen`) — **chat/AskQuestion only; complete spec**
 
-7. Gaps: Cursor **AskQuestion**. Options MUST include: 1. Your Recommended option(s), 2. An explicit "Log as Tech Debt (Pending)" option. (The UI automatically adds "Other"). Batches ≤5. **STOP**.
+7. Gaps: **AskQuestion** wizard form — hiển thị **từng question một**, chờ Member trả lời xong mới chuyển question tiếp. Each question MUST have **≥3 options** bao gồm: (1) Recommended option(s), (2) Other (nhập text tự do), và (3) "Log as Tech Debt (Pending)". Batches ≤5. **STOP**.
 8. After **member** picks a named option or Other **with** a decision: apply into `design` / `review`. If member selects "Log as Tech Debt" → `qa-inbox.md`. Close later with **`/qa-resolve`**. Never invent.
 9. `grillStatus.bqaOpen: done` when this pass’s answers **or** QA pointers are on disk. Leftover `#missing_info` **with** a `QA-…` id is allowed (does not block).
 10. User: `docs_render` / `docskit render` (fallback `pnpm docs:render`).

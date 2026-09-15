@@ -9,7 +9,7 @@ extractBundle: architecture-core
 > - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
 > - Path SSOT: `surfaces/<surface>/CMP-*/` (no `modules/` segment).
 > - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform shallow checks. Verify against the **Verification Checklist** via harness TODO evidence.
+> - Do NOT perform shallow checks. Verify against the **Verification Checklist** with evidence.
 
 # /module
 

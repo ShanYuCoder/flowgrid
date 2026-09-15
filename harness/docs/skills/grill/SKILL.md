@@ -29,7 +29,7 @@ When filling gaps (including from a prior `/spec` pass):
 
 1. **Re-check ArtifactGraph** if available — another member may have updated the registry.
 2. **Micro-scope** — reason only about the missing block/field; do not rewrite settled sections.
-3. **Propose** via **AskQuestion** on the Chat Thread. The options MUST include: 1. Your Recommended option(s), 2. An explicit "Log as Tech Debt (Pending)" option. (The UI automatically adds "Other").
+3. **Propose** via **AskQuestion** wizard form on the Chat Thread — **từng question một**, chờ Member trả lời xong mới chuyển question tiếp. Each question MUST have **≥3 options** bao gồm: (1) Recommended option(s), (2) Other (nhập text tự do), và (3) "Log as Tech Debt (Pending)".
 4. **STOP** — ask the member. If member selects "Log as Tech Debt" → `qa-inbox.md`. Write product SSOT and update **Artifact Registry** only after explicit confirmation of a solution.
 
 For BA/UI or codegen grill on an existing bundle, prefer `/grill-bqa`, `/grill-dev`, or `/grill-docs` after this router clarifies the layer.
@@ -81,7 +81,7 @@ Do not invent business data to close gaps — leave `#missing_info` or ask.
 
 ## Verification Checklist
 
-- [ ] Pre-flight read of this `SKILL.md` and harness TODO materialized.
+- [ ] Pre-flight read of this `SKILL.md` and workflow checklist derived.
 - [ ] Target layer identified; questions stayed in playbook scope.
 - [ ] No product SSOT overwrite for unconfirmed proposals; `#missing_info` resolution used the hard gate, updated Artifact Registry after confirm.
 - [ ] Handoff skill named explicitly.
