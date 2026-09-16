@@ -165,6 +165,12 @@ design:
   #     placeholder: "Nhập tên đăng nhập..." # Sẽ i18n
   #   validation: { required: true }
   #   bind: { field: username }
+  #   db:
+  #     schema: users
+  #     field: username
+  #     enumMapping:
+  #       "0": "Tài khoản bình thường"
+  #       "1": "Tài khoản bị khóa"
   
   # Ví dụ 4: Component tương tác (Có actions xử lý sự kiện)
   # - id: btn_submit_login

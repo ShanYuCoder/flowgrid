@@ -73,6 +73,8 @@ nav:
 **LƯU Ý ĐẶC BIỆT VỀ ĐA NGÔN NGỮ (i18n):**
 1. **Text hiển thị UI (cần i18n)**: Các thuộc tính như `label`, `value`, `copy.placeholder`, text của component lib... BẮT BUỘC dùng cho i18n (sẽ được map với file ngôn ngữ). Áp dụng cho các component lá như `input`, `text`, `button`, v.v.
 2. **Text ngữ cảnh (không i18n)**: Các thuộc tính giải thích/cấu trúc như `name`, `description`, `purpose` chỉ dùng cho BA/Dev, KHÔNG dùng để render UI, KHÔNG mang đi dịch. Tùy thuộc vào `kind` mà khai báo cho đúng bản chất, **tuyệt đối không dùng `label` để mô tả một node ẩn (như container)**.
+   - **BA**: `name`, `description`, `purpose`, `copy`, `position`, `color`, `visual` (width/height/max-*/scroll), `interaction`, `validation` (mặt UI), `db` (thông tin lưu trữ schema, field, enumMapping)
+   - **Tech**: `kind`/`widget`, `tags`, `extract`, `bind` (field/hidden/apiRef), `apiRefs`, `hidden`, `testId`, `states`
 
 ```yaml
 sections:
@@ -117,6 +119,12 @@ sections:
     label: "Tên đăng nhập" # Cần i18n
     copy:
       placeholder: "Nhập tên đăng nhập..." # Cần i18n
+    db:
+      schema: users
+      field: username
+      enumMapping:
+        "0": "Tài khoản bình thường"
+        "1": "Tài khoản bị khóa"
 ```
 
 Minh họa lồng (không phải template cố định): container → card → form, hoặc sidebar → toolbar → table.

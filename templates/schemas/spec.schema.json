@@ -287,6 +287,16 @@
       },
       "additionalProperties": true
     },
+    "dbMapping": {
+      "type": "object",
+      "description": "Database schema mapping for backend integration",
+      "properties": {
+        "schema": { "type": "string" },
+        "field": { "type": "string" },
+        "enumMapping": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
     "zoneItem": {
       "type": "object",
       "required": ["id", "kind", "label"],
@@ -306,6 +316,7 @@
         "validation": { "$ref": "#/$defs/fieldValidation" },
         "messages": { "$ref": "#/$defs/fieldMessages" },
         "bind": { "$ref": "#/$defs/zoneItemBind" },
+        "db": { "$ref": "#/$defs/dbMapping" },
         "states": { "$ref": "#/$defs/zoneItemStates" },
         "tags": { "type": "array", "items": { "type": "string" } },
         "extract": { "type": "string" },
@@ -409,7 +420,8 @@
         "sortable": { "type": "boolean" },
         "render": { "type": "string" },
         "component": { "type": "string" },
-        "componentProp": { "type": "string" }
+        "componentProp": { "type": "string" },
+        "db": { "$ref": "#/$defs/dbMapping" }
       },
       "additionalProperties": true
     },
@@ -425,6 +437,7 @@
         "color": { "type": "string" },
         "placeholder": { "type": "string" },
         "source": { "$ref": "#/$defs/fieldSource" },
+        "db": { "$ref": "#/$defs/dbMapping" },
         "validation": { "$ref": "#/$defs/fieldValidation" },
         "messages": { "$ref": "#/$defs/fieldMessages" }
       },
@@ -535,7 +548,8 @@
         "key": { "type": "string" },
         "label": { "type": "string" },
         "render": { "type": "string" },
-        "helpText": { "type": "string" }
+        "helpText": { "type": "string" },
+        "db": { "$ref": "#/$defs/dbMapping" }
       },
       "additionalProperties": true
     },
@@ -564,6 +578,7 @@
         "validation": { "$ref": "#/$defs/fieldValidation" },
         "messages": { "$ref": "#/$defs/fieldMessages" },
         "source": { "$ref": "#/$defs/fieldSource" },
+        "db": { "$ref": "#/$defs/dbMapping" },
         "dependsOn": { "$ref": "#/$defs/fieldDependsOn" }
       },
       "additionalProperties": true

@@ -115,6 +115,30 @@ function renderItemBusiness(item, indent) {
   }
   
   if (item.hidden === true) lines.push(`${pad}  - Ẩn trên UI (hidden)`)
+  
+  if (item.db) {
+    const db = item.db;
+    const dbParts = [];
+    if (db.schema && db.field) {
+      dbParts.push(`Bảng \`${db.schema}\`, trường \`${db.field}\``);
+    } else if (db.schema) {
+      dbParts.push(`Bảng \`${db.schema}\``);
+    } else if (db.field) {
+      dbParts.push(`Trường \`${db.field}\``);
+    }
+    
+    if (dbParts.length > 0) {
+      lines.push(`${pad}  - Nơi lưu trữ dữ liệu: ${dbParts.join(' · ')}`);
+    }
+
+    if (db.enumMapping && typeof db.enumMapping === 'object') {
+      const enumStr = Object.entries(db.enumMapping)
+        .map(([k, v]) => `\`${k}\` = ${v}`)
+        .join(', ');
+      lines.push(`${pad}  - Ý nghĩa dữ liệu: ${enumStr}`);
+    }
+  }
+
   return lines
 }
 
