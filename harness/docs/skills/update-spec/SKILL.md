@@ -5,75 +5,75 @@ description: /update-spec — delta update bundle/spec.
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (no `modules/` segment). Gaps → **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt"; if selected → `qa/open/` (`qa-inbox.md`); do not invent business data.
-> - Protocol: `extracts/agent-execution-protocol.md` + host `AGENTS.md` / `agent-compliance`.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-# /update-spec — Controlled spec delta
+# /update-spec — Controlled Spec Delta
 
 **Extracts:** `extractBundle: update-spec` → `.cursor/extracts/extract-registry.json`
-
 Doc hub: `platform/toolchain/UPDATE-SPEC-FLOW.md` · `platform/toolchain/FEATURE-ARTIFACT-FLOWS.md`
 
-## Load policy
+---
 
-| Read (whole file) | Write | Do not Read |
-|-------------------|-------|-------------|
-| **`ir/design.yaml`** — current tech/UI | Patch **`*.bundle.yaml`** then split | Generated `*.md`, `ir/*` as write target |
-| **`ir/spec.yaml`** — if the delta is requirements/acceptance prose | | Cherry-picked keys from bundle |
+## Rule: Load Policy
 
-Do **not** Read only `design.sections` / `spec.ui` slices from the bundle. Split exists so you load the full design IR.
+| Read (whole file) | Write | NEVER |
+|---|---|---|
+| **`ir/design.yaml`** — current tech/UI | Patch `*.bundle.yaml` → then split | Write generated `*.md`; write to `ir/*` directly |
+| **`ir/spec.yaml`** — ONLY when delta involves requirements/acceptance prose | | Read only `design.sections` / `spec.ui` partial slices |
 
-## Scope
+---
 
-**In:** patch bundle (+ note plans handoff when E2E scope changes); Docskit split/check; emit `#update:*`; bump `specRevision`.
+## Rule: Scope Boundaries
 
-**Out:** full rewrite (`/spec`), close a `qa/open` item (`/qa-resolve`), legacy re-mine (`/update-spec-legacy`), production code, direct `ir/` edits.
+- **[MANDATORY]** Scope: patch bundle (delta only); emit `#update:*` tags; bump `specRevision`; run `docskit split/check`.
+- **[STRICTLY FORBIDDEN]** Full rewrite → `/spec`. Close `qa/open` item → `/qa-resolve`. Legacy re-mine → `/update-spec-legacy`. Production code → NOT this skill.
+
+---
+
+## Rule: Missing Information Handling & Workload Threshold (Law 2)
+
+- **[MANDATORY]** Gaps or ambiguity regarding delta scope, evaluate total gap volume:
+  - **Small Scope (≤5 questions):** Trigger `AskQuestion` wizard — one question at a time, **≥3 options**: (1) `(Recommended)`, (2) `Other`, (3) `Log as Tech Debt (Pending)`.
+  - **Large Scope (≥10 gaps):** **[MANDATORY HARD STOP IN CHAT]**. Do not spam single questions in chat. Generate an implementation plan / Plan Mode document partitioned into sequential Phases (3–5 gaps per phase) with disk offloading at boundaries.
+  - ✅ If "Log as Tech Debt" is selected → create `qa/open/` entry; do not invent business data.
+  - ❌ Never invent delta scope or novel business fields without explicit user confirmation.
+- Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` — NO `modules/` segment.
+
+---
+
+## Rule: Patch Guardrails
+
+- **[MANDATORY]** Patch minimal YAML sections in **bundle** only (not `ir/*`).
+- **[MANDATORY]** Preserve error matrices: when patching actions/API endpoints, ensure `onSuccess`, `onCommonError`, `onSpecificError` + `#err:*` tags are preserved and updated accordingly.
+  - ✅ Add new `onSpecificError.409` entry alongside existing `onSuccess` block.
+  - ❌ Overwrite or delete existing error handling blocks that are unrelated to this delta.
+- **[MANDATORY]** If `featureStatus` was `wire` → update to `need-update`.
+- **[STRICTLY FORBIDDEN]** Do NOT add `codegen` / `gen:` blocks without Dev alignment — hand off to `/grill-dev` instead.
+- **[STRICTLY FORBIDDEN]** Do NOT strip legacy evidence or unrelated blocks.
+- **[STRICTLY FORBIDDEN]** Do NOT clear `#update:*` tags — those are cleared exclusively at `/wire`.
+
+---
 
 ## Workflow
 
-1. Identify delta scope (one scenario / block / API field).
-2. Patch minimal YAML sections in **bundle** per `spec-update-delta.md` (not `ir/*`).
+1. Identify delta scope (one scenario / block / API field at a time).
+2. Patch minimal YAML sections in bundle per `spec-update-delta.md` (not `ir/*`).
 3. Emit matching `#update:*` tags; bump `specRevision`.
-4. If `featureStatus` was `wire` → `need-update`.
+4. Update `featureStatus` if needed.
 5. Record harness notes when present.
-6. `docskit_bundle_split` / `docskit split -- <bundle>` (fallback `pnpm docs:split`)
-7. `docskit_bundle_check` / `docskit split --check -- <bundle>` (fallback `pnpm docs:check`)
-8. User runs `docs_render` / `docskit render` (manual; fallback `pnpm docs:render`)
-9. Follow-up per matrix: handoff FE `/prototype` or `/grill-dev` / `/grill-bqa` — do not assume sibling codegen.
+6. `docskit_bundle_split` / `docskit split -- <bundle>` (fallback: `pnpm docs:split`).
+7. `docskit_bundle_check` / `docskit split --check -- <bundle>` (fallback: `pnpm docs:check`).
+8. User runs `docs_render` / `docskit render` (fallback: `pnpm docs:render`).
+9. Follow-up per patch type: handoff FE `/prototype` or `/grill-dev` / `/grill-bqa`.
 
-## Accelerators (optional)
+---
 
-```text
-if ArtifactGraph available: tag/update suggest slice
-else: apply spec-update extracts only (deterministic fallback)
+## Verification Checklist
 
-Codegenkit / portal:gen is FE-lane only — never required on docs hub
-```
-
-Reused subagent ID is empty. Missing optionals never block `/update-spec`. After the existing fallback
-completes, emit exactly one `docskit.missing-optional` event per `runId` +
-optional against
-`.cursor/schemas/docskit/missing-optional-event.schema.json`. Deduplicate
-retries and report only actual `fileReads` / `contextBytes`.
-
-## Path examples
-
-```text
-surfaces/<surface>/CMP-*/<slug>/{id}.bundle.yaml   # patch here
-surfaces/<surface>/CMP-*/<slug>/ir/*.yaml          # read-only — from split
-# Plans: https://github.com/raintr91/base_test (open tests hub; no sibling path)
-```
-
-## Guardrails
-
-- Do not strip legacy evidence or unrelated blocks.
-- **Preserve Error Matrices:** When patching delta updates to actions or API endpoints, ensure UI Error Handling (`onSuccess`, `onCommonError`, `onSpecificError`) and API Hashtags (`#err:*`) are preserved and updated accordingly.
-- Do not add `codegen` / `gen:` without Dev alignment — hand off `/grill-dev`.
-- Tags cleared only at `/wire` — not during this command.
-
-## Done
-
-- Delta documented in bundle + tags; `ir/*` regenerated and split:check pass.
-- Next command obvious from patch type.
+- [ ] Delta scoped to one scenario/block/field.
+- [ ] Patched bundle only (not `ir/*` directly).
+- [ ] `#update:*` tags emitted; `specRevision` bumped.
+- [ ] Error matrices (`onSuccess`, `onCommonError`, `onSpecificError`, `#err:*`) preserved and updated.
+- [ ] `docskit split` + `docskit split --check` passed with zero errors.
+- [ ] No `codegen` / `gen` added without `/grill-dev` handoff.

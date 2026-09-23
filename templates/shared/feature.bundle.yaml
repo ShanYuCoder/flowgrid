@@ -7,6 +7,8 @@ page-id: role-domain-function
 title: Feature title
 status: draft
 owner: portal-team
+
+# 1. BẢN TÓM TẮT TỔNG QUAN (ARC42 BUSINESS SUMMARY)
 summary: |
   - mục tiêu nghiệp vụ (business_goals): [Nêu rõ vấn đề đang giải quyết và giá trị kinh tế/nghiệp vụ mang lại. Viết sâu sắc để Stakeholder hiểu rõ vì sao phải làm.]
   - các bên liên quan (stakeholders): [Ai dùng, ai hưởng lợi, ai quản lý?]
@@ -16,6 +18,77 @@ summary: |
     - input: [Dữ liệu đầu vào. CHÚ Ý liên kết cross-page / cross-module nếu có]
     - output: [Kết quả đầu ra]
   - cách giải quyết (solution): [Tuỳ chọn. Ghi kỹ thuật phức tạp nếu có.]
+
+# 2. KHỐI USER STORIES CHI TIẾT CHO MÀN HÌNH (SCREEN USER STORIES & SCENARIOS)
+userStories:
+  primary:
+    asA: "[Persona / Role - vd: Nhân viên Vận hành / Khách hàng / Quản trị viên]"
+    iWant: "[Hành động chính trên màn hình: xem danh sách, lọc, tạo mới, cập nhật, phê duyệt...]"
+    soThat: "[Mục đích kinh doanh và giá trị thực tế đạt được]"
+
+  contextAndHandoff:
+    # 3 LOẠI CÁCH THỨC VÀO MÀN HÌNH (SCREEN ACCESS ENTRY MODE):
+    # - directRoute: Dành cho Login, Register, Public/Guest Page (mô tả path router)
+    # - sidebarMenu: Dành cho Dashboard, CRUD List, Admin Pages (mô tả menu đa cấp dropdown + label text)
+    # - contextualAction: Dành cho Detail, Edit Modal, Settings (mô tả nút bấm xxx từ màn hình A)
+    screenAccess:
+      accessType: sidebarMenu # directRoute | sidebarMenu | contextualAction
+      directRoute:
+        routePath: "/auth/login"
+        isPublic: true
+        urlParams: ["redirect_url"]
+      sidebarMenu:
+        menuHierarchy: ["Quản trị hệ thống", "Quản lý Người dùng"] # Cấu trúc menu đa cấp
+        menuLabel: "Danh sách tài khoản" # Text hiển thị trên left sidebar menu
+        icon: "user-cog"
+        badge: "New"
+      contextualAction:
+        sourceScreen: "W-ADM-LIST-01"
+        triggerControl: "Nút 'Chỉnh sửa' (btn_edit) trên từng dòng bảng User List"
+        navigationType: "pageRedirect" # pageRedirect | modalDialog | drawer | tabSwitch
+        inputsReceived: ["customer_id", "booking_id"]
+
+    sourceScreen: "W-ADM-LIST-01"
+    inputsReceived:
+      - "customer_id"
+      - "booking_id"
+    nextScreenOnSuccess: "W-ADM-DETAIL-01"
+    nextScreenOnCancel: "W-ADM-LIST-01"
+
+  scenarios:
+    - name: "Khởi tạo & Tải dữ liệu ban đầu (Initial Load)"
+      steps:
+        - "Kiểm tra quyền hạn người dùng (Role / Permissions) đối với màn hình."
+        - "Tải danh sách dữ liệu theo bộ lọc mặc định hoặc bind thông tin bản ghi theo ID nhận được."
+        - "Hiển thị trạng thái tải (Skeleton / Spinner), nếu không có dữ liệu hiển thị Empty State."
+
+    - name: "Tương tác Nhập liệu & Thẩm định Dữ liệu (Input & Validation)"
+      steps:
+        - "Người dùng nhập liệu các trường bắt buộc và tùy chọn trên form."
+        - "Hệ thống validate trực tiếp trên giao diện (Inline error) khi nhập sai định dạng hoặc bỏ trống."
+        - "Các trường có logic phụ thuộc tự động cập nhật hoặc mở thêm vùng nhập (Dynamic visibility / calculation)."
+
+    - name: "Nộp dữ liệu & Hoàn tất Thành công (Happy Path Submit)"
+      steps:
+        - "Người dùng nhấn nút thực thi chính (Primary Action Button)."
+        - "Hệ thống khóa nút và hiển thị loading để chống bấm đúp (double submit prevention)."
+        - "Lưu dữ liệu thành công, hiển thị Toast thông báo và điều hướng sang màn hình tiếp theo theo Handoff."
+
+    - name: "Xử lý Ngoại lệ & Lỗi Giao diện (Exceptions & Edge Cases)"
+      steps:
+        - "Xung đột dữ liệu / Đã bị sửa đổi bởi người khác (409 Conflict): Cảnh báo và tải lại."
+        - "Lỗi kết nối / Máy chủ (Network / 5xx error): Giữ nguyên dữ liệu đã nhập trên form, không bắt nhập lại."
+        - "Hết hạn phiên làm việc (Session timeout): Yêu cầu xác thực lại và bảo lưu tạm bản nháp."
+
+    - name: "Tác vụ Ngầm Kích hoạt từ Màn hình (Background / Async Logic - Tùy chọn)"
+      steps:
+        - "Nếu thao tác kích hoạt xử lý ngầm (gửi tin nhắn, tạo job đồng bộ): Hệ thống đẩy sự kiện vào hàng đợi."
+        - "Cập nhật trạng thái hiển thị trên màn hình thành 'Đang xử lý ngầm' (Processing) để người dùng theo dõi."
+
+  acceptanceCriteria:
+    - "[ ] Người dùng có quyền truy cập xem được toàn bộ thông tin hợp lệ."
+    - "[ ] Form chặn nộp khi thiếu các trường bắt buộc và thông báo lỗi rõ ràng."
+    - "[ ] Khi nộp thành công, dữ liệu được lưu đúng và chuyển trang mượt mà."
 
 specOrigin: requirement # requirement | legacy
 
@@ -39,188 +112,446 @@ spec:
     #   - path: /feature
     #     pageTestId: feature-page
     validationMessages:
-      required: This field is required
+      required: "Trường này là bắt buộc"
     list:
-      columns: []
-      # - key: status
-      #   title: Status
-      #   purpose: "Cho user thấy tài khoản còn hoạt động hay đã khóa"
-      #   widget: chip
-      #   color: "#common:status-chip"
-      #   sortable: false
-      #   render: custom
-      filters: []
-      # - name: keyword
-      #   label: Search
-      #   purpose: "Tìm nhanh bản ghi theo tên hoặc mã"
-      #   type: string
-      #   widget: search
-      #   placeholder: Search by name or code
+      columns:
+        - key: status
+          title: "Trạng thái"
+          meaning: "Tình trạng hoạt động của tài khoản trong hệ thống để quản lý quyền đăng nhập và giao dịch"
+          purpose: "Cho user thấy tài khoản còn hoạt động hay đã bị tạm khóa"
+          widget: chip
+          color: "#common:status-chip"
+          sortable: false
+          render: custom
+      filters:
+        - name: keyword
+          label: "Tìm kiếm"
+          meaning: "Từ khóa tra cứu nhanh để xác định đúng khách hàng hoặc mã giao dịch cụ thể"
+          purpose: "Tìm nhanh bản ghi theo tên hoặc mã định danh"
+          type: string
+          widget: search
+          placeholder: "Nhập tên hoặc mã để tìm..."
       rowActions: []
       bulkActions: []
       pagination:
         defaultPageSize: 20
         pageSizeOptions: [20, 50, 100]
       emptyState:
-        title: No data
-        message: No records found.
+        title: "Không có dữ liệu"
+        message: "Không tìm thấy bản ghi nào phù hợp với bộ lọc."
     form:
       layout:
         mode: single-column # single-column | two-column | custom
       sections: []
-      fields: []
-      # - key: name
-      #   label: Name
-      #   purpose: "Tên hiển thị trên hồ sơ"
-      #   type: string
-      #   widget: text
-      #   required: true
+      fields:
+        - key: name
+          label: "Tên hồ sơ"
+          meaning: "Tên danh xưng chính thức của khách hàng dùng để in trên chứng từ hợp đồng và xuất hóa đơn"
+          purpose: "Nhập tên hiển thị trên hồ sơ khách hàng"
+          type: string
+          widget: text
+          required: true
       submit:
-        label: Save
+        label: "Lưu thông tin"
       emptyState:
-        title: No form fields
-        message: This form has not been configured yet.
+        title: "Chưa cấu hình trường"
+        message: "Form này chưa được cấu hình các trường nhập liệu."
     detail:
       header:
         badges: []
       sections: []
       actions: []
       emptyState:
-        title: No detail sections
-        message: This detail page has not been configured yet.
+        title: "Chưa có thông tin"
+        message: "Trang chi tiết này chưa được thiết lập nội dung."
   acceptance: []
 
 # Dev-grill / portal:gen — /grill-dev MUST fill codegen.profile (codegenkit reads ir/design.yaml).
 # Empty profile = grill incomplete; codegenkit gen MUST fail.
 gen:
   codegen:
-    profile: "" # REQUIRED: auth | change-password | public | not-found | error | list | create | admin-crud
+    profile: "admin-crud" # REQUIRED: auth | change-password | public | not-found | error | list | create | admin-crud
     entity: ""
     module: ""
   tags: []
-    # list: "#gen:test-schema" "#gen:test-service"
-    # create: "#gen:test-validation"
-    # "#common:form-validation" "#common:i18n"
   ui:
     filters: []
     columns: []
     composition: null
     testIds: null
 
-# legacy: chỉ khi specOrigin: legacy và có evidence. Split bỏ stub rỗng.
-
 design:
   inherits: null
   shell:
     tag: "#shell: DataListPage" # AuthPage | AppShell
   patterns: []
-  # Chrome — điền theo từng page (không cố định login).
-  # Sidebar/breadcrumb: bật khi màn nằm trong app shell; full-bleed thì enabled: false.
   nav:
     sidebar:
       enabled: false
-      # position: left
-      # purpose: ""
-      # levels: []   # cây đa cấp: id, label, href, active, children[]
-    breadcrumb: []  # [{ label, href }]
+    breadcrumb: []
 
-  # Cây layout động — lồng sections[] tùy page. Không copy cứng 1 màn mẫu.
-  # LƯU Ý ĐẶC BIỆT VỀ ĐA NGÔN NGỮ (i18n):
-  # 1. Các thuộc tính hiển thị UI (như `label`, `value`, `copy.placeholder`, text của component lib): BẮT BUỘC dùng cho i18n (sẽ được map với file ngôn ngữ).
-  # 2. Các thuộc tính giải thích/cấu trúc (như `name`, `description`, `purpose`): Chỉ dùng cho BA/Dev, KHÔNG dùng để render UI, KHÔNG mang đi dịch.
-  # Tùy thuộc vào `kind` mà khai báo cho đúng bản chất, KHÔNG dùng `label` để mô tả một node ẩn (ví dụ: container).
-  # BA: name, description, purpose, copy, position, color, visual (width/height/max-*/scroll), interaction, validation (mặt UI)
-  # Tech: kind/widget, tags, extract, bind (field/hidden/apiRef), apiRefs, hidden, testId, states
-  # kind ví dụ: header | container | card | form | sidebar | toolbar | table | dialog | other | input | text
-  sections: []
-  
-  # Ví dụ 1: Nhóm cấu trúc (Không có text hiển thị UI -> Không i18n)
-  # - id: form_login_container
-  #   name: Login Form Container
-  #   kind: container
-  #   description: Container chứa toàn bộ form đăng nhập
-  #   purpose: Nhóm layout và css cho phần login
-  #   visual:
-  #     background: ""
-  #     width: ""
-  #     padding: ""
-  #   tags: []              # vd ["#needs-component: BlockName"]
-  #   sections: []
-  
-  # Ví dụ 2: Node text (Có text hiển thị UI -> Cần i18n)
-  # - id: title_login
-  #   name: Login Title
-  #   kind: text
-  #   value: "Đăng nhập hệ thống" # Text này sẽ được map i18n
-  #   visual: { color: "primary" }
-  
-  # Ví dụ 3: Component nhập liệu (Có placeholder/label -> Cần i18n)
-  # - id: user_name_field
-  #   name: Username Field
-  #   kind: input
-  #   description: Trường nhập username
-  #   purpose: User nhập tên đăng nhập
-  #   label: "Tên đăng nhập" # Sẽ i18n
-  #   copy: 
-  #     placeholder: "Nhập tên đăng nhập..." # Sẽ i18n
-  #   validation: { required: true }
-  #   bind: { field: username }
-  #   db:
-  #     schema: users
-  #     field: username
-  #     enumMapping:
-  #       "0": "Tài khoản bình thường"
-  #       "1": "Tài khoản bị khóa"
-  
-  # Ví dụ 4: Component tương tác (Có actions xử lý sự kiện)
-  # - id: btn_submit_login
-  #   name: Submit Login Button
-  #   kind: button
-  #   label: "Đăng nhập" # Sẽ i18n
-  #   purpose: Nút xác nhận đăng nhập
-  #   actions:
-  #     - click: "Nếu form validate ok thì call api login. Đang gọi API -> khóa nút và hiện spinner"
-  # - id: btn_forgot_password
-  #   name: Forgot Password Link
-  #   kind: button
-  #   label: "Quên mật khẩu?" # Sẽ i18n
-  #   actions:
-  #     - click: "Di chuyển sang page Quên mật khẩu"
+  # CÂY LAYOUT ĐỘNG — lồng sections[] tùy màn hình.
+  # THUỘC TÍNH ĐỘNG DÀNH CHO CÁC KHỐI UI & SHADCN PRIMITIVES:
+  # - primitive: Thẻ primitive của Shadcn UI (vd: #ui: Card, #ui: Form, #ui: Table, #ui: Dialog, #ui: Select, #ui: Badge, #ui: Sheet, #ui: Tabs)
+  # - visual: Cấu hình CSS/Tailwind (className), token màu (colorToken), font/typography, layout mode (layoutMode), kích thước
+  # - meaning: Ý NGHĨA NGHIỆP VỤ — Bản chất kinh doanh của trường/khối/nút trong thế giới thực
+  # - purpose: MỤC ĐÍCH THAO TÁC — Người dùng thao tác gì với control này trên UI
+  sections:
+    # LOẠI 1: KHỐI STATS BANNER / HEADER KPI CARD (#ui: Card, #ui: Badge)
+    - id: sec_kpi_banner
+      name: "Khối Thống Kê Tổng Quan"
+      kind: card
+      primitive: "#ui: Card"
+      meaning: "Cung cấp chỉ số hiệu suất tổng quan của tài khoản giúp nhân viên đưa ra quyết định xử lý nhanh"
+      purpose: "Hiển thị các thẻ KPI thống kê tổng số bản ghi và trạng thái"
+      visual:
+        colorToken: "#common:card-surface"
+        className: "grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-card border rounded-xl shadow-xs"
+        typography: "text-card-foreground"
+      dynamicProps:
+        layoutMode: "responsive-grid"
+        columns: 3
+      items:
+        - id: kpi_total_records
+          kind: badge
+          primitive: "#ui: Badge"
+          label: "Tổng hồ sơ"
+          meaning: "Số lượng bản ghi đang quản lý trong hệ thống"
+          purpose: "Theo dõi số lượng hồ sơ hiện có"
+          colorToken: "#common:primary"
+          visual:
+            className: "text-2xl font-bold tracking-tight text-primary"
+
+    # LOẠI 2: KHỐI FORM NHẬP LIỆU ĐỘNG (#ui: Form, #ui: Select, #ui: Input)
+    - id: sec_main_info
+      name: "Khối Thông Tin Nhập Liệu Hồ Sơ"
+      kind: form_grid
+      primitive: "#ui: Form"
+      meaning: "Gom nhóm các thuộc tính nhận diện cốt lõi của bản ghi phục vụ tra cứu và kiểm toán"
+      purpose: "Khu vực nhập liệu thông tin chính của hồ sơ"
+      visual:
+        className: "space-y-6 border p-6 rounded-xl bg-background shadow-xs"
+        layoutMode: "two-column"
+      dynamicProps:
+        responsiveGrid: "grid grid-cols-1 lg:grid-cols-2 gap-6"
+      sections:
+        # Ví dụ 2.1: Input field có Dynamic Validation 5 Tiers + Messages chi tiết
+        - id: fld_record_code
+          name: "Record Code Field"
+          kind: input
+          primitive: "#ui: Input"
+          label: "Mã hồ sơ"
+          meaning: "Mã định danh duy nhất của hồ sơ dùng để đối soát kế toán và tra cứu hợp đồng"
+          purpose: "Nhập mã định danh hồ sơ nghiệp vụ"
+          visual:
+            className: "w-full focus:ring-2 focus:ring-ring font-mono uppercase"
+          copy:
+            placeholder: "VD: REC-2026-001"
+            helper: "Từ 5-20 ký tự, gồm chữ in hoa, số và gạch ngang"
+          bind:
+            field: record_code
+          db:
+            schema: records
+            field: code
+          validation:
+            prototype: "slug_uppercase" # Built-in prototype preset
+            required: true
+            rules:
+              - type: "regex"
+                pattern: "^[A-Z0-9_-]{5,20}$"
+                message: "Mã hồ sơ chỉ được gồm chữ in hoa, chữ số và ký tự gạch (- _)"
+              - type: "length"
+                min: 5
+                max: 20
+                message: "Độ dài mã hồ sơ bắt buộc từ 5 đến 20 ký tự"
+            remoteCheck:
+              endpoint: "/api/v1/records/check-duplicate-code"
+              trigger: "onBlur" # onBlur | onSubmit
+              debounceMs: 400
+              params:
+                code: "{value}"
+                excludeId: "{current_record_id}"
+              message: "Mã hồ sơ này đã tồn tại trên hệ thống. Vui lòng chọn mã khác."
+          messages:
+            required: "Vui lòng nhập mã hồ sơ."
+
+        # Ví dụ 2.2: Input tên hồ sơ có sanitize & boundary
+        - id: fld_record_name
+          name: "Record Name Field"
+          kind: input
+          primitive: "#ui: Input"
+          label: "Tên hồ sơ"
+          meaning: "Tên định danh giao dịch của khách hàng dùng làm tiêu đề hiển thị trên mọi báo cáo"
+          purpose: "Nhập tên hồ sơ hiển thị"
+          visual:
+            className: "w-full focus:ring-2 focus:ring-ring"
+          copy:
+            placeholder: "Nhập tên đầy đủ..."
+            helper: "Tối thiểu 3 ký tự, tối đa 100 ký tự"
+          bind:
+            field: record_name
+          db:
+            schema: records
+            field: name
+          validation:
+            prototype: "text_clean"
+            required: true
+            rules:
+              - type: "length"
+                min: 3
+                max: 100
+                message: "Tên hồ sơ bắt buộc từ 3 đến 100 ký tự"
+          messages:
+            required: "Vui lòng nhập tên hồ sơ."
+
+        # Ví dụ 2.3: Component chọn có điều kiện động (Dropdown + States)
+        - id: fld_service_level
+          name: "Service Level Select"
+          kind: select
+          primitive: "#ui: Select"
+          label: "Cấp độ dịch vụ"
+          meaning: "Xác định gói dịch vụ để áp dụng chính sách giá, cam kết SLA và kích hoạt tự động gửi tin Zalo nếu là gói VIP"
+          purpose: "Chọn gói dịch vụ áp dụng cho hồ sơ"
+          visual:
+            className: "w-full border-input"
+          bind:
+            field: service_level
+          db:
+            schema: records
+            field: service_level
+            enumMapping:
+              "STANDARD": "Tiêu chuẩn"
+              "PREMIUM": "Cao cấp VIP"
+          validation:
+            prototype: "enum"
+            required: true
+          messages:
+            required: "Vui lòng chọn cấp độ dịch vụ."
+
+        # Ví dụ 2.4: Component hiển thị & validate có điều kiện chéo (Cross-field Dependency)
+        - id: fld_vip_request
+          name: "VIP Special Request"
+          kind: textarea
+          primitive: "#ui: Textarea"
+          label: "Yêu cầu đặc biệt cho gói VIP"
+          meaning: "Chi tiết yêu cầu cá nhân hóa bổ sung cho khách hàng phân khúc cao cấp"
+          purpose: "Nhập ghi chú yêu cầu riêng cho gói dịch vụ VIP"
+          visual:
+            className: "col-span-full border-muted bg-muted/20"
+          copy:
+            placeholder: "Nhập yêu cầu chi tiết..."
+          bind:
+            field: vip_request
+          states:
+            visibleWhen: "service_level == 'PREMIUM'"
+          validation:
+            conditionalRules:
+              - when: "service_level == 'PREMIUM'"
+                apply:
+                  required: true
+                  message: "Khi chọn gói Cao cấp VIP, vui lòng nêu rõ yêu cầu đặc biệt của khách hàng."
+            rules:
+              - type: "length"
+                max: 500
+                message: "Yêu cầu đặc biệt không được vượt quá 500 ký tự."
+          messages:
+            required: "Vui lòng nhập yêu cầu đặc biệt khi đăng ký gói VIP."
+            maxLength: "Yêu cầu đặc biệt không vượt quá 500 ký tự."
+
+    # LOẠI 3: KHỐI BẢNG DỮ LIỆU (#ui: Table, #ui: DropdownMenu, #ui: Pagination)
+    - id: sec_data_table
+      name: "Khối Bảng Dữ Liệu & Bộ Lọc"
+      kind: table
+      primitive: "#ui: Table"
+      meaning: "Hiển thị danh sách kết quả sau bộ lọc hỗ trợ sắp xếp và thao tác tác vụ theo từng dòng"
+      purpose: "Duyệt danh sách bản ghi và chọn dòng cần xử lý"
+      visual:
+        className: "w-full border rounded-lg overflow-hidden shadow-xs"
+        colorToken: "#common:table-border"
+      dynamicProps:
+        selectionMode: "single"
+        enablePagination: true
+
+    # LOẠI 4: KHỐI MODAL HOẶC DRAWER SHEET (#ui: Dialog / #ui: Sheet)
+    - id: sec_edit_modal
+      name: "Khối Modal Chỉnh Sửa Nhanh"
+      kind: modal_dialog
+      primitive: "#ui: Dialog"
+      meaning: "Cung cấp cửa sổ pop-up thao tác nhanh không cần rời khỏi màn hình chính"
+      purpose: "Hiển thị form cập nhật trạng thái hoặc duyệt hồ sơ"
+      visual:
+        width: "540px"
+        className: "sm:max-w-lg p-6 bg-popover rounded-xl shadow-lg border"
+      states:
+        visibleWhen: "isModalOpen == true"
+
+    # LOẠI 5: KHỐI GIAO DIỆN TÙY BIẾN MỚI NGOÀI BASE KIT (CUSTOM NOVEL WIDGET)
+    # BẮT BUỘC ĐẶC TẢ CHI TIẾT KÍCH THƯỚC, BẢNG MÀU, VÀ HIỆU ỨNG TƯƠNG TÁC
+    - id: sec_workflow_timeline
+      name: "Khối Tiến Trình Xử Lý Hồ Sơ (Custom Timeline)"
+      kind: custom
+      customWidgetType: "interactive-timeline"
+      meaning: "Hiển thị trục thời gian trực quan ghi nhận các mốc xét duyệt của hồ sơ qua từng bộ phận"
+      purpose: "Theo dõi tiến độ xử lý và xem chi tiết phản hồi từng bước duyệt"
+      
+      # Đặc tả kích thước & hình học (Geometry & Responsive Dimensions)
+      dimensions:
+        width: "100%"
+        minHeight: "180px"
+        maxHeight: "320px"
+        responsiveLayout:
+          desktop: "horizontal-stepper"
+          mobile: "vertical-accordion"
+          breakpoint: "768px"
+
+      # Bảng màu sắc & Bề mặt (Palette & Semantic Color Tokens)
+      palette:
+        backgroundToken: "#common:surface-muted"
+        borderToken: "#common:border-subtle"
+        accentToken: "#common:primary"
+        completedNodeColor: "#common:success-green"
+        pendingNodeColor: "#common:muted-gray"
+        activeNodeColor: "#common:warning-amber"
+        hoverStateColor: "rgba(var(--primary-rgb), 0.08)"
+
+      # Typography & Phông chữ
+      typography:
+        stepTitle: "font-semibold text-sm tracking-tight text-foreground"
+        stepDescription: "text-xs text-muted-foreground line-clamp-2"
+        timestamp: "font-mono text-[11px] text-muted-foreground/80"
+
+      # Trạng thái & Vi tương tác (Micro-Interactions)
+      interactions:
+        loadingSkeleton: "pulse-node-bar"
+        emptyStateText: "Chưa có tiến trình nào được ghi nhận cho hồ sơ này"
+        stepClickable: true
+        activeAnimation: "subtle-pulse"
 
   zones: []
-  # Fallback phẳng nếu chưa cần cây lồng. Ưu tiên sections[] khi có header/card/form.
   behavior:
     create: { enabled: true, surface: page }
     update: { enabled: true, surface: page }
     delete: { enabled: true, mode: confirm_dialog }
-  actions: []
-  # Gọi API chỉ khai trên action / item (không còn spec.api trên bundle).
-  # Mới: apiRefs (+ sau /api-spec sẽ có sibling api/<seq>/). Tái sử dụng: tags #reuse-api + reuseFrom.
-  # - id: submit_form
-  #   label: Save
-  #   purpose: "Lưu bản ghi và quay về danh sách"
-  #   variant: primary
-  #   position: form_footer
-  #   trigger: button_click
-  #   apiRefs: [feature.create]   # tech — unique API của màn này
-  #   tags: []                    # "#reuse-api" khi dùng 01 đã có
-  #   reuseFrom: null             # path …/01-backend-spec.yaml (khi #reuse-api)
-  #   onSuccess:
-  #     - Navigate to list page
-  #   onCommonError:
-  #     override: false
-  #     notes: "Inherit #ui-common:error-handler"
-  #   onSpecificError:
-  #     - condition: "422 Validation"
-  #       notes: "Show inline field errors"
-  #     - condition: "403 IDOR"
-  #       notes: "Redirect to safety page, show warning"
 
-  # Đa ngôn ngữ (i18n): Danh sách các bản dịch của màn hình (nếu có). Key là text mặc định, value là ngôn ngữ dịch.
+  # MA TRẬN TRẠNG THÁI GIAO DIỆN & PHÂN QUYỀN (UI STATE & PERMISSION MATRIX)
+  stateMatrix:
+    recordStatuses: ["DRAFT", "PENDING_APPROVAL", "APPROVED", "REJECTED"]
+    behaviors:
+      - status: "DRAFT"
+        fieldsState: "editable" # Tất cả input được phép nhập
+        visibleButtons: ["btn_save_draft", "btn_submit_record", "btn_cancel"]
+      - status: "PENDING_APPROVAL"
+        fieldsState: "readonly" # Khóa toàn bộ input form
+        visibleButtons: ["btn_cancel_request"]
+        rbacOverrides:
+          manager:
+            visibleButtons: ["btn_approve", "btn_reject"]
+      - status: "APPROVED"
+        fieldsState: "readonly"
+        visibleButtons: ["btn_print", "btn_export"] # Nút Lưu/Xóa biến mất hoàn toàn
+      - status: "REJECTED"
+        fieldsState: "editable"
+        visibleButtons: ["btn_resubmit", "btn_delete"]
+
+  # ĐẶC TẢ CHI TIẾT HÀNH ĐỘNG (ACTION FLOW SPECIFICATION — 6 KHỐI KỸ THUẬT)
+  actions:
+    - id: btn_save_record
+      label: "Lưu & Xác Nhận"
+      kind: button
+      variant: primary
+      position: form_footer
+      meaning: "Chính thức lưu trữ dữ liệu vào hệ thống, chuyển đổi trạng thái đơn sang 'Đã tạo' và kích hoạt Job gửi tin tự động"
+      purpose: "Thẩm định toàn bộ form và gửi dữ liệu lên máy chủ"
+      trigger: click
+
+      # 1. ĐIỀU KIỆN TIÊN QUYẾT (PRE-CONDITIONS)
+      preconditions:
+        uiState: "form.isValid == true"
+        recordState: "record.status in ['DRAFT', 'REJECTED']"
+        requiredPermissions: ["records.create", "records.edit"]
+        disabledReason: "Vui lòng điền đầy đủ các thông tin bắt buộc và sửa các trường bị báo lỗi trước khi lưu"
+
+      # 2. KIỂM SOÁT TƯƠNG TÁC (INTERACTION CONTROL)
+      interactionControl:
+        debounceMs: 500
+        preventDoubleSubmit: true # Khóa nút ngay khi click
+        loadingIndicator: "Đang lưu thông tin hồ sơ..."
+        confirmDialog:
+          required: false # Bật true nếu là hành động xóa/duyệt
+
+      # 3. BIẾN ĐỔI DỮ LIỆU ĐẦU VÀO (PAYLOAD TRANSFORMATION)
+      payloadTransformation:
+        trimStrings: true
+        sanitizeHtml: true
+        typeCasting:
+          record_code: "uppercase"
+          total_fee: "integer"
+
+      # 4. HỢP ĐỒNG THỰC THI (EXECUTION CONTRACT)
+      executionContract:
+        apiRef: "records.create"
+        method: POST
+        idempotencyKey: "Header: X-Idempotency-Key"
+        timeoutMs: 8000
+        concurrencyHandling:
+          strategy: "optimistic_locking"
+          onConflictStatus: 409
+          conflictResolution: "Thông báo bản ghi đã bị thay đổi bởi người khác; giữ nguyên dữ liệu form và load lại bản mới nhất"
+
+      # 5. MA TRẬN PHẢN HỒI KẾT QUẢ & NGOẠI LỆ (OUTCOMES & EDGE CASES MATRIX)
+      outcomes:
+        onSuccess:
+          toast:
+            type: success
+            message: "Lưu hồ sơ thành công! Mã: {record_code}"
+          navigation:
+            target: "W-ADM-DETAIL-01"
+            params:
+              id: "{response.data.id}"
+          backgroundTrigger:
+            event: "RecordCreated"
+            note: "Hệ thống ngầm sẽ kích hoạt Job xử lý thông báo nếu là gói PREMIUM"
+        onBusinessErrors:
+          - statusCode: 422
+            type: "ValidationFailure"
+            action: "Map lỗi chi tiết từ máy chủ vào chân từng trường tương ứng"
+          - statusCode: 409
+            type: "DuplicateRecord"
+            action: "Hiển thị cảnh báo: 'Hồ sơ với mã này đã tồn tại trong hệ thống!'"
+        onSecurityErrors:
+          - statusCode: 403
+            type: "Forbidden"
+            action: "Hiển thị Toast: 'Bạn không có quyền thực hiện thao tác này.'"
+          - statusCode: 401
+            type: "SessionExpired"
+            action: "Bảo lưu tạm dữ liệu form vào localStorage và mở Modal đăng nhập lại"
+        onSystemErrors:
+          - statusCode: 504
+            type: "GatewayTimeout"
+            action: "KHÔNG cho phép bấm submit lại ngay; hiển thị nút 'Kiểm tra trạng thái giao dịch' để tránh nhân đôi bản ghi"
+          - statusCode: "NETWORK_OFFLINE"
+            type: "ClientOffline"
+            action: "Hiển thị thông báo mất mạng; giữ nguyên dữ liệu đã nhập trên form"
+
+    - id: btn_cancel
+      label: "Hủy Bỏ"
+      kind: button
+      variant: outline
+      position: form_footer
+      meaning: "Từ bỏ các thông tin vừa điền và trở lại trang danh sách"
+      purpose: "Hủy thao tác tạo mới và quay lại trang trước"
+      trigger: click
+      preconditions:
+        uiState: "always_enabled"
+      interactionControl:
+        confirmDialog:
+          required: true
+          title: "Xác nhận hủy bỏ?"
+          message: "Các thông tin bạn vừa nhập sẽ không được lưu. Bạn có chắc chắn muốn quay lại trang danh sách?"
+      navigation:
+        target: "W-ADM-LIST-01"
+
   i18n: {}
-  #  "login":
-  #    vi: "Đăng nhập"
-  #    en: "Login"
 
 review:
   summary: ""

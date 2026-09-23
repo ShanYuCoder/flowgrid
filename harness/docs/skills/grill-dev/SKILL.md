@@ -5,37 +5,46 @@ description: EXCLUSIVE /grill-dev — ONLY for engineering codegen tags and bund
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - For `#missing_info` / open gaps: ArtifactGraph re-check → micro-scope → propose → **STOP for member confirm** before overwriting settled SSOT.
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform a shallow check. Verify against the **Verification Checklist** with evidence.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Read entire `ir/design.yaml`. If `ir/` is missing, read entire `*.bundle.yaml`. NEVER filter partial keys.
+> **[MANDATORY]** Expect `grillStatus.bqaOpen: done` (or `bqaFacts`) before starting.
 
-# /grill-dev — Dev / codegen grill
+# /grill-dev — Dev / Codegen Grill
 
-Ambiguous codegen/API facts: **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt", then write **`bundle.gen`** and **`api/<seq>/01-backend-spec.yaml`**. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (đóng **`/qa-resolve`**). Empty `codegen.profile` / required `entity`/`module` / 01 endpoint `action` still block `grillStatus.dev: done`.
+**Scope:** Author `bundle.gen` + `api/<seq>/01-backend-spec.yaml` only. No prose, no BQA reports, no framework code snippets.
 
-**Hard gate (codegenkit input):** Do **not** set `grillStatus.dev: done` until `bundle.gen` has:
+**Doc hub:** `platform/toolchain/PORTAL-CODEGEN.md`
+**Extracts:** `extractBundle: dev-grill` → `codegen/readiness.md`, `platform-mark-detect.md`
 
-```yaml
-gen:
-  codegen:
-    profile: "auth"   # login/forgot/reset. change-password | public | not-found | error | list | create | admin-crud
-    entity: ""
-    module: ""
-  tags:
-    - "#gen:test-schema"
-    - "#gen:test-service"
-  ui:
-    filters: []
-    columns: []
-    composition: null
-    testIds: null
-```
-Missing `gen.codegen.profile` **or** (for list/create/admin-crud/auth/change-password/public) empty `entity`/`module` **or** sibling `01` endpoints without `action` + path suffix → **You MUST proactively brainstorm logical suggestions based on the business context (e.g. if it's a login page, suggest module: auth, entity: user). Use the `ask_question` tool to present a wizard form — từng question một, chờ Member trả lời xong mới chuyển question tiếp.** Each question MUST have **≥3 options** bao gồm: (1) Recommended suggestion(s), (2) Other (nhập text tự do), và (3) "Log as Tech Debt (Pending)". If the member selects the "Log as Tech Debt" option, ONLY THEN MUST you generate a `qa/open/QA-<bundle.id>-NNNN.yaml` tech debt file and keep `grillStatus.dev: pending`. Split **fails** if you mark `done` without those fields. Do **not** author `bundle.spec.api`.
-**Profile → layout (do not use `create` for auth):**
+---
+
+## Rule: Load Policy
+
+| Read (whole file) | Write | NEVER Read |
+|---|---|---|
+| **`ir/design.yaml`** (layout, ui, projected api, entities, codegen, tags) | `bundle.gen` on `*.bundle.yaml` → `pnpm spec:split` | `ir/spec.yaml` prose, generated `*.md` |
+| **`api/<seq>/01-backend-spec.yaml`** (endpoint action/path) | endpoint `action` / path on **01** only — NOT `bundle.spec.api` | |
+
+---
+
+## Rule: Missing Information / Hard Gate & Workload Threshold (Law 2)
+
+- **[MANDATORY]** If `gen.codegen.profile` is missing, OR `entity`/`module` is empty for list/create/admin-crud/auth/change-password, OR sibling `01` endpoints lack `action` + path suffix:
+  → **Proactively brainstorm** logical suggestions from business context in Vietnamese (e.g. login page → suggest `module: auth, entity: user`).
+  - **Small Scope (≤5 questions):** Trigger `AskQuestion` wizard — **one question at a time**, ≥3 options: (1) `(Recommended)`, (2) `Other` (free text), (3) `Log as Tech Debt (Pending)`. Wait for member answer before showing next question.
+  - **Large Scope (≥10 gaps/endpoints):** **[MANDATORY HARD STOP IN CHAT]**. Do not spam single questions in chat. Generate an implementation plan / Plan Mode document partitioned into sequential Phases (3–5 endpoints/gaps per phase) with disk offloading at boundaries.
+  - ✅ If member selects "Log as Tech Debt" → create `qa/open/QA-<bundle.id>-NNNN.yaml`; maintain `grillStatus.dev: pending`.
+  - ❌ Do NOT set `grillStatus.dev: done` until profile + entity/module + endpoint actions are all verified and confirmed.
+
+---
+
+## Rule: Codegen Profile Mapping
+
+- **[MANDATORY]** Use correct profile per page type:
+
 | profile | Pages | Next.js output |
-|---------|--------|----------------|
+|---|---|---|
 | `auth` | login, forgot, reset | `src/app/(auth)/…` — no admin chrome |
 | `change-password` | change password (logged-in) | `src/app/(dashboard)/…` |
 | `public` | marketing / other public | `src/app/(public)/…` |
@@ -43,101 +52,101 @@ Missing `gen.codegen.profile` **or** (for list/create/admin-crud/auth/change-pas
 | `error` | 503 / error | `src/app/error.tsx` |
 | `list` / `create` / `admin-crud` | admin CRUD | `src/app/(dashboard)/…` |
 
-Lookup **design.registry** / existing `#ui:` before `#needs-component`. Unknown widget → `#needs-ui:` or ask the member — never invent a shadcn name. Codegenkit dry-run fails unknown `#ui:`; do not patch that from this skill.
+- **[STRICTLY FORBIDDEN]** Never use `create` for auth pages. `auth` covers login/forgot/reset.
 
-After `pnpm spec:split`, **FE and Testkit** read the **entire** `ir/design.yaml` (its `api` is **projected** from 01). **Author and BE** use `…/api/<seq>/01-backend-spec.yaml` only. Do not send consumers `ir/spec.yaml` prose.
+---
 
-Doc hub: `platform/toolchain/PORTAL-CODEGEN.md`
+## Rule: bundle.gen Required Fields
 
-**Extracts:** `extractBundle: dev-grill` → `codegen/readiness.md`, `platform-mark-detect.md`
+- **[MANDATORY]** `bundle.gen` MUST contain:
+  ```yaml
+  gen:
+    codegen:
+      profile: "auth"   # or list | create | admin-crud | public | not-found | error | change-password
+      entity: ""
+      module: ""
+    tags:
+      - "#gen:test-schema"
+      - "#gen:test-service"
+    ui:
+      filters: []
+      columns: []
+      composition: null
+      testIds: null
+  ```
+- **[MANDATORY]** Tags by profile: `list` → `#gen:test-schema` + `#gen:test-service`; `create` → `#gen:test-validation`.
 
-## Target / ID Resolution Rule
+---
 
-- User prompt MAY specify a screen ID, function ID, or short slug (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`, `login`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve target path under `surfaces/...`.
-- Do NOT demand full surface/module filesystem paths from the user.
+## Rule: UI Component & Registry
 
-## Load policy
+- **[MANDATORY]** Before tagging `#needs-component`, match widget against `design.registry` and existing `#ui:` tags.
+  - Shadcn primitive → `#ui: <Primitive>` (FE installs via `shadcn add`).
+  - Unknown widget → `#needs-ui:` or prompt member. Never invent an arbitrary shadcn component name.
+  - ≥2 **domain** structural blocks → `#needs-component: MoBlockName`.
+  - **[STRICTLY FORBIDDEN]** Do NOT tag shadcn primitives (`Dialog`, `Button`, `Table`) as `#needs-component`.
+- **[MANDATORY]** Pages with ≥3 levels of nested UI (Page → Tab → Card → Sub-table) → suggest `#use-store` (Pinia/Zustand).
+- **[MANDATORY]** Forms MUST be extracted as independent SPA components. `ui.form` must be properly defined; do NOT merge form layout into page shell.
 
-**Read the entire `ir/design.yaml`** (layout, ui, projected api, entities, codegen, tags). For contracts, Read sibling **`api/<seq>/01-backend-spec.yaml`**. Do **not** filter keys from `*.bundle.yaml`.
+---
 
-| Read (whole file) | Write | Do not Read |
-|-------------------|-------|-------------|
-| **`ir/design.yaml`** | `bundle.gen` on **`*.bundle.yaml`**, then `pnpm spec:split` | `ir/spec.yaml` prose, generated `*.md` |
-| **`…/api/<seq>/01-backend-spec.yaml`** | endpoint `action` / path on **01** (not `bundle.spec.api`) | |
+## Rule: Hashtag & Error Verification
 
-If `ir/` is missing, Read the **entire** `*.bundle.yaml` once (still no `spec.api` authoring).
+- **[MANDATORY]** Verify and apply these tags from `ir/design.yaml` evidence:
+  - Domain: `#call-external`, `#cross-service`, `#cross-entity-service`, `#derived-data`, `#tech-debt:*`
+  - Errors: `#err:validation`, `#err:idor-violation`, `#err:not-found`, `#err:permission-denied`
+  - Code-size: `#split-hook:columns` (>8 cols), `#split-hook:filters` (>3 filters), `#split-hook:export`, `#split-hook:form-sections` (>6 fields)
 
-Extracts: `codegen/*`, `legacy/legacy-api-migration.md`, `platform-mark-detect.md`. Not UX copy debates.
+---
 
-## Workflow (Technical & Engineering Only — No BQA Business Questions)
+## Rule: API Reuse & Explicit Suffix
 
-1. Expect `grillStatus.bqaOpen: done` (or `bqaFacts` for requirement-only).
-2. **Technical Review Only:** Ensure technical architecture and API contracts align strictly with the `summary.business_goals` and `user_journey` (Do NOT debate BQA business rules, but ensure dev output fulfills the business purpose). Focus strictly on Database tables, data types, API contracts, routing paths, hidden fields, composables, and codegen tags. Đảm bảo các `Edge Cases` và `Validations` ở tầng business được map đầy đủ với mã lỗi HTTP (`#err:*`).
-3. Derive from the **entire** `ir/design.yaml` → write **`bundle.gen`** on `*.bundle.yaml`, then `pnpm spec:split`:
-   - `codegen`, `tags`, `ui.filters`, `ui.columns`, `ui.composition`, `ui.testIds`
-   - **01** `api.endpoints[].action` (then split projects onto `ir/design.yaml`)
-   - **Component & HBS Template Check:** Verify if required UI components exist or if Handlebars (`.hbs`) codegen templates are available for rendering. Mark missing ones with `#needs-component` / `#needs-ui`. 
-     - **UI registry first:** Before `#needs-component`, match the widget against `design.registry` and existing `#ui:` tags. Primitive → `#ui:`. Unknown → `#needs-ui:` or ask; never fake a shadcn component name.
-     - **Proactive UI Splitting:** ≥2 **domain** blocks → `#needs-component: MoBlockName`. Shadcn primitives → `#ui:` only (FE [shadcn skill](https://ui.shadcn.com/docs/skills) + `shadcn add`). Do not `#needs-component: Dialog`.
-     - **Deeply Nested Structure (Global Store):** If the screen contains deeply nested UI blocks ($\ge 3$ levels deep, e.g., Page -> Tab -> Card -> Sub-table), you MUST suggest `#use-store` to prevent prop-drilling. Codegenkit will automatically generate a Pinia (Nuxt) or Zustand (Next.js) store for state management.
-     - **Absolute Rule for Forms:** Whenever a form is present (Create, Edit, Modal, etc.), it MUST be extracted as an independent SPA component. Ensure the spec properly defines `ui.form` and do NOT merge form layout into the page shell.
-   - **Check Common Pattern Tags (`#pattern`):** `#pattern` must map to a bundle found by walking up `common/yaml/` (cluster → module → surface → global). Do not require only surface-level common.
-   - **Check API Reuse (`#reuse-api`):** Search `common/yaml/` (LCA) or sibling `…/api/<seq>/`. If the action/item calls an existing 01, tag `#reuse-api` and set `reuseFrom` on that **page action/item** (not a `spec.api` block). `/api-spec` then skips a new trio.
-   - **Explicit Action Suffixes:** Ensure endpoints follow explicit naming (`/create`, `/{id}/update`, `/{id}/duplicate`, `/{id}/delete`, `/{id}/detail`). No ambiguous RESTful paths.
-   - **Hashtag & Error Matrix Verification:** Verify and apply domain/engineering hashtags: `#call-external`, `#cross-service`, `#cross-entity-service`, `#derived-data`, `#tech-debt:*`, `#err:*` (`#err:validation`, `#err:idor-violation`, `#err:not-found`, `#err:permission-denied`), and code-size compliance tags (`#split-hook:columns`, `#split-hook:filters`, `#split-hook:export`, `#split-hook:form-sections`).
-4. Keep `#needs-component`, `#manual-composable`, `#skip-codegen`, `#wire-only`, `#phase-api`.
-5. List: `#gen:test-schema`, `#gen:test-service` · Create: `#gen:test-validation`
-6. **Common candidates** — scan columns, toolbar, filters, composables:
-   - Prefer `artifactgraph_grill_check` / `artifactgraph_analyze` on `ir/design.yaml` when MCP wired
-   - Mỗi `render: custom` → `#needs-component: cell-{key}:MoXxx` **hoặc** Mo* trong design registry
-   - Widget lạ → `lookupAlias()` → `#ui:` / `#needs-ui:`
-   - Logic lặp (export, auth) → hỏi member `#common:` / `#needs-common:` (`platform-mark-detect.md`)
-   - In bảng **Common candidates** (Vietnamese) — member chọn A/B/C; `artifactgraph_remember` when available
-7. Optional `marks[]` on spec for confirmed B choices
-8. Set `grillStatus.dev: done` only if profile + entity/module (list/create/admin-crud) + endpoint actions are set.
-9. **Recommendation gate:** if ArtifactGraph is available, call
-   `artifactgraph_allowlist_check(commandKey=genDry)` then
-   `artifactgraph_recommend_command`. Do **not** execute gen in docs hub.
-10. `docskit_bundle_split` if edited bundle; user runs `docs_render`.
-11. Handoff the spec ID/path + recommendation to FE Codegenkit. Missing
-    Codegenkit means “pending FE dry-run”, not a docs failure.
+- **[MANDATORY]** Scan `common/yaml/` (LCA) + sibling `…/api/<seq>/` for existing `01` files. If found → tag `#reuse-api` + `reuseFrom` on page action/item; skip new trio.
+- **[MANDATORY]** All endpoint paths MUST use explicit suffixes: `/create`, `/{id}/update`, `/{id}/duplicate`, `/{id}/delete`, `/{id}/detail`.
 
-## Accelerators (optional)
+---
 
-```text
-if ArtifactGraph available: analyze/grill/tag hints + recommend genDry
-else: model review from scoped bundle/design/legacy evidence (model fallback)
+## Rule: Common Candidates Review
 
-if Docskit available: resolve CMP/CTR IDs
-else: repository path conventions (deterministic fallback)
-```
+- **[MANDATORY]** After scanning columns/toolbar/filters/composables, present a **Common Candidates** summary table (in Vietnamese) to member. Provide selectable options (A/B/C). Record confirmed common promotions via `artifactgraph_remember` (when available).
+- `render: custom` → `#needs-component: cell-{key}:MoXxx` or matching Mo* in design registry.
+- Repeating logic (export, auth) → ask for `#common:` / `#needs-common:`.
 
-Missing optionals never block this docs-side grill. After the existing fallback
-completes, emit exactly one `docskit.missing-optional` event per `runId` +
-optional against
-`.cursor/schemas/docskit/missing-optional-event.schema.json`. Deduplicate
-retries and report only actual `fileReads` / `contextBytes`.
+---
 
-## Out of scope
+## Rule: Done Gate
 
-- **NO PROSE / NO BQA REPORTS:** Do NOT output Markdown reports, BQA 3-Pillars reports, or framework-specific code snippets (FastAPI, Pydantic, Axios, i18n).
-- UX prose, acceptance rewrite, implement UI, full E2E.
+- **[MANDATORY]** Set `grillStatus.dev: done` ONLY when ALL are satisfied:
+  1. `gen.codegen.profile` is set (double-quoted string).
+  2. `entity` + `module` are non-empty (for list/create/admin-crud/auth/change-password/public).
+  3. Sibling `01` endpoint `action` + path suffix are explicitly set.
+- **[MANDATORY]** Run `docskit_bundle_split` after editing bundle; user runs `docs_render`.
+- **[MANDATORY]** If ArtifactGraph is available: call `artifactgraph_allowlist_check(commandKey=genDry)` then `artifactgraph_recommend_command`. Do NOT execute code generation in docs hub.
+
+---
+
+## Out of Scope
+
+- **[STRICTLY FORBIDDEN]** No BQA 3-Pillars reports, no framework code (FastAPI, Pydantic, Axios, i18n), no UX prose, no full E2E, no `portal:gen` execution.
+
+---
 
 ## Handoff
 
 - FE Codegenkit dry pass → `/prototype`
 - BQA↔Dev conflict → `/grill-docs`
 - Legacy fact gap → `/update-spec-legacy`
-- Member chose promote common → `/platform-mark` same session or before `/prototype`
+- Confirmed common promote → `/platform-mark` (same session or before `/prototype`)
 
-## Verification Checklist (Evidence Required)
-- [ ] **Codegen profile:** `bundle.gen.codegen.profile` quoted. Login/forgot/reset = **`auth`** (never `create`). Change password = **`change-password`**. 404 = **`not-found`**. 503 = **`error`**. Other public = **`public`**.
-- [ ] **gen.ui derived:** `filters` / `columns` / `composition` / `testIds` present under `bundle.gen.ui` (empty arrays OK if inventory is empty — then flag `/spec` gap).
-- [ ] **Tags:** List profile tags present (`#gen:test-schema` + `#gen:test-service` for list; `#gen:test-validation` for create).
-- [ ] **Target Bundle Updated:** Exact path of updated `*.bundle.yaml`.
-- [ ] **Status Updated:** `grillStatus.dev: done` **only if** codegen.profile, entity/module (when required), and **01** endpoint actions are set. Did **not** write `bundle.spec.api`.
-- [ ] **Split Command:** `docskit split` / `pnpm docs:split` with zero errors.
-- **DO NOT output fake checklists or unrelated framework reports.**
+---
 
+## Verification Checklist
 
+- [ ] `grillStatus.bqaOpen: done` confirmed before starting.
+- [ ] `bundle.gen.codegen.profile` set with correct profile per page type.
+- [ ] `gen.ui`: `filters`, `columns`, `composition`, `testIds` all present (empty arrays OK).
+- [ ] Profile-specific gen tags applied (`#gen:test-schema`, `#gen:test-service`, `#gen:test-validation`).
+- [ ] `#err:*` tags applied for each endpoint's nature (IDOR on `{id}`, validation on POST/PUT).
+- [ ] UI components: `#ui:` for primitives, `#needs-component:` for domain Mo* blocks only.
+- [ ] `grillStatus.dev: done` set only with profile + entity/module + endpoint actions confirmed.
+- [ ] Bundle split run with zero errors; no `bundle.spec.api` authored.

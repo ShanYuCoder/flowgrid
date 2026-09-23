@@ -5,43 +5,54 @@ disable-model-invocation: true
 extractBundle: architecture-core
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Path SSOT: `surfaces/<surface>/CMP-*/` (no `modules/` segment).
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform shallow checks. Verify against the **Verification Checklist** with evidence.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Path SSOT: `surfaces/<surface>/CMP-*/` — NO `modules/` segment.
 
-# /module
+# /module — Business Module (CMP-*)
 
 **Target Paths:**
-- Thư mục Module: `surfaces/[Surface]/[CMP-ID]/`
-- File tài liệu chính: `surfaces/[Surface]/[CMP-ID]/[CMP-ID].md`
+- Module folder: `surfaces/[Surface]/[CMP-ID]/`
+- Main doc: `surfaces/[Surface]/[CMP-ID]/[CMP-ID].md`
 
-**Guidelines:** Modules can contain `common/` for **module-wide** share only. Cluster-only share goes under `…/<NN>/common/`. See `.cursor/extracts/common-scope.md`.
+---
 
-## Target / ID Resolution Rule
+## Rule: ID Resolution
 
-- User prompt MAY specify a CMP ID or Module name (e.g. `CMP-ADM-000`, `CMP-123`).
-- **Numeric Hierarchical IDs:** Cấu trúc thư mục con (chứa các function/sub-module) BẮT BUỘC phải dùng ID phân cấp thuần số (ví dụ: `01/01/02/`). KHÔNG ĐƯỢC chứa tên chữ (textual slug) trong đường dẫn thư mục con của module.
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve target surface and module folder under `surfaces/...`.
-- Do NOT demand full surface filesystem paths from the user if a CMP ID is given.
+- **[MANDATORY]** When a CMP ID or module name is provided → use `docskit_route` or glob to resolve to `surfaces/[Surface]/[CMP-ID]/`. Do NOT demand the full path from the user.
+- **[MANDATORY]** Sub-folder IDs (function/sub-module) MUST use pure numeric hierarchical segments (e.g. `01/01/02/`). NO textual slugs in sub-folder path segments.
+- VitePress/publish menu uses **Document Code** (e.g. `SPEC-PORTAL-AUTH-00`) as menu text, not the H1 heading.
 
-## Workflow / Luồng thực thi
-1. Nếu gọi kèm ID/Tên module (vd: `/module CMP-ADM-000` hoặc `/module "Customer App" CMP-123`):
-   - Sử dụng `docskit_route` / glob search để tìm vị trí `surfaces/[Tên Surface]/[CMP-ID]`.
-   - Tiến hành tạo hoặc cập nhật file tài liệu chính tại `surfaces/[Tên Surface]/[CMP-ID]/[CMP-ID].md`. VitePress/publish dùng **Mã tài liệu** (vd `SPEC-PORTAL-AUTH-00`) làm text menu, không dùng H1 dài.
-2. Nếu gọi kèm `common` (vd: `/module CMP-123 common`):
-   - Default path: `surfaces/[Surface]/[CMP-ID]/common/` (`patterns/`, `yaml/`, `processes/`).
-   - If the user names a cluster (`02`, draft `2-*`): `…/[CMP-ID]/02/common/` (or deeper `02/01/common/` if they named that prefix).
-   - Do **not** create `surfaces/[Surface]/common` from `/module`.
+---
 
-## Modifiers (If /legacy is used)
-Khi gọi kèm `/legacy` (vd: `/legacy /module`):
-- Tham chiếu source từ `legacy-repos.local.json`.
-- Khảo cổ: phân tích subsystem/component cũ và map sang cấu trúc Modules (`CMP-*`) mới, ghi nhận vào `surfaces/[Tên Surface]/[CMP-ID]/legacy-module.md`.
+## Rule: Common Scope for `/module … common`
 
-## Verification Checklist (Evidence Required)
-- [ ] **Target Resolved:** Resolved CMP ID to `surfaces/[Surface]/[CMP-ID]/`.
-- [ ] **Main Module File:** Created or updated `[CMP-ID].md` inside module directory.
-- **DO NOT output fake checklists, i18n tables, or framework prose.**
+- **[MANDATORY]** When called with `common` modifier:
+  - Default: `surfaces/[Surface]/[CMP-ID]/common/` (`patterns/`, `yaml/`, `processes/`).
+  - If user names a cluster (e.g. `02`, draft `2-*`) → `…/[CMP-ID]/02/common/` (or deeper if sub-prefix specified).
+  - **[STRICTLY FORBIDDEN]** Do NOT create `surfaces/[Surface]/common` from `/module` — that scope requires `/surfaces`.
 
+---
+
+## Rule: Common Scope by Breadth
+
+- Module-wide share only → `CMP-*/common/`.
+- Cluster-only share → `CMP-*/NN/common/`.
+- Do NOT create a wider common scope than necessary.
+- Refer to `.cursor/extracts/common-scope.md` for LCA resolution.
+
+---
+
+## Modifier: `/legacy`
+
+- **[MANDATORY]** If `adoption-inventory.md` is missing at workspace root → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** If file exists: look up CMP ID → get legacy file path → write `surfaces/[Surface]/[CMP-ID]/legacy-module.md`.
+- **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield commands.
+
+---
+
+## Verification Checklist
+
+- [ ] CMP ID resolved to `surfaces/[Surface]/[CMP-ID]/`.
+- [ ] Main module doc `[CMP-ID].md` created or updated.
+- [ ] No textual slugs in numeric sub-folder paths.

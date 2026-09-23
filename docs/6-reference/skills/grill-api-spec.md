@@ -14,7 +14,7 @@
 ## Output (Kết quả mong đợi)
 - File `01-backend-spec.yaml` được vá/sửa đổi nếu phát hiện sai sót.
 - Bổ sung các thẻ gencode (`codegen.profile`, `entity`, `module`, `#gen:*`) vào `01-backend-spec.yaml`.
-- Chạy qua các cổng kiểm định CLI: `docskit api:check`, `openapi:gen` và `openapi:render`.
+- Chạy qua các cổng kiểm định CLI: `forgekit openapi_gen` và `forgekit openapi_render`.
 
 ## Description / Ý nghĩa
 - Kỹ năng **kiểm toán (Audit)** độc quyền cho Technical Backend.

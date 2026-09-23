@@ -12,6 +12,7 @@ export const BUNDLE_META_KEYS = [
   'status',
   'owner',
   'summary',
+  'userStories',
   'specOrigin',
   'grillStatus'
 ]

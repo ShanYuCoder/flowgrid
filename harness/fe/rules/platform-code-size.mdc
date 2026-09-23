@@ -18,11 +18,14 @@ requirements — they are temporary and will be removed when wiring real APIs.
 
 ## Proactive Component Splitting
 
-Không chờ đến khi file chạm mốc 200 dòng. Việc tách component cần được quyết định ngay từ lúc duyệt Spec:
+Do not wait until a file reaches 200 lines. Proactive component splitting MUST be decided during Spec review:
 
-- **Nếu Page chỉ có 1 block chính** (vd: 1 Table list): Dùng template chuẩn của page, không tách.
-- **Nếu Page có từ 2 blocks trở lên** (vd: 1 Card + 1 Tab, hoặc 2 Tables): Sinh riêng component cho mỗi block, Page chỉ đóng vai trò layout (ghép các block lại). Gắn tag `#needs-component: TênWidget` cho từng block.
-- **Quy tắc tuyệt đối cho Form**: Bất cứ khi nào Spec xuất hiện một **Form** (không phân biệt là trang Create, Edit, hay một form nhỏ nằm trong Modal/Tab), hệ thống bám chặt rule của SPA: Tự động tách thành một Component độc lập hoàn toàn (Component UI, Hook logic, Zod Schema, và Service). Component này có thể "vác đi đâu cũng dùng được full đủ". File Page chỉ đóng vai trò host.
+- **Single Main Block** (e.g. 1 Table list): Use the standard page template without splitting.
+- **Multiple Blocks (≥2 blocks)** (e.g. 1 Card + 1 Tab, or 2 Tables): Scaffold a separate component for each block; the Page file acts solely as an orchestrating layout. Tag each block with `#needs-component: WidgetName`.
+- **Form Component Interlock**: Whenever a **Form** appears in the Spec (whether on a dedicated Create/Edit page or nested inside a Modal/Tab):
+  - **[MANDATORY]** Extract the Form into a fully self-contained component (UI component, logic hook/composable, Zod schema, and Service client).
+  - The component must be fully portable and reusable across contexts.
+  - The Page file acts strictly as a host container.
 
 Split in the same PR when exceeded line limits.
 

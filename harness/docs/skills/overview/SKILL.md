@@ -5,28 +5,38 @@ disable-model-invocation: true
 extractBundle: architecture-core
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform a shallow check. Verify your results against the **Verification Checklist** at the end of this skill before completing.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-# /overview
-**Target Paths:** `overview/operational-areas/[Admin operations | Workforce operations | ...]`
-**Guidelines:** Focus on personas, operational areas, and high-level system purpose.
-- **Business Spec Boundary:** Overview MUST remain a pure business document written in user language. DO NOT include technical system details (such as database schemas, cloud configurations, routing internals). If mentioning a 3rd party system, use its representative business name (e.g., "Payment Gateway") rather than technical specs.
+# /overview — Operational Areas Overview
 
-## Workflow / Luồng thực thi
-1. Kiểm tra xem thư mục `overview` đã tồn tại chưa. Nếu chưa, tạo mới.
-2. Nếu gọi kèm `common` (vd: `/overview common`):
-   - Kiểm tra xem `overview/common` đã có chưa.
-   - Nếu có, tiến hành cập nhật. Nếu chưa, tạo mới thư mục/file tương ứng rồi mới cập nhật.
+**Target Paths:** `overview/operational-areas/[Admin operations | Workforce operations | …]`
 
-## Modifiers (If /legacy is used)
-Khi gọi kèm `/legacy` (vd: `/legacy /overview`):
-- Tham chiếu source từ `legacy-repos.local.json`.
-- Nhiệm vụ là "khảo cổ": map các actor/persona và hệ thống con cũ thành Operational Areas tương ứng, ghi nhận vào cùng thư mục đang thao tác nhưng tên file thêm tiền tố `legacy-` ở đầu (vd: `overview/legacy-overview.md`).
+---
+
+## Rule: Content Boundary
+
+- **[MANDATORY]** Overview MUST be a pure business document written in user domain language: personas, operational areas, high-level system purpose.
+- **[STRICTLY FORBIDDEN]** Do NOT include technical details (database schemas, cloud infrastructure configurations, internal routing mechanisms).
+- **[MANDATORY]** When mentioning 3rd-party systems, use business names only (e.g. "Payment Gateway"), not technical specifications or protocols.
+
+---
+
+## Rule: `common` Modifier
+
+- **[MANDATORY]** When called with `common` (e.g. `/overview common`) → check if `overview/common` exists; create it if not present.
+
+---
+
+## Modifier: `/legacy`
+
+- **[MANDATORY]** Reference source mappings from `legacy-repos.local.json`.
+- **[MANDATORY]** Map legacy actors/personas and subsystems into Operational Areas. Write output with `legacy-` prefix (e.g. `overview/legacy-overview.md`).
+
+---
 
 ## Verification Checklist
-- [ ] Strictly verified presence/creation of `overview` directory structure.
-- [ ] Handled `common` modifier if passed.
-- [ ] Handled `/legacy` modifier by referencing `legacy-repos.local.json` and prepending `legacy-` to output filenames if applicable.
 
+- [ ] `overview` directory structure verified/created.
+- [ ] Content uses business language only — free of technical architecture details.
+- [ ] Handled `common` modifier properly if passed.

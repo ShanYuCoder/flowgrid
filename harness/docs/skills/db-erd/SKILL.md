@@ -4,16 +4,26 @@ description: /db-erd — Models shared business data and database ERD (entities,
 disable-model-invocation: true
 extractBundle: architecture-core
 ---
-# /db-erd
-**Target Paths:** `<LCA>/common/db-erd.md` — same LCA as `.cursor/extracts/common-scope.md`.
-**Guidelines:** Use Mermaid `erDiagram`. Start from business entities and data ownership, not from a raw repo schema dump. VitePress/publish menu label is **`db-erd`** (not the H1).
 
-## Data meaning
-- Model shared entities, relationships, cardinality, and ownership.
-- Keep common/shared data in the common scope when it is reused by multiple surfaces or modules.
-- Do not use the skill as a per-repo ORM/schema export unless the repo boundary is the actual data boundary.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-## Modifiers (If /legacy is used)
-Khi gọi kèm `/legacy` (vd: `/legacy /db-erd`):
-- Tham chiếu source từ `legacy-repos.local.json`.
-- Khảo cổ: ánh xạ schema cũ sang business data model / entity ownership tương ứng.
+# /db-erd — Business Data Model (ERD)
+
+**Target Path:** `<LCA>/common/db-erd.md` — LCA resolved from `.cursor/extracts/common-scope.md`.
+VitePress/publish menu label: **`db-erd`** (not the H1 heading).
+
+---
+
+## Rule: Modeling Approach
+
+- **[MANDATORY]** Use Mermaid `erDiagram`. Start from business entities and domain data ownership — NOT from a raw repository schema dump.
+- **[MANDATORY]** Place shared entities in the common scope when reused by multiple surfaces or modules.
+- **[STRICTLY FORBIDDEN]** Do NOT use this skill as a per-repository ORM/schema export unless the repository boundary strictly represents the actual data boundary.
+
+---
+
+## Modifier: `/legacy`
+
+- **[MANDATORY]** Reference source mappings from `legacy-repos.local.json`.
+- **[MANDATORY]** Map legacy schema to the business data model and entity ownership.

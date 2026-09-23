@@ -4,63 +4,88 @@ description: /testcase — author E2E plan YAML/MD on the tests hub (not Playwri
 disable-model-invocation: true
 ---
 
-# /testcase
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Read entire `ir/design.yaml` for the target screen BEFORE authoring any test case.
 
-**Owner:** Testkit (`--type=tests`)
+# /testcase — E2E Test Case Authoring (Tests Hub)
 
-Author TC/suites on the current tests hub. Design rules stay on the docs hub.
-Playwright generation is FE `/test`.
+**Owner:** Testkit (`--type=tests`). Design rules stay on docs hub. Playwright generation is FE `/test`.
 
-Route cross-repo evidence by owner: Functions/W-* through Docskit, plan/docs
-through `TESTKIT_TESTS_ROOT` / `TESTKIT_DOCS_ROOT`, and symbols for repo X
-through its Platform DNA-wired `codegraph-<repo-key>` server. Never query one
-workspace-wide graph or ask the member to hand-edit MCP config.
+---
 
-```bash
-testkit cases:render -- …
-testkit cases:check -- …
-```
+## Rule: Audit Interlock & Workload Threshold (Law 2)
 
-## Output Rules
+- **[MANDATORY]** Always run static audit first: `node engines/spec/lib/audit-testcase-gaps.mjs <target-test.yaml>`.
+  - ✅ Consume JSON gap report to fix coverage gaps.
+  - **Threshold Interlock (Law 2):**
+    - **Small Scope (≤5 missing testcases/gaps):** Resolve inline in chat thread.
+    - **Large Scope (≥10 missing testcases/gaps):** **[MANDATORY HARD STOP IN CHAT]**. Generate an implementation plan / Plan Mode document partitioned into sequential Phases (3–5 testcases per phase) with disk offloading at boundaries.
+  - ❌ Do not skip audit and proceed to authoring directly.
 
-- **Rich Business Descriptions:** When generating YAML testcases, you MUST provide a detailed `description` (or `story`) field. Do not leave them empty or write sparse 1-liners.
-- Explain the **Business Context**: Why does this case exist? What is the real-world scenario?
-- Outline the **Expected Outcome**: Detail what should happen from the user's perspective, not just the code execution.
-- Include metadata like `priority`, `status`, `module`, and `tags` if available to make the final generated Markdown robust and human-friendly.
-- **Valid YAML Syntax:** Do NOT write raw JavaScript expressions (like `"a".repeat(256)`) directly into YAML values. YAML is not JS. If you need a long string for test data, generate the actual long string, or wrap the exact code expression entirely in single quotes (e.g. `value: '"a".repeat(256)'`) so the YAML parser does not crash.
-- **Concise Naming Convention:** The `id` must be short (e.g., `TC-AUTH-01`). The `title` MUST be extremely short and concise (limit 15-20 characters, e.g., `Valid Login`, `Empty Email`, `SQLi Check`). This ensures the Vitepress left menu remains neat and readable. Put all long explanations into the `description` field, not the `title` or `id`.
+---
 
-## Target / ID Resolution Rule
+## Rule: Missing Scenarios / Acceptance Criteria
 
-- User prompt MAY specify a screen ID, module ID, or short slug (e.g. `W-AD-AUTH-001`, `CMP-ADM-000`, `login`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search under `TESTKIT_DOCS_ROOT` / `surfaces/...`) to resolve target paths.
-- Docs tech SSOT for screens: **Read the entire `ir/design.yaml`**. `FLOW-*` is process markdown (`architecture/03-business-process/` or `…/common/processes/`), not `ir/design.yaml`.
-- If story/copy/acceptance is missing for a case, that is a **docs gap**: STOP and hand off to docs-hub `/grill-dev`, `/grill-bqa`, or `/update-spec`. **CRITICAL:** When handing off, you MUST output a comprehensive gap report in the Chat Thread. This report must be formatted as a complete, ready-to-use prompt starting with `@docskit` (e.g., `@docskit /update-spec [details...]`) detailing exactly what business rules or acceptance criteria are missing, so the user can copy-paste it directly to run the docs-hub skill. Do **not** Write docs hub files (`ir/*`, `*.bundle.yaml`). Do **not** read `ir/spec.yaml` for testcase authoring.
-- Do not Read generated `*.md`.
-- Do NOT demand full surface/module filesystem paths from the user if an ID or short slug is given.
+- **[MANDATORY]** If `userStories.scenarios` or `userStories.acceptance` is missing in `ir/design.yaml`:
+  → **STOP**. Output a complete gap report in chat formatted as a ready-to-paste prompt: `@docskit /update-spec [exact missing details]`. Do NOT invent test cases.
+- **[STRICTLY FORBIDDEN]** Do NOT write docs hub files (`ir/*`, `*.bundle.yaml`). Do NOT read `ir/spec.yaml` for testcase authoring. Do NOT read generated `*.md`.
 
-## Directory Mirroring Rule (Docs SSOT)
+---
 
-Testkit acts as a reflection of the Docs SSOT. Mirror the function folder under `surfaces/`, **strip** that prefix only (not a legacy `common/` tree):
-- **Cases:** `cases/<relative-path>/` next to the screen/API folder.
-  - Docs `surfaces/admin/CMP-ADM-002/02/01/login/` → `cases/admin/CMP-ADM-002/02/01/login/TC-*.yaml`
-  - Do not invent `cases/admin/auth/W-…` unless that is the real docs path.
+## Rule: ID Resolution
+
+- **[MANDATORY]** Use `docskit_route` or `docskit_get_element` (or glob under `TESTKIT_DOCS_ROOT` / `surfaces/…`) to resolve target paths from ID or slug.
+- **[STRICTLY FORBIDDEN]** Do NOT demand full filesystem path from user when ID or slug is given.
+
+---
+
+## Rule: Directory Mirroring (Docs SSOT)
+
+- **[MANDATORY]** Mirror function folder: `cases/<relative-path>/TC-*.yaml`.
+  - ✅ `surfaces/admin/CMP-ADM-002/02/01/login/` → `cases/admin/CMP-ADM-002/02/01/login/TC-*.yaml`
+  - ❌ `cases/admin/auth/W-…` — invented path not matching docs structure.
 - Cross-flow plans → `/scenario` (mirror `common/processes/FLOW-*` or `architecture/03-business-process/FLOW-*`).
 
-## Accelerators (optional)
+---
 
-```text
-if local ArtifactGraph available: taxonomy/coverage/gap hints from this tests hub
-else: local deterministic coverage/search from scoped plan + docs evidence
-```
+## Rule: Test Case Content Requirements & Equivalence Partitioning (testMatrix)
 
-ArtifactGraph on the tests hub uses `--type=common,test` (installs the testcase
-taxonomy) and indexes this repo only. Docs-hub design evidence comes through
-explicit docs references, never through ArtifactGraph.
+- **[MANDATORY]** Read `userStories.scenarios`, `validation`, and `actions` from `ir/design.yaml`.
+- **[MANDATORY]** Every test case file MUST declare a structured `testMatrix` covering:
+  1. `positive_boundary`: Minimum / maximum valid lengths and ranges.
+  2. `negative_length` / `negative_format`: Under min, over max, and regex pattern violations with expected localized error messages.
+  3. `negative_duplicate`: Server-side remote uniqueness violation (expected 409).
+  4. `concurrency_double_submit`: Immediate button disablement and idempotency check.
+  5. `network_interruption` / `exception`: Offline banner and form state preservation.
+- **[MANDATORY]** Consult `meaning` + `purpose` fields of UI elements when writing step descriptions and test data.
+- **[MANDATORY]** `description` / `story` field MUST be rich — explain business context, real-world scenario, expected outcome from user perspective.
+  - ✅ Multi-sentence description covering why case exists + what user should experience.
+  - ❌ Single-liner `"Test login form"`.
+- **[MANDATORY]** `id`: short (e.g. `TC-AUTH-01`). `title`: max 15-20 characters (e.g. `Valid Login`, `Empty Email`). All long explanations belong in `description`.
+- **[MANDATORY]** Include: `priority`, `status`, `module`, `tags`, verification of `userStories.acceptance` criteria.
+- **[MANDATORY]** YAML test data must be valid YAML — no raw JavaScript expressions (e.g. `"a".repeat(256)` → write the actual repeated string or wrap in single quotes).
 
-At run start, assign one stable `runId`. If ArtifactGraph is missing, complete
-the local fallback, count successful file reads and exact raw bytes read into
-context, then emit exactly one `testkit.missing-optional` JSON event for the
-`runId` + `artifactgraph` pair. Deduplicate retries. Use
-`.cursor/schemas/testkit/missing-optional-event.schema.json`; report only actual
-`fileReads` and `contextBytes`, never estimated token or savings claims.
+---
+
+## Rule: Route Cross-Repo Evidence
+
+- **[MANDATORY]** Route evidence by owner:
+  - Functions/`W-*` → Docskit
+  - Plan/docs → `TESTKIT_TESTS_ROOT` / `TESTKIT_DOCS_ROOT`
+  - Symbols for repo X → `codegraph-<repo-key>` (Platform DNA-wired server)
+- **[STRICTLY FORBIDDEN]** Never query one workspace-wide graph. Never hand-edit MCP config.
+
+---
+
+## Verification Checklist
+
+- [ ] Audit script run; all coverage gaps resolved or gap report generated for docs hub.
+- [ ] `ir/design.yaml` read in full (not partial slices).
+- [ ] All `userStories.scenarios` covered by corresponding test cases.
+- [ ] Equivalence Partitioning & Boundary Value Analysis `testMatrix` declared (min/max boundary, regex failure, duplicate 409, double-submit lock, offline preservation).
+- [ ] Scenario markdown (`SC-*.md`) formatted with IEEE 29119 Boundary Analysis Table & Gherkin BDD.
+- [ ] `meaning` + `purpose` used for step descriptions.
+- [ ] `id` short; `title` ≤20 chars; `description` is rich and business-meaningful.
+- [ ] YAML syntax valid — no JS expressions in test data values.
+- [ ] Directory structure mirrors docs SSOT path exactly.

@@ -6,9 +6,9 @@
 ## Cách dùng (Command/Trigger)
 - Gọi qua slash command: `/openapi`
 - Dùng qua CLI để sinh từng file riêng lẻ: 
-  `docskit openapi:gen --spec surfaces/.../api/<seq>/01-backend-spec.yaml`
+  `forgekit openapi_gen --spec surfaces/.../api/<seq>/01-backend-spec.yaml`
 - Dùng qua CLI để quét và sinh toàn bộ: 
-  `docskit openapi:gen`
+  `forgekit openapi_gen`
 - Render và gộp API: `forgekit openapi_render`
 - Build UI tĩnh: `forgekit openapi_build_ui`
 
@@ -17,8 +17,8 @@
 
 ## Output (Kết quả mong đợi)
 - Sinh ra file `02-openapi.yaml` (nằm cùng cấp thư mục với file 01).
-- Sau khi chạy `openapi_render`, tất cả các file `02-openapi.yaml` phân tán sẽ được gộp lại thành một file OpenAPI tổng hợp duy nhất tại `docs/openapi/api.yaml`.
-- (Tùy chọn) Chạy `openapi_build_ui` sẽ sinh ra thư mục chứa giao diện Swagger/Redocly UI tĩnh.
+- Sau khi chạy `forgekit openapi_render`, toàn bộ các file `02-openapi.yaml` từ các module sẽ được tổng hợp thành một file OpenAPI thống nhất tại `docs/openapi/api.yaml`.
+- (Tùy chọn) Chạy `forgekit openapi_build_ui` sẽ sinh ra thư mục chứa giao diện Swagger/Redocly UI tĩnh.
 
 ## Description / Ý nghĩa
 - Chuyên dùng để chuyển đổi (Transform) chuẩn nội bộ `01-backend-spec.yaml` sang chuẩn quốc tế **OpenAPI 3.0.3** (`02-openapi.yaml`).

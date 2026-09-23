@@ -33,5 +33,4 @@ Shared: resolve skill `extractBundle` → `.cursor/extracts/extract-registry.jso
 6. **`/prototype`** — FE-lane handoff only after Codegenkit dry-run passes.
 
 - Render: `docs_render` / `docskit render` (pnpm fallback during transition)
-- **Không** prototype UI, backend, real API, full E2E/unit trong phase spec/grill.
-
+- **[STRICTLY FORBIDDEN]** Do NOT build UI prototypes, backend implementations, live APIs, or full E2E/unit tests during the spec/grill phase.

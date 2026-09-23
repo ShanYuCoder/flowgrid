@@ -4,36 +4,43 @@ description: EXCLUSIVE /common — Use this to define common business rules, UX/
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - This skill is an **allowed** human-invoked path to create/update common Markdown rules. Do not run it as a side-effect of `/spec`.
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** This is an allowed human-invoked path only. Do NOT run as a side-effect of `/spec`.
 
 # /common
 
-**Target Path:** `<LCA>/common/patterns/` — resolve LCA from `.cursor/extracts/common-scope.md` (module/cluster `common/` before surface, never invent a second tree).
+**Target Path:** `<LCA>/common/patterns/` — resolve LCA from `.cursor/extracts/common-scope.md` (module/cluster `common/` before surface; never invent a second tree).
 
 ## Purpose
 
-Markdown rules for a **named scope** (cluster / module / surface / global). Not “always surface-wide”. First **Read** `.cursor/extracts/common-scope.md` and pick the LCA `common/patterns/` folder. One function only → do not create `common/`; put the rule on the function bundle.
+Markdown rules for a **named scope** (cluster / module / surface / global). Not "always surface-wide". First **Read** `common-scope.md` and pick the LCA `common/patterns/` folder.
 
-**DSL / common gate:** Only use when the user explicitly invoked `/common` (or confirmed a grill proposal).
+**Gate:** Only use when the user explicitly invoked `/common` (or confirmed a grill proposal).
 
-**DO NOT** generate YAML bundles here. If the user wants to generate codegen bundles for common features, instruct them to use `/common-spec`.
+---
 
-## Target / ID Resolution Rule
+## Rule: Target / ID Resolution
 
-- Prompt MUST name **consumers** (CMP id, cluster `NN`, surface, or “all surfaces”). Ambiguous → ask; propose one LCA from `common-scope.md`.
-- Scaffold `common/patterns/` at that LCA only. Do not create `surfaces/common` unless ≥2 surfaces share the rule.
-- Surface-wide with no `common/` yet: `/surfaces <name> common` then write `patterns/` there.
+- **[MANDATORY]** Prompt MUST name **consumers** (CMP id, cluster `NN`, surface, or "all surfaces"). If ambiguous → ask; propose one LCA from `common-scope.md`.
+- **[MANDATORY]** Scaffold `common/patterns/` at that LCA only.
+- **[STRICTLY FORBIDDEN]** Do NOT create `surfaces/common` unless ≥2 surfaces share the rule.
+- **[MANDATORY]** One function only → do NOT create `common/`; attach the rule to the function bundle directly.
+- Surface-wide with no `common/` yet → run `/surfaces <name> common` first, then author `patterns/`.
 
-## Rules for Markdown Content
+---
 
-1. Use clear, non-technical language where possible, geared towards Business / QA / Dev alignment.
-2. If applicable, define rules based on the surface type (e.g., Kiosk UI rules differ from Web Portal UI rules).
-3. Do NOT output fake i18n tables or framework prose. Focus on the actual rules (e.g., "Confirm dialog must always block background").
+## Rule: Markdown Content
 
-## Verification Checklist (Evidence Required)
-- [ ] **Surface Resolved:** Resolved the target surface to `surfaces/[Surface]/`.
-- [ ] **Common Directory Exists:** Verified that `common/` exists.
-- [ ] **Markdown Output:** Wrote `.md` under the LCA `common/patterns/` from `common-scope.md` (not beside a single function).
+- **[MANDATORY]** Use clear, non-technical language geared towards Business / QA / Dev alignment.
+- **[MANDATORY]** Define rules based on surface type when applicable (e.g. Kiosk UI rules differ from Web Portal rules).
+- **[STRICTLY FORBIDDEN]** Do NOT output fake i18n tables or framework prose. Focus on actual rules (e.g. "Confirm dialog must always block background").
+- **[STRICTLY FORBIDDEN]** Do NOT generate YAML bundles here — use `/common-spec` for codegen bundles.
+
+---
+
+## Verification Checklist
+
+- [ ] Target surface resolved to `surfaces/[Surface]/`.
+- [ ] `common/` directory verified or created.
+- [ ] `.md` written under LCA `common/patterns/` from `common-scope.md` (not beside a single function).

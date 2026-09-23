@@ -5,46 +5,30 @@ disable-model-invocation: true
 extractBundle: architecture-core
 ---
 
-# /deployment — Deploy — stub-first
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-**Business layer:** Deploy (outside module tree; architecture thin layer)  
-**Standards:** short prose OK; diagrams → **C4** `DEP-*` only when placement matters. Team-facing architecture: prefer **Deployment** active; other chapters stub.
+# /deployment — Deploy Stub-First
 
-## Default
+**Business layer:** Deploy (outside module tree; thin architecture layer)  
+**Standards:** Short prose OK; diagrams → C4 `DEP-*` only when placement is confirmed.
 
-If the user did **not** confirm placement matters → write/keep a **short stub** only (`tpl-deployment.md`). **Refuse** to invent staging/prod diagrams.
+---
 
-## Write (when justified)
+## Rule: Default Behavior
 
-- Path: `Architecture/Deployment/`
-- ID: `DEP-*`
-- MD + Mermaid optional; no secrets
-- Do **not** write local IDE/WSL machine tips into the docs hub
+- **[MANDATORY]** If the user did NOT confirm that deployment placement matters → write/keep a **short stub only** (`tpl-deployment.md`).
+- **[STRICTLY FORBIDDEN]** Do NOT invent staging/production multi-region diagrams from imagination.
+- **[STRICTLY FORBIDDEN]** Do NOT write local IDE/WSL machine tips into the docs hub.
+- **[STRICTLY FORBIDDEN]** Never commit secrets into deployment documentation.
 
-## Do not
+---
 
-- Full multi-region topology from imagination
-- Confuse with journey sequences (`/journey`)
+## Rule: When to Write Full Deployment Doc
 
-## Pilot
+- **[MANDATORY]** Only author a full `DEP-*` deployment document when the user explicitly confirms placement matters.
+- **[MANDATORY]** Path: `Architecture/Deployment/`; ID: `DEP-*`.
+- **[MANDATORY]** Use `docskit_list_ids kind:DEP` to check existing IDs before creating new ones.
+- **[STRICTLY FORBIDDEN]** Do NOT confuse with journey sequences (those belong to `/journey`).
 
-[`Architecture/Deployment/`](../../../Architecture/Deployment/) · `DEP-local` (minimal)
-
-## Accelerators (optional)
-
-Prefer `docskit_list_ids` kind `DEP`; refuse inventing nodes not already in MD.
-
-```text
-if Docskit available: targeted docskit_* tools for IDs / deps / journeys / links
-else: Glob/search under architecture/ and surfaces/, then Read scoped Markdown
-
-Missing Docskit never blocks authoring.
-Missing ArtifactGraph never blocks Docskit or architecture skills.
-```
-
-When ArtifactGraph is missing, follow `/docskit` fallback evidence: continue
-targeted local reads, then emit one deduplicated `docskit.missing-optional`
-event per run and optional with actual `fileReads` and `contextBytes` only.
-
-
-Parent: `/architecture` · [Start now](../../../platform/guide/start-now.md)
+Parent: `/architecture`

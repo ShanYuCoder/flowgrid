@@ -5,101 +5,113 @@ description: EXCLUSIVE /grill-bqa — ONLY for BA/BQA UI acceptance criteria. Ga
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - For `#missing_info` / open gaps: ArtifactGraph re-check → micro-scope → propose (Recommended) on **Chat Thread** → **STOP for member confirm** before patching settled SSOT and updating **Artifact Registry**.
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform a shallow check. Verify against the **Verification Checklist** with evidence.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Read entire `ir/design.yaml` + `ir/spec.yaml`. If `ir/` is missing, read entire `*.bundle.yaml`.
 
 # /grill-bqa — Spec Validation (BQA / UI)
 
-**Re-check only:** Do **not** author `design.zones[].items[]` or `spec.ui.list|form` from scratch. `/spec` already filled inventory when info existed. This skill re-checks copy/layout/`purpose` vs common, fills `#missing_info` after Confirm, and fixes mistakes.
-
-**Mindset:** Spec Validation + Decision Resolution — **not** domain archaeology.
+**Mindset:** Spec Validation + Decision Resolution — **not** domain archaeology. Do NOT author `design.zones[].items[]` or `spec.ui.list|form` from scratch; `/spec` already populated inventory when info existed.
 
 **Extracts:** `extractBundle: bqa-grill` → `.cursor/extracts/grill/validation.md`
 
-## Target / ID Resolution Rule
+---
 
-- User prompt MAY specify a screen ID, function ID, or slug (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`, `login`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve target path under `surfaces/...`.
-- Do NOT demand full surface/module filesystem paths from the user.
+## Rule: Load Policy
 
-## Load policy
+| Read (whole file) | Write | NEVER Read |
+|---|---|---|
+| **`ir/design.yaml`** (UI inventory, copy, visual, actions) | After Confirm: patch `*.bundle.yaml` → `pnpm spec:split` | Generated `*.md` |
+| **`ir/spec.yaml`** (requirements/acceptance prose — only when auditing) | | `bundle.gen` |
 
-Split is the token cut: **Read the entire IR file**. Do **not** cherry-pick keys (`design.sections`, `spec.ui`, …) out of a long `*.bundle.yaml`.
+---
 
-| Read (whole file) | Write | Do not Read |
-|-------------------|-------|-------------|
-| **`ir/design.yaml`** — UI inventory, copy, visual, actions | After Confirm: patch **`*.bundle.yaml`** then `pnpm spec:split` | Generated `*.md` |
-| **`ir/spec.yaml`** — only when checking requirements / acceptance prose | | `bundle.gen` |
+## Rule: Missing Information / Gap Handling & Workload Threshold (Law 2)
 
-If `ir/` is missing, Read the **entire** `*.bundle.yaml` once (first `/spec` not split yet).
+- **[MANDATORY]** For `#missing_info` / open gaps: re-check ArtifactGraph → micro-scope → evaluate total gap volume:
+  - **Small Scope (≤5 questions):** `AskQuestion` wizard in chat thread — **one question at a time**, **≥3 options**: (1) `(Recommended)`, (2) `Other` (free text), (3) `Log as Tech Debt (Pending)`.
+  - **Large Scope (≥10 gaps):** **[MANDATORY HARD STOP IN CHAT]**. Do not spam single questions in chat. Generate an implementation plan / Plan Mode document partitioned into sequential Phases (3–5 gaps per phase) with disk offloading at boundaries.
+- **[MANDATORY]** If member selects "Log as Tech Debt" → create `qa-inbox.md` entry. Close later with `/qa-resolve`.
+- **[STRICTLY FORBIDDEN]** Never write `openQuestions` in YAML. Never silently overwrite settled SSOT without explicit confirmation.
 
-> [!IMPORTANT] MANDATORY UI ERROR HANDLING BEHAVIOR SPECIFICATION
-> Agent MUST explicitly document 3 UI execution outcomes for EVERY user action / API call in `design.yaml`:
-> 1. **On Success (`200/201`):** Action feedback, state transition, toast/modal feedback, navigation.
-> 2. **On Common Global Error (`401/500/503`):** Default inheritance from `#ui-common:error-handler` (Global toast/redirect). Explicitly document `override: true` if UI requires custom behavior (e.g. Inline alert instead of global toast).
-> 3. **On Specific Error (`422/404/403/409`):**
->    - **`422 Validation`:** Exact placement of inline field error messages (`errors: {field: [msg]}`).
->    - **`404 Not Found`:** Empty state UI / 404 Component rendering.
->    - **`403 IDOR` (`TENANT_IDOR_VIOLATION`):** Access blocked UI / Safety redirect.
->    - **`409 Conflict`:** Specific modal/dialog copywriting for duplicate data or invalid state.
+---
+
+## Rule: UI Error Handling (3 Outcomes)
+
+- **[MANDATORY]** Every user action / API call in `design.yaml` MUST have the 6-block Action Flow and 4-tier outcomes documented:
+  1. `preconditions`: UI validity, record status, RBAC permissions, disabled reason.
+  2. `interactionControl`: `preventDoubleSubmit: true`, loading text, confirm dialog.
+  3. `payloadTransformation`: Trimming, sanitation, type casting.
+  4. `executionContract`: Idempotency key, timeout, optimistic locking.
+  5. `outcomes`:
+     - **`onSuccess` (200/201):** Action feedback, state transition, toast/modal, navigation, background trigger.
+     - **`onBusinessErrors` (422/409):** Inline field error placement (`errors: {field: [msg]}`) and duplicate warnings.
+     - **`onSecurityErrors` (401/403):** Session expiry and IDOR safety redirect.
+     - **`onSystemErrors` (500/504/Offline):** Gateway timeout lock, offline data preservation banner.
+- **[STRICTLY FORBIDDEN]** Do NOT skip documenting error outcomes or concurrency protection, even for "simple" forms.
+
+---
+
+## Rule: Business & Stakeholder Audit (Step A)
+
+- **[MANDATORY]** Audit these 6 dimensions before proceeding:
+  1. `summary` tells business story in 100% Non-tech language (Arc42 style: goals, user scenarios).
+  2. `validation` depth: Reject specs that only declare `required: true` without prototype format, boundary limits, or explicit localized error copy.
+  3. `stateMatrix`: Declares UI editability and button visibility across record lifecycles and user roles.
+  4. `actions`: All mutations declare preconditions, double-submit protection, payload transformation, and 4-tier outcomes.
+  5. `custom UI blocks`: If a section does NOT map to a standard base component / Shadcn primitive, verify it has explicit dimension boundaries, color tokens, typography metrics, and micro-interaction states. Reject vague custom UI placeholders.
+  6. CSS properties (font-size, exact colors) are NOT in feature spec unless they are explicit Design System overrides.
+- **[MANDATORY]** Cross-check common patterns: walk up from function → nearest `common/patterns/` → module → surface → `surfaces/common/patterns/` (per `common-scope.md`).
+- **[MANDATORY]** Set `grillStatus.bqaFacts: done` after Step A completes.
+- **[STRICTLY FORBIDDEN]** Do NOT run Step B wizard before `grillStatus.bqaFacts: done`.
+
+---
+
+## Rule: Proactive Member Wizard (Step B)
+
+- **[MANDATORY]** AskQuestion wizard for remaining gaps — one question at a time, ≥3 options per question.
+- **[PROACTIVE BRAINSTORMING INTERLOCK]**: When member inputs are brief or missing boundary rules, the Agent MUST NOT ask open-ended questions like "How should this be validated?". Instead, the Agent MUST synthesize realistic candidate validations (e.g. `(Recommended): phone_vn with 10 digits and duplicate DB check`) and provide them as selectable options.
+- **[MANDATORY]** After member picks named option or writes "Other with text" → apply to `design` / `review`.
+- **[MANDATORY]** Set `grillStatus.bqaOpen: done` when all answers or QA pointer files are on disk. Leftover `#missing_info` with `QA-…` id is allowed (does not block).
+
+---
 
 ## Workflow
 
-**Step A — fact-lock** (`grillStatus.bqaFacts`)
+**Step A — fact-lock** (`grillStatus.bqaFacts`):
+1. Compare `design.zones/behavior/actions` vs `legacy.ui` vs common UI.
+2. Audit business focus (summary, requirements, CSS, error flows).
+3. Cross-check common patterns.
+4. Audit UI error handling flows (all 3 outcomes per action).
+5. Patch bundle → `docskit split`.
+6. Set `grillStatus.bqaFacts: done`.
 
-1. Compare `design.zones/behavior/actions` vs `legacy.ui` vs common UI. **UI Metrics SSOT:** Ensure basic CSS properties (font-size, colors) are NOT redundantly specified in feature specs unless they are explicit overrides of the Design System (`common/yaml/design-system.bundle.yaml`).
-2. **Audit Business & Stakeholder Focus:** Đảm bảo `summary` kể được câu chuyện nghiệp vụ theo chuẩn Arc42 (mục tiêu nghiệp vụ, kịch bản người dùng) bằng ngôn ngữ 100% Non-tech. Kiểm tra xem `spec.requirements` đã định nghĩa đủ: (1) Field Validations, (2) State Machine, (3) UI Permissions, (4) Edge Cases chưa. Nếu thiếu, reject & yêu cầu bổ sung.
-3. **Cross-check Common Patterns:** Walk up from the function: nearest `common/patterns/` then module, surface, `surfaces/common/patterns/` (`.cursor/extracts/common-scope.md`).
-4. **Audit UI Error Handling Flows:** Ensure every user action/API call in `design.yaml` has detailed specifications for Success, Common Global Error, and Specific Errors.
-4. Patch **bundle** (`design`, `review`, `spec` requirements) → `docskit_bundle_split` / `docskit split` (fallback `pnpm docs:split`).
-5. Set `grillStatus.bqaFacts: done`.
-6. **Rule:** chưa `bqaFacts: done` → không chạy Step B wizard.
+**Step B — member wizard** (`grillStatus.bqaOpen`):
+7. AskQuestion for remaining gaps (batches ≤5).
+8. Apply member decisions to bundle.
+9. Set `grillStatus.bqaOpen: done`.
+10. User runs `docs_render` / `docskit render`.
 
-**Step B — member wizard** (`grillStatus.bqaOpen`) — **chat/AskQuestion only; complete spec**
+---
 
-7. Gaps: **AskQuestion** wizard form — hiển thị **từng question một**, chờ Member trả lời xong mới chuyển question tiếp. Each question MUST have **≥3 options** bao gồm: (1) Recommended option(s), (2) Other (nhập text tự do), và (3) "Log as Tech Debt (Pending)". Batches ≤5. **STOP**.
-8. After **member** picks a named option or Other **with** a decision: apply into `design` / `review`. If member selects "Log as Tech Debt" → `qa-inbox.md`. Close later with **`/qa-resolve`**. Never invent.
-9. `grillStatus.bqaOpen: done` when this pass’s answers **or** QA pointers are on disk. Leftover `#missing_info` **with** a `QA-…` id is allowed (does not block).
-10. User: `docs_render` / `docskit render` (fallback `pnpm docs:render`).
+## Out of Scope
 
-## Accelerators (optional)
+- **[STRICTLY FORBIDDEN]** `codegen`, `gen`, `ui.filters/columns`, `portal:gen`, implement UI.
 
-```text
-if ArtifactGraph available: grill/parity hints
-else: model review from design+legacy slices (model fallback)
-
-if Docskit available: ID → doc path for referenced CMP/FLOW
-else: search docs tree (local fallback)
-```
-
-Missing optionals never block `/grill-bqa`. After the existing fallback
-completes, emit exactly one `docskit.missing-optional` event per `runId` +
-optional against
-`.cursor/schemas/docskit/missing-optional-event.schema.json`. Deduplicate
-retries and report only actual `fileReads` / `contextBytes`.
-
-## specOrigin branches
-
-- **legacy:** design vs legacyEvidence vs common UI
-- **requirement:** complete zones + common — không legacy
-
-## Out of scope
-
-`codegen`, `gen`, `ui.filters/columns`, `portal:gen`, implement UI.
+---
 
 ## Handoff
 
 → `/grill-dev`
 
-## Verification Checklist
-- [ ] Strict compliance with Load Policy (did not load out-of-scope files like codegen or legacy source code).
-- [ ] **UI Error Flow Detailed:** Every API call/user action in `design.yaml` has explicit On Success, On Common Error, and On Specific Error handling specified.
-- [ ] `#missing_info` / proposals used the hard confirmation gate (no silent overwrite of settled SSOT), updated Artifact Registry after confirm.
-- [ ] Step A completed with `grillStatus.bqaFacts: done` before Step B wizard.
-- [ ] Gaps used **AskQuestion** + member confirm, **or** a `qa/open/QA-<page-id>-NNNN.yaml` pointer. Bundle has **no** `openQuestions`.
-- [ ] `grillStatus.bqaOpen: done` after this pass (defer via QA files is OK).
-- [ ] Executed bundle split and rendered docs.
+---
 
+## Verification Checklist
+
+- [ ] Load policy complied (did not load codegen, legacy source code, or generated `*.md`).
+- [ ] Step A completed with `grillStatus.bqaFacts: done` before Step B.
+- [ ] Every action/API call in `design.yaml` has all 3 error outcomes (Success + CommonError + SpecificError).
+- [ ] `summary` is 100% Non-tech; `spec.requirements` covers Validations, State Machine, Permissions, Edge Cases.
+- [ ] All gaps used AskQuestion wizard + member confirm (or `QA-*` pointer). No `openQuestions` in YAML.
+- [ ] `grillStatus.bqaOpen: done` after this pass.
+- [ ] Bundle split + docs render executed with zero errors.

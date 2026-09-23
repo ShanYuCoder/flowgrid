@@ -15,7 +15,7 @@
 - File `01-backend-spec.yaml` được vá/bổ sung nếu thiếu sót về Auth, Idempotency, Retry logic.
 - Bổ sung các thẻ gencode (`codegen.profile`, `entity`, `module`, `#gen:*`, `#manual-service`).
 - Cập nhật trạng thái `approval.status` thành `reviewed` (hoặc `approved`).
-- Chạy qua các cổng kiểm định CLI: `docskit api:check`, `openapi:gen` và `openapi:render`.
+- Chạy qua các cổng kiểm định CLI: `forgekit openapi_gen` và `forgekit openapi_render`.
 
 ## Description / Ý nghĩa
 - Đóng vai trò là "Kiểm toán viên" (Auditor) dành riêng cho các hợp đồng giao tiếp ngoại vi (Webhook, Partner API). 

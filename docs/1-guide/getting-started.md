@@ -21,7 +21,7 @@
 </div>
 </div>
 
-<div class="base-note"><span class="base-note-mark">(*)</span><em>Base cung cấp đầy đủ các tầng và artifact tham chiếu, nhưng team không bắt buộc phải triển khai toàn bộ. PM/Leader lựa chọn phạm vi phù hợp với quy mô team, giai đoạn và rủi ro của dự án; nội dung có thể được lược bỏ, thực hiện trước hoặc bổ sung sau. Ví dụ, ở giai đoạn đầu chỉ cần hoàn thiện Overview và một số business-process core đại diện cho nghiệp vụ chính, sau đó mở rộng theo nhu cầu thực tế.</em></div>
+<div class="base-note"><span class="base-note-mark">(*)</span><em>Hệ thống cung cấp đầy đủ các tầng và artifact tham chiếu, nhưng team không bắt buộc phải triển khai toàn bộ cùng lúc. PM/Leader lựa chọn phạm vi phù hợp với quy mô team, giai đoạn và mức độ ưu tiên của dự án; nội dung có thể được hoàn thiện cuốn chiếu theo nhu cầu thực tế.</em></div>
 
 Chi tiết quy ước: [System doc structure](./system-doc-structure.md).
 
@@ -29,7 +29,7 @@ Pilot tham khảo: [FLOW-login](#). Màn hình sống dưới `surfaces/<surface
 
 <div class="intro-hero">
 
-![Các tầng tài liệu](#)
+![Các tầng tài liệu Forgekit](./assets/start-here-layers.png)
 
 </div>
 
@@ -271,19 +271,24 @@ Member nhận Module và business-process đã được thống nhất, sau đó
 
 <div class="phase-pills">
 <span>Actor · precondition</span>
-<span>Screen states · actions</span>
-<span>Fields · validation</span>
+<span>Screen states & RBAC matrix</span>
+<span>Dynamic 5-tier validation</span>
+<span>6-block action flow</span>
+<span>4-tier outcomes (422/409/401/500/offline)</span>
 <span>API contracts</span>
-<span>Error / edge cases</span>
 <span>Acceptance criteria</span>
 </div>
 
 - Function mới dùng `/spec`; Function từ hệ thống cũ dùng `/legacy /spec` (qua Forgekit).
+- Bắt buộc hoàn thiện:
+  - **Dynamic 5-Tier Validator**: Prototype presets, boundaries [min, max], format regex, conditional dependencies và unique DB async checks.
+  - **Ma Trận Trạng Thái Giao Diện & Phân Quyền (State & Permission Matrix)**: Khóa trường và nút bấm theo trạng thái bản ghi và RBAC roles.
+  - **Action Flows 6 Khối Kỹ Thuật**: Khóa nhấn đúp (double-submit lock), payload transformation, concurrency optimistic locking, và ma trận phản hồi 4 tầng rõ ràng.
 - BA xác nhận business qua `/grill-bqa`; Engineer qua `/grill-dev` + `/api-spec`.
-- Output: leaf `CMP-*/NN…/` (`ir/` + `api/<seq>/`). Câu treo: `qa/open/QA-…` rồi `/qa-resolve`.
+- Output: leaf `CMP-*/NN…/` (`ir/` + `api/<seq>/`). Kết xuất tài liệu `spec.md` hoàn toàn bằng bảng biểu **Data Dictionary Table**, không còn dump raw YAML thô. Câu treo: `qa/open/QA-…` rồi `/qa-resolve`.
 - Đọc trên GitHub: `pnpm forge:render` rồi **`pnpm forge:publish`** (README → `CATALOG.md`).
 
-**Kết quả:** Function Detail đủ rõ để Tester thiết kế testcase và Developer triển khai mà không phải suy đoán lại requirement.
+**Kết quả:** Function Detail đủ rõ với Data Dictionary & State Matrix để Tester thiết kế testcase và Developer triển khai mà không phải suy đoán lại requirement.
 
 </div>
 </section>
@@ -300,14 +305,21 @@ Tester nhận acceptance, `CMP-*`, `W-*`, `API-*` và `FLOW-*` từ docs hub; te
 
 <div class="phase-pills">
 <span>Map surface · CMP-* · W-*</span>
-<span>Scenario · SC-*</span>
+<span>Scenario · SC-* (Gherkin BDD)</span>
+<span>Boundary test matrix (IEEE 29119)</span>
 <span>Test case · TC-*</span>
 <span>Suite / smoke set</span>
 <span>Grill + cases:render</span>
 <span>Handoff automation</span>
 </div>
 
-- `/testcase` tạo Scenario và Test case; `/grill-testcase` kiểm tra coverage, data, assertion và edge cases.
+- `/testcase` tạo Scenario và Test case; kịch bản được chuẩn hóa theo cấu trúc **Gherkin BDD** (Given / When / Then) và bảng **Ma Trận Phân Hoạch Tương Đương & Phân Tích Giá Trị Biên (Equivalence Partitioning & Boundary Value Analysis - IEEE 29119)** bao phủ:
+  - Giá trị biên tối thiểu/tối đa (`positive_boundary`).
+  - Vi phạm độ dài, sai regex ký tự (`negative_length`, `negative_format`).
+  - Trùng lặp dữ liệu trên DB (`negative_duplicate` 409).
+  - Thao tác nhấp đúp (`concurrency_double_submit`).
+  - Gián đoạn kết nối mạng (`network_interruption` offline state preservation).
+- `/grill-testcase` kiểm tra coverage, data, assertion và edge cases.
 - `pnpm cases:render` sinh bản review từ test plan SSOT.
 - Khi cần automation, FE repo đọc plan bằng `testcase:gen` và ghi Playwright vào `tests/e2e/`; file FE không thay thế plan trong `base-tests`.
 
@@ -376,7 +388,7 @@ Dev, QA, PM/Leader và stakeholder hợp nhất các đầu ra thành một lu�
 
 ## 5. Trợ lý và công cụ
 
-![Skill, ArtifactGraph và Docskit](#)
+![Kiến trúc Unified Engine và Hệ sinh thái Forgekit MCP](./assets/start-here-helpers.png)
 
 | Công cụ | Trách nhiệm |
 |---------|-------------|
@@ -399,8 +411,8 @@ Setup: [Kits (MCP)](./toolkits.md) — Sử dụng `forgekit init`.
 | business-process detail | `FLOW-*` | `/business-process` | Common theo scope |
 | Module | `CMP-*` | `/module` | `surfaces/<owner-surface>/CMP-*/` |
 | Screen leaf | `<NN…>` | `/spec` | `…/CMP-*/<NN…>/` |
-| FE IR | — | Codegenkit `/prototype` | `…/ir/design.yaml` |
+| FE IR | — | `/prototype` | `…/ir/design.yaml` |
 | API contract | — | `/api-spec` | `…/api/<seq>/01-backend-spec.yaml` |
 | Deployment | `DEP-*` | `/deployment` | `architecture/07-deployment/` |
 
-Đọc tiếp: [System doc structure](./system-doc-structure.md) · [Platform guide index](./).
+Đọc tiếp: [System doc structure](./system-doc-structure.md) · [AI Workflow](./ai-workflow.md) · [Toolkits](./toolkits.md).

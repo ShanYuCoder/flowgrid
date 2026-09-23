@@ -13,7 +13,8 @@ export function bundleToSpecShape(bundle) {
     title: bundle.title,
     status: bundle.status,
     owner: bundle.owner,
-    summary: bundle.summary ?? bundle.review?.summary
+    summary: bundle.summary ?? bundle.review?.summary,
+    userStories: bundle.userStories ?? bundle.spec?.userStories
   }
   return {
     ...meta,

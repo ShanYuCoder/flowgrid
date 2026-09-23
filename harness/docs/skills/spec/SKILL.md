@@ -5,149 +5,181 @@ description: EXCLUSIVE /spec — ONLY for authoring design bundle (feature.bundl
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Physical interlocks: `AGENTS.md` + `SSOT_AGENT_PROTOCOL.md` (Đạo luật 1–7). Chat-only done = FAILED.
-> - ĐẠO LUẬT 1: First action **BẮT BUỘC** `{{DOC_SKIT_READ_TOOL}}` this entire `SKILL.md`. **TUYỆT ĐỐI KHÔNG** dựa trí nhớ.
-> - ĐẠO LUẬT 5: Data lấy từ User prompt | ArtifactGraph. **BẮT BUỘC brainstorm bổ sung text business (bối cảnh bài toán, input, output, mô tả chức năng màn hình theo ngôn ngữ business) cho đội Non-tech hiểu.** Core rules thiếu: **AskQuestion** wizard form với **≥3 options**, hoặc treo `qa/open/QA-<page-id>-NNNN` + `#missing_info QA-…`.
-> - ĐẠO LUẬT 6–7: Grill Confirm trước khi vá gap; common/DSL chỉ `/common`|`/common-spec`|`/docs-mark`|Confirm — `/spec` chỉ consume.
-> - You MUST follow ALL Workflow steps below; verify via the Verification Checklist with evidence, not a static AGENTS checklist.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. **STRICTLY FORBIDDEN** to rely on memory.
+> **[MANDATORY]** Read `.forgekit/templates/feature.bundle.yaml` + `.forgekit/templates/bundle-authoring.md` BEFORE generating any YAML.
+> If templates are missing → STOP: *"Template missing. Run `forgekit init` to generate templates."*
+> Physical interlocks: `AGENTS.md` + `SSOT_AGENT_PROTOCOL.md` (Laws 1–7). Chat-only done = **FAILED**.
 
 # /spec — Function detail (design)
 
-**Mindset:** Author a **complete** bundle from the template when information exists. Fill a **dynamic** `design.sections[]` tree for that page (any `kind` / depth; `visual` + `tags`/`extract`) and `design.nav` when the page has sidebar/breadcrumb. Leaf controls in `items[]`. Matching `spec.ui.list` | `ui.form` | `ui.detail`. Do **not** copy a login (or any) sample as the default layout. `/grill-*` only re-check, fill gaps, or fix conflicts.
+**Mindset:** Author a **complete** bundle from the template when information exists. Build a **dynamic** `design.sections[]` tree for that page; leaf controls in `items[]`. Do **not** copy a login (or any) sample as the default layout.
 
-**Business layer:** Function (screen `W-*` / API `API-*` inside a module)  
-**Standards:** **C4 only** — do **not** open new arc42 chapters for one screen.
+**Business layer:** Screen `W-*` / API `API-*` inside a module. **Standards:** C4 only (no new arc42 chapters per screen).
 
-**Extracts:** `extractBundle: spec-requirement` → `.cursor/extracts/extract-registry.json`
+---
 
-> [!CRITICAL] TEMPLATE REQUIREMENT
-> You MUST read the template `.forgekit/templates/feature.bundle.yaml` and rules `.forgekit/templates/bundle-authoring.md` BEFORE generating any spec.
-> If these files are missing, you MUST STOP immediately and report an error to the user: "Template missing. Please run `forgekit init` to generate templates." DO NOT attempt to guess the format or generate the YAML without them.
+## Rule: Missing Information Handling & Workload Threshold (Law 2)
 
-## Load policy
+- **[MANDATORY]** When required fields are absent from user prompt or context, evaluate total missing items:
+  - **Small Scope (≤5 gaps):** Run `AskQuestion` wizard — **one question at a time**, **≥3 options**: (1) `(Recommended)`, (2) Alternative, (3) `Log as Tech Debt (Pending)`. Show next question only after member answers current one.
+  - **Large Scope (≥10 gaps OR multi-screen scope):** **[MANDATORY HARD STOP IN CHAT]**. Do not spam single questions in chat. Generate an implementation plan / Plan Mode document partitioned into Phases (3–5 questions/fields per phase) to prevent session token overflow.
+  - ❌ Never invent, assume, or silently skip missing fields.
+- **[MANDATORY]** If member chooses "Log as Tech Debt" → create `qa/open/QA-<page-id>-NNNN.yaml` + tag `#missing_info QA-…`. Do not block on it.
+- **[RECOMMENDED]** Brainstorm business text (context, input, output, screen descriptions) proactively in Vietnamese for Non-tech audience — do not wait to be told.
 
-**Write** the **entire** `*.bundle.yaml` (authoring SSOT). After split exists, **re-read the entire `ir/design.yaml`** (and `ir/spec.yaml` for prose) — do **not** open the bundle only to skim `design.sections` / `spec.ui` keys. Do not Read generated `*.md`.
+---
 
-Tree: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/guide/SYSTEM-DOC-STRUCTURE.md) · [Start now](../../../platform/guide/start-now.md)
+## Rule: Audit Interlock
 
-## Scope
+- **[MANDATORY]** If bundle file already exists: run `node engines/spec/lib/audit-bundle-gaps.mjs <path-to-bundle.yaml>` first.
+  - ✅ Consume JSON gap report to fill missing fields.
+  - **Threshold Interlock (Law 2):** If audit script outputs ≥10 missing items, HALT chat wizard immediately → create an implementation plan / Plan Mode document partitioned into sequential phases.
+  - ❌ Do not skip audit and proceed to authoring directly.
 
-**In:** Code bundle / `--id` under `surfaces/.../CMP-*/<slug>`, `pnpm docs:split`, `pnpm docs:render` (design MD only), harness notes.
+---
 
-**Out:** E2E plans → **`base-tests` `/testcase`**. UI → `/prototype` after grill-docs. overview / CTR → `architecture` children.
+## Rule: Target / ID Resolution
 
-## Target / ID Resolution Rule
+- **[MANDATORY]** Resolve screen ID, module ID, slug, or Draft ID before generating any file.
+  - Draft ID `1-1-2` → pad each segment → `01/01/02/`
+  - Bundle ID: module prefix + padded segments, e.g. `CMP-ADM-002` + `02-01-02` → `page-id: cmp-adm-002-02-01-02`
+- **[MANDATORY]** Search for input `.md` file at resolved path. If found, read it as primary requirement source — do NOT say "I cannot hallucinate" or ask user for input that is already present.
+- **[STRICTLY FORBIDDEN]** Do NOT demand full filesystem path from user when ID or slug is given.
 
-- User prompt MAY specify a screen ID, module ID, slug (e.g. `CMP-ADM-000`, `W-AD-AUTH-001`, `login`), or Draft ID (e.g., `1-1`, `2-1-1`).
-- If a Draft ID is provided, Agent MUST split it into numeric segments (e.g., `1-1-1` -> `01/01/01/`) to resolve the exact numeric target folder.
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve the exact target folder under `surfaces/.../CMP-*/<numeric-path>/`.
-- **CRITICAL INPUT DISCOVERY**: Before generating a new spec, Agent MUST proactively search for an input markdown file named `<numeric-path>.md` (e.g. `01/01/02.md`) at the resolved module path `surfaces/<surface>/CMP-*/<numeric-path>.md`. If found, Agent MUST read this file as the primary source of business bullets/requirements instead of saying "I cannot hallucinate" or asking the user for input. Do NOT wait for the user to explicitly tell you to read it.
-- Do NOT force the user to provide the full filesystem surface/module path if an ID, Draft ID or short slug is given.
+---
+
+## Rule: Load Policy
+
+- **[MANDATORY]** Write the **entire** `*.bundle.yaml` (authoring SSOT).
+- **[MANDATORY]** After split exists: re-read **entire** `ir/design.yaml` + `ir/spec.yaml`; do not skim partial keys.
+- **[STRICTLY FORBIDDEN]** Do NOT read generated `*.md` files.
+
+---
 
 ## Workflow
 
-1. Confirm **module (`CMP-*`) exists**, its operational-area mapping is known, and the implementing `CTR-*` is identified — otherwise stop for lead/owner.
-2. If bundle exists, verify gaps: actors, fields, validations, routes, actions, edge cases, acceptance. API contracts live in **`api/<seq>/01`** (`/api-spec`), not `spec.api`. Unknown facts → AskQuestion (Other chưa chốt → `qa-inbox.md`; đóng sau **`/qa-resolve`**); do not invent.
-3. If new, draft from user bullets or from the automatically discovered input `.md` file (e.g. `01/01/02.md`). **CRITICAL: BẮT BUỘC brainstorm 2 mảng: (1) Mặt Business cho Stakeholder (Chuẩn Arc42: Mục tiêu nghiệp vụ, Các bên liên quan, Kịch bản người dùng - bằng ngôn ngữ đời thường 100% Non-tech); (2) Mặt Kỹ thuật cho Dev/QA (Bắt buộc định nghĩa Field Validations, State Machine, UI Permissions, Edge Cases). TUYỆT ĐỐI KHÔNG viết các khối text chung chung ở ngoài (vd: "Field Validations: Username...", "State Machine: ..."). BẮT BUỘC map mọi rule/validation vào chính xác item tương ứng thông qua các thuộc tính `validation`, `messages`, `states` (disabledWhen, visibleWhen, etc.), `action` (onSuccess, onCommonError, onSpecificError) trong `design.sections[]`.** Map every visible control into nested `design.sections[]` (or flat `zones[]`) and `spec.ui.list|form|detail` (widget required). App pages: `design.nav.sidebar.levels` + breadcrumb. Phân vân: **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt" rồi **STOP**. Picks A/B/Other-with-text → ghi field thật. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (sau **`/qa-resolve`**). Summary đủ **key**; câu ngắn = member review. API endpoints → `/api-spec` `01`, không `spec.api`.
-   - **Draft ID Mapping:** Nếu có Draft ID (`1-1-1`, `2-1-2`), padding số 0 vào từng đốt (`01-01-01`, `02-01-02`).
-   - **Bundle ID:** Lắp tiền tố của module cha với các đốt vừa pad (vd: Module `CMP-ADM-002` + `02-01-02` -> `page-id: cmp-adm-002-02-01-02`). Split ghi `page-id` lên `ir/spec.yaml`.
-   - **Numeric Folder Path:** Cấu trúc thư mục BẮT BUỘC phản ánh chính xác các đốt số, KHÔNG ĐƯỢC chứa text. Draft ID có 3 đốt (vd `2-1-2`) thì sinh đúng 3 cấp thư mục: `02/01/02/`. **Agent MUST automatically create this directory (and any missing parent directories) if it does not exist.**
-   - **Bundle Name:** File `.bundle.yaml` BẮT BUỘC phải mang tên chức năng (textual slug), vd: `login.bundle.yaml`. Do đó path cuối cùng sẽ là: `surfaces/<surface>/CMP-*/02/01/02/login.bundle.yaml`.
-   - **Textual Info:** Tất cả các mô tả (cluster-name, submodule-name, function-name) phải được ghi vào các trường YAML (title, name, summary, sidebar, breadcrumb), KHÔNG đưa vào đường dẫn vật lý. Create this `*.bundle.yaml` with `specOrigin: requirement`. Do NOT write Markdown.
-4. Incremental blocks per extracts when needed.
-5. Apply **existing** common UI / spec-split extracts (consume only — do not invent or overwrite common SSOT; promote via `/common-spec` or confirmed grill).
-6. `pnpm docs:split -- <bundle>` (emits `ir/*`). `pnpm docs:render` writes **`ir/generated/spec.md` only**. VitePress/publish menu: module MD uses **Mã tài liệu**; function folder is `NN + <page-id>` → that spec.md (no handoff/generate/API extra items).
-7. Update `.harness/progress.md` when present; keep checklist in sync (`[x]` + evidence).
-8. Handoff plans: open **base-tests** → `/testcase` from acceptance.
+1. Confirm `CMP-*` exists and `CTR-*` is identified — otherwise stop for lead/owner.
+2. Run audit: `node engines/spec/lib/audit-bundle-gaps.mjs <bundle>` (if bundle exists).
+3. Fill gaps using rules below; unknowns → AskQuestion wizard.
+4. Write/update `*.bundle.yaml` with `specOrigin: requirement`.
+5. Apply **existing** common/DSL extracts (consume only — promote via `/common-spec`).
+6. Run `pnpm docs:split -- <bundle>` → `pnpm docs:render` (design MD only).
+7. Update `.harness/progress.md`.
+8. Handoff → `/testcase` from acceptance criteria.
 
-## Output
+---
 
-- `spec` / `design` only (see `bundle-authoring.md`)
-- **Không** author `TC-*` / `*.test.yaml` here (R3)
+## Rule: Content Requirements per Section
 
-## Rules
+### Rule: User Stories (`userStories`)
+- **[MANDATORY]** Generate complete `primary` (asA, iWant, soThat), `contextAndHandoff`, `scenarios` (5 scenarios), `acceptanceCriteria`.
+- **[MANDATORY]** `contextAndHandoff.screenAccess` MUST be one of: `directRoute` | `sidebarMenu` | `contextualAction`.
+- **[MANDATORY]** 5 scenarios: (1) Initial data load, (2) Input entry & Form validation errors, (3) Successful submission, (4) Exception handling / UI error states, (5) Background operations (if applicable). All descriptive texts generated for user consumption MUST be in clear Vietnamese.
 
-- **UI Metrics / Design System Policy:** DO NOT invent or explicitly declare low-level CSS properties (font-size, exact hex colors, padding, margin, border-radius) in feature specs. Assume these are governed globally by the common Design System (e.g., Tailwind/Shadcn base). Only declare `visual` properties if there is a specific, exceptional override requested by the spec.
-- Do not edit FE production code or Playwright.
-- Do not run `portal:gen` / `testcase:gen`.
-- Vague spec → `/grill-bqa` before `/prototype`.
+### Rule: Meaning vs Purpose
+- **[MANDATORY]** Every section, item, column, filter, action MUST declare both:
+  - `meaning`: Business essence / meaning (value delivered, which workflow it impacts).
+  - `purpose`: Interaction purpose (what user does with this control on the UI).
+  - ✅ `meaning: "Xác nhận danh tính thành viên"` / `purpose: "Nhập email đăng nhập"`
+  - ❌ `meaning: "Email field"` — too generic; not business-meaningful.
 
-### Common Pattern Resolution (MANDATORY)
-Before authoring a new Spec, you MUST:
-1. Scan **upward** from the function folder: nearest `common/yaml/` then module `common/yaml/`, then `surfaces/<surface>/common/yaml/`, then `surfaces/common/yaml/` (see `.cursor/extracts/common-scope.md`). **Consume only** — do not create/overwrite common here.
-2. Read `templates/shared/patterns/*.pattern.yaml` to identify which `commonSpecs` are associated with each pattern.
-3. From the prompt (structural cues only — not invented business fields), propose appropriate pattern tags:
-   - Screen has >8 columns → suggest `#split-hook:columns`
-   - Screen has >3 filters → suggest `#split-hook:filters`
-   - Screen has export/download → suggest `#split-hook:export`
-   - Complex form (>6 fields) → suggest `#split-hook:form-sections`
-   - **Proactive Component Splitting:** If the screen contains >= 2 **domain** structural blocks (card of *this* feature, not a generic Dialog), suggest `#needs-component: MoBlockName` for each. **Do not** tag shadcn primitives (`Button`, `Dialog`, `Table`, `FieldGroup`, `Sidebar`, …) as `#needs-component` — those are `#ui: AlertDialog` (design registry) and installed on the FE repo via the [shadcn/ui skill](https://ui.shadcn.com/docs/skills) (`shadcn add` / `shadcn search`). `#needs-component` = composite `Mo*` the generator cannot emit.
-   - **Deeply Nested Structure (Global Store):** If the screen contains deeply nested UI blocks ($\ge 3$ levels deep), suggest `#use-store` to extract local state into a Pinia/Zustand store.
-   - **Absolute Rule for Forms:** Whenever a form is present (Create, Edit, Modal, etc.), it MUST be extracted. Codegenkit auto-extracts it, so ensure the spec defines `ui.form` properly and DO NOT merge form layout into the page shell.
-   - Screen has a delete button → `#pattern: delete-flow`
-   - Screen is a list/table → `#pattern: CRUD` + `common-list-page`, `common-pagination`
-   - Contains confirm/overwrite actions → reference `common-confirm-dialog`
-4. Inject references into the `design.patterns` of the bundle.yaml:
-   ```yaml
-   design:
-     inherits: admin-crud
-     patterns:
-       - "#pattern: CRUD"
-       - "#pattern: delete-flow"
-   ```
+### Rule: UI Section Attributes & Custom Component Deep-Grill
+- **Reusable / Base Components (Shadcn UI & Base Kit):**
+  - If a component/section uses an existing base component or Shadcn primitive:
+    - Declare `primitive`: Shadcn tag (`#ui: Card`, `#ui: Form`, `#ui: Table`, `#ui: Dialog`, `#ui: Select`, `#ui: Input`, `#ui: Badge`, …).
+    - Declare `visual.colorToken` (e.g. `#common:card-surface`, `#common:primary`) and standard Tailwind layout classes.
+- **New / Custom Non-standard UI Blocks (`custom` / Novel Widgets):**
+  - **[MANDATORY DEEP-GRILL INTERLOCK]**: Whenever a UI section or component is novel, custom, or not in the standard base library, the Agent **STRICTLY FORBIDDEN** from leaving vague descriptions. The Agent MUST deeply drill down and specify:
+    1. **`customWidgetType`**: Exact functional archetype (e.g. `interactive-timeline`, `kanban-lane`, `drag-drop-uploader`, `signature-pad`).
+    2. **Dimension & Geometry Specifications**: Explicit width, height, min/max constraints, aspect ratio, responsive breakpoints (`mobileBreakpoints`, `desktopLayout`).
+    3. **Color & Surface Palette**: Exact token hierarchy — `backgroundToken`, `borderToken`, `accentToken`, `hoverStateColor`, `activeStateColor`, and dark/light contrast semantics.
+    4. **Typography & Text Metrics**: Header hierarchy (`h1`-`h6`), font-weight, line-height, text truncation behavior (`truncate`, `line-clamp-2`).
+    5. **Micro-Interactions & States**: Loading skeleton structure, empty/error state UI, hover transition curves, and disabled visual opacity.
+- **[PROACTIVE AI BRAINSTORMING]**: If the user asks for a new UI block without specifying dimensions/colors, the Agent MUST propose 2–3 concrete visual design specifications (using Design System semantic tokens) via the Wizard with `(Recommended)` instead of asking open-ended questions.
 
-- **STRICT API REUSE & `#reuse-api`:** Walk up `common/yaml/` (module/cluster first) and sibling `api/<seq>/`. If a **page action/item** calls an existing 01, set `tags: ["#reuse-api"]` and `reuseFrom` on that action/item. Do **not** author `bundle.spec.api`.
-- **EXPLICIT ACTION SUFFIX URIs:** All API endpoints MUST use explicit action suffixes (`/create`, `/{id}/update`, `/{id}/duplicate`, `/{id}/delete`, `/{id}/detail`, `/list`). Never use ambiguous RESTful paths without action suffixes.
-- **MANDATORY UI & API ERROR HANDLING SPECIFICATION:**
-  - **UI Actions (`design.yaml`):** Agent MUST specify 3 execution outcomes for EVERY user action / API call: `onSuccess` (feedback, navigation), `onCommonError` (inherit `#ui-common:error-handler` or explicit `override: true`), and `onSpecificError` (inline `422` validation, `404` empty state, `403 IDOR` safety block, `409` conflict copy).
-  - **API Contract (`spec.yaml`):** MUST apply Endpoint Error Storming Matrix using `#err:*` tags. Detail/Update/Delete routes with `{id}` MUST have `#err:not-found` & `#err:idor-violation`. Form Submits MUST have `#err:validation` rules.
-- **CRITICAL:** Output MUST be a `.bundle.yaml` file. Do NOT generate Markdown (`.md`) files by hand. Markdown is generated by `pnpm docs:split` / `docskit split` (and `docs:render`) from the bundle.
-- **STRICT YAML ESCAPING:** ALL string properties (e.g. `summary`, `label`, `review.layoutNotes`) containing colon (`:`), brackets (`[]`), or leading symbols MUST be quoted with double quotes (`"..."`) or written using YAML multiline block scalars (`|`). Never leave unquoted colons inside string values.
-- If a custom template/layout is required, specify the template name in the bundle YAML's `template` field (e.g., `template: breadcrumb-flow`). Do not edit the generated Markdown output directly.
+### Rule: Dynamic 5-Tier Validation & Messages
+- **[MANDATORY]** Never accept superficial `validation: { required: true }`. The Agent **MUST proactively brainstorm and specify** the full 5-tier validation profile for all form fields:
+  1. **Prototype format:** Assign standard presets (`email`, `phone_vn`, `tax_code`, `slug_uppercase`, `currency_vnd`, `date_range`, `password_strong`).
+  2. **Boundary limits:** Explicit `min` / `max` length or numeric values.
+  3. **Conditional & Cross-field dependencies:** Declare `conditionalRules` (`requiredWhen`, `disabledWhen`, `greaterThan`).
+  4. **Remote / Async verification:** Declare `remoteCheck` for unique DB constraints (endpoint, trigger `onBlur`, debounce, params).
+  5. **Explicit Vietnamese error copy:** Every single rule MUST declare its exact human-readable error message.
+- **[PROACTIVE AI BRAINSTORMING INTERLOCK]**: When user inputs are sparse, the Agent **STRICTLY FORBIDDEN** from leaving fields minimally validated. The Agent MUST actively infer and propose realistic validation rules and confirm with user via Wizard options.
 
-## Modifiers (If /legacy is used)
-Khi người dùng gọi `... /legacy /spec`, Agent PHẢI:
-- Đọc source từ `legacy-repos.local.json` thay vì source hiện tại.
-- Trích xuất function logic từ source code cũ.
-- Viết/cập nhật `legacy-dynamics/{module}/_legacy.dynamics.yaml` (`portal-legacy-dynamics/v1`).
-- Viết `*.bundle.yaml` cho function đó vào `surfaces/<surface>/CMP-*/<slug>/` với `specOrigin: legacy`.
-- **Không** tạo codegen tags. Hỗ trợ chạy validate: `legacy_dynamics_validate` / `pnpm legacy-dynamics:validate`.
+### Rule: Action Flow Specification (6 Mandatory Technical Blocks)
+- **[MANDATORY]** Every mutation/submit button MUST specify all 6 technical blocks:
+  1. `preconditions`: UI form validity, record lifecycle status (`record.status in [...]`), required RBAC permissions, and `disabledReason`.
+  2. `interactionControl`: `preventDoubleSubmit: true` (immediate button lock), `debounceMs`, `loadingIndicator` text, and `confirmDialog` (for destructive actions).
+  3. `payloadTransformation`: String trimming, XSS sanitation, and type casting rules (e.g. currency string $\to$ integer).
+  4. `executionContract`: Target `apiRef`, HTTP method, `idempotencyKey` header, timeout SLA, and concurrency strategy (`optimistic_locking`).
+  5. `outcomes`: 4-tier matrix:
+     - `onSuccess`: Toast copy, navigation target, background event dispatch.
+     - `onBusinessErrors` (422, 409): Field-level inline error mapping and duplicate warnings.
+     - `onSecurityErrors` (401, 403): Session expiry localStorage preservation and IDOR safety redirects.
+     - `onSystemErrors` (500, 504, Client Offline): Timeout resubmit lock, offline data preservation banner.
+  6. `stateMatrix`: Link action behavior with screen record status and role permission visibility.
+- **[STRICTLY FORBIDDEN]** Do NOT skip concurrency, double-submit protection, or network timeout handling.
 
-## Tools (required after forgekit init)
+### Rule: Layout Structure
+- **[MANDATORY]** Map every visible control into nested `design.sections[]` (or flat `zones[]`).
+- **[MANDATORY]** App pages: declare `design.nav.sidebar.levels` + breadcrumb.
+- **[MANDATORY]** API endpoints → `/api-spec` (not `spec.api` on this bundle).
 
-Prefer MCP/CLI when Docskit is installed:
+---
 
-- `docskit_bundle_split` / `docskit split -- <bundle>`
+## Rule: Common Pattern Resolution
+
+- **[MANDATORY]** Before authoring: scan upward `common/yaml/` (function → module → cluster → surface → global); read `templates/shared/patterns/*.pattern.yaml`.
+- **[MANDATORY]** Tag patterns from structural cues only (never invented business fields):
+  - `>8 columns` → `#split-hook:columns`; `>3 filters` → `#split-hook:filters`; export button → `#split-hook:export`; complex form (>6 fields) → `#split-hook:form-sections`
+  - `≥2 domain structural blocks` → `#needs-component: MoBlockName` (NOT shadcn primitives)
+  - Delete button → `#pattern: delete-flow`; list/table → `#pattern: CRUD`; confirm/overwrite → `common-confirm-dialog`
+- **[MANDATORY]** Inject into `design.patterns[]` in bundle YAML.
+- **[STRICTLY FORBIDDEN]** Do NOT tag shadcn primitives (`Button`, `Dialog`, `Table`) as `#needs-component`. Use `#ui: <ShadcnPrimitive>` instead.
+
+---
+
+## Rule: YAML Authoring Safety
+
+- **[MANDATORY]** Output MUST be `*.bundle.yaml`. Do NOT write `.md` directly — Markdown is generated by `pnpm docs:split`.
+- **[MANDATORY]** All strings with `:`, `[]`, or leading symbols MUST be double-quoted or use YAML block scalar (`|`).
+  - ✅ `summary: "Màn hình: Đăng nhập hệ thống"`
+  - ❌ `summary: Màn hình: Đăng nhập`
+- **[MANDATORY]** File path: `surfaces/<surface>/CMP-*/<NN>/<NN>/<NN>/<slug>.bundle.yaml` (numeric segments, no text in path).
+
+---
+
+## Modifiers
+
+### `/legacy` modifier
+- **[MANDATORY]** Lookup `adoption-inventory.md` at workspace root. If missing → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** Set `specOrigin: legacy`; use legacy source path from inventory mapping.
+- **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield (non-legacy) commands.
+
+---
+
+## Tools
+
+- `docskit_bundle_split` / `docskit split -- <bundle>` (prefer MCP when installed)
 - `docs_render` / `docskit render …`
-- Local fallback only if package not installed: `pnpm docs:split` · `pnpm docs:render`
+- Local fallback: `pnpm docs:split` · `pnpm docs:render`
 
-## Accelerators (optional)
-
-```text
-if Docskit available: resolve CMP/CTR/FLOW IDs → paths
-else: repository conventions / search (local fallback)
-
-if ArtifactGraph available: tags/parity slice for touched contracts
-else: model review from scoped bundle evidence (model fallback)
-```
-
-Missing optionals never block `/spec`. After the existing fallback completes,
-emit exactly one `docskit.missing-optional` event per `runId` + optional
-against `.cursor/schemas/docskit/missing-optional-event.schema.json`.
-Deduplicate retries and report only actual `fileReads` / `contextBytes`.
-
-## Done
-
-- Design bundle coherent · split + docs:render pass · plans handoff → `/testcase` on tests hub.
+---
 
 ## Verification Checklist
-- [ ] Strict adherence to scope boundaries and module CMP mapping (`surfaces/<surface>/CMP-*/<slug>/`).
-- [ ] Brainstormed business text (context, input, output). Missing **keys** filled or deferred as `qa/open/QA-<page-id>-NNNN` + `#missing_info QA-…`. Short prose is member review, not a QA file.
-- [ ] Screen inventory complete when info exists: nested `design.sections[]` (kind/visual/tags) or `zones[].items[]`, plus `spec.ui.list|form|detail`. App pages include `design.nav` sidebar/breadcrumb when a left menu exists.
-- [ ] Common/DSL only consumed (not invented); output MUST be a `.bundle.yaml` (Do NOT write `.md` directly).
-- [ ] **YAML Syntax Check:** All strings with colons (`:`) or brackets (`[]`) are double-quoted (`"..."`) or block-escaped (`|`).
-- [ ] Executed `docskit split` / `pnpm docs:split` (IR + spec MD) with zero parse errors.
-- [ ] Handed off testcase plans to `base-tests` `/testcase`.
 
-
+- [ ] Module `CMP-*` confirmed; `CTR-*` identified.
+- [ ] Audit script run (if bundle existed); all gaps resolved or QA-tagged.
+- [ ] `userStories`: 5 scenarios + `screenAccess` typed + `acceptanceCriteria` present.
+- [ ] `meaning` + `purpose` on every section, item, column, action.
+- [ ] Shadcn `primitive` + `visual.className` + `states` on every `design.sections[]` block.
+- [ ] Dynamic 5-Tier Validator: `prototype`, boundaries (`min`/`max`), regex/format, `conditionalRules`, `remoteCheck` DB unique.
+- [ ] `validation.messages` in Vietnamese on every validated field (no vague error text).
+- [ ] `stateMatrix` defined: Record Status ↔ Fields State ↔ Visible Buttons ↔ RBAC Overrides.
+- [ ] 6-Block Action Flows specified: Preconditions, Interaction Lock (Double-submit), Payload Transform, API Contract, 4-Tier Outcomes Matrix (Success, 422/409, 401/403, 500/504/Offline).
+- [ ] Custom UI Blocks: Dimensions, Palette semantic tokens, Typography, and Micro-interactions defined if novel.
+- [ ] Common patterns tagged in `design.patterns[]`; no invented low-level CSS.
+- [ ] YAML strings with `:` or `[]` are double-quoted. No `.md` written by hand.
+- [ ] `pnpm docs:split` + `pnpm docs:render` run with zero errors; rendered `spec.md` verified clean of raw YAML dumps.
+- [ ] Handoff → `/testcase` created.

@@ -4,30 +4,40 @@ description: EXCLUSIVE /grill-common-spec — Use this to audit and verify techn
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-# /grill-common-spec
+# /grill-common-spec — Common Bundle Audit
 
-**Target Path:** any `<LCA>/common/yaml/<slug>/<slug>.bundle.yaml` (see `.cursor/extracts/common-scope.md`). Do not “fix” a module common by copying it to surface `common/`.
+**Target Path:** `<LCA>/common/yaml/<slug>/<slug>.bundle.yaml` (see `.cursor/extracts/common-scope.md`).
 
-## Purpose
+---
 
-The `/grill-common-spec` skill audits a common feature bundle (YAML) for technical validity before passing it to `docskit split` and the code generator.
+## Rule: Audit Checks
 
-## Audit Rules
+- **[MANDATORY]** Verify `schema` is set (e.g. `portal-feature-bundle/v1` or appropriate surface schema).
+- **[MANDATORY]** Verify `design.shell.tag` reflects the target platform:
+  - Web Portal → `#shell: DataListPage`
+  - WinForms → `#shell: KioskCheckIn`
+  - Gateway → `#shell: OtAdapter`
+- **[MANDATORY]** Verify `spec.principles` and `spec.acceptance` are detailed enough to drive test cases and codegen.
+- **[MANDATORY]** Verify `design.patterns` and referenced middlewares point to valid, existing items.
+- **[STRICTLY FORBIDDEN]** Do NOT "fix" a module-common bundle by copying it to surface `common/`.
 
-1. **Schema Validation:** Verify that `schema` is set (e.g. `portal-feature-bundle/v1` or appropriate surface schema).
-2. **Platform Readiness:** Ensure `design.shell.tag` correctly reflects the target platform (e.g., `#shell: DataListPage` for Web, `#shell: KioskCheckIn` for WinForms, `#shell: OtAdapter` for Gateway).
-3. **Completeness:** Ensure `spec.principles` and `spec.acceptance` are sufficiently detailed to generate test cases and drive codegen behavior.
-4. **References:** Verify that any `design.patterns` or referenced middlewares point to valid, existing items.
+---
 
-## Output
+## Rule: Output
 
-Do NOT output new files. 
-- If issues are found, inform the user and suggest fixes, or fix them directly in the `.bundle.yaml` file if instructed.
-- If the bundle is perfect, instruct the user to proceed with `docskit split -- <path>` (must emit `ir/design.yaml`) then Codegenkit FE `/gen-common`. Do not send BE `/api` a common FE bundle.
+- **[STRICTLY FORBIDDEN]** Do NOT output new files from this skill.
+- **[MANDATORY]** If issues are found → inform user + suggest fixes, or fix directly in `.bundle.yaml` if instructed.
+- **[MANDATORY]** If bundle passes → instruct user: run `docskit split -- <path>` (must emit `ir/design.yaml`), then Codegenkit FE `/gen-common`.
+- **[STRICTLY FORBIDDEN]** Do NOT send BE `/api` a common FE bundle.
 
-## Verification Checklist (Evidence Required)
-- [ ] **Bundle Audited:** The specified `.bundle.yaml` file was read and checked against the rules.
-- [ ] **Platform Checked:** The bundle's platform tags correctly align with its intended surface.
+---
+
+## Verification Checklist
+
+- [ ] `schema` field set correctly.
+- [ ] `design.shell.tag` aligned with target surface type.
+- [ ] `spec.principles` and `spec.acceptance` are substantive.
+- [ ] All `design.patterns` / middleware references are valid and exist.

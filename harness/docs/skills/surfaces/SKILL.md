@@ -4,43 +4,49 @@ description: "/surfaces — Manage business/interaction surfaces (who does what 
 disable-model-invocation: true
 extractBundle: architecture-core
 ---
-# /surfaces
-**Target Paths:** `surfaces/[Business Surface]`
-**Guidelines:** Manage business/interaction surfaces, not repos or projects. A surface is defined by actor(s), channel, and business responsibility.
-- **Surface Technical Boundary:** Surfaces contain technical design specs, but ONLY for UI/Page building (UI Layout, Component States, Props) and single-API Data Schemas (Request/Response) specific to that screen. You MUST NOT include system-level architecture details such as backend server config, load balancers, or backend database internal schemas. Cross-flows within surfaces only track user navigation/journeys across screens, not backend technical flows.
 
-## Workflow / Luồng thực thi
-1. Kiểm tra xem thư mục `surfaces` đã tồn tại chưa. Nếu chưa, tạo mới.
-2. Nếu gọi kèm tên một business surface cụ thể (vd: `/surfaces "Customer App"`):
-   - Kiểm tra xem thư mục `surfaces/[Tên Surface]` đã có chưa. Nếu chưa, tạo mới thư mục rồi mới làm việc.
-3. Nếu gọi kèm `common`:
-   - Không tên surface → `surfaces/common` **chỉ** khi rule/API dùng cho ≥2 surfaces. Không dùng làm thùng rác mặc định.
-   - Có tên surface → `surfaces/[Surface]/common` cho share **giữa các module** trên surface đó. Share trong một CMP → `/module CMP-… common`.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-## Surface meaning
-- A surface represents a business interface or interaction channel (e.g., Customer Web, Admin Portal, Mobile App, Integration Gateway).
-- common is shared scope used by more than one surface.
-- API is **not** a surface; API belongs to architecture containers or function / API contract detail.
+# /surfaces — Business/Interaction Surfaces
 
-## Target / ID Resolution Rule
+**Definition:** A surface = business interface or interaction channel (Admin Portal, Customer Web, Mobile App, Integration Gateway) — NOT a repository or project.
 
-- User prompt MAY specify a Surface ID or Business Surface name (e.g. `Admin Portal`, `Customer Web`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve target surface directory under `surfaces/...`.
+---
 
-## Overview alignment
-When writing overview content, describe the surface in the same business sense:
-- who uses it
-- what they do
-- which channel they use
-- what business responsibility it covers
+## Rule: Target Resolution
 
-## Modifiers (If /legacy is used)
-Khi gọi kèm `/legacy` (vd: `/legacy /surfaces`):
-- Tham chiếu source from `legacy-repos.local.json`.
-- Khảo cổ: truy vết và ánh xạ các client / app / integration cũ vào đúng business surface hiện tại, ghi nhận vào cùng thư mục đang thao tác tại `surfaces/[Tên Surface]/legacy-surface.md`.
+- **[MANDATORY]** Use `docskit_route` or `docskit_get_element` (or glob) to resolve the target surface directory under `surfaces/[Surface Name]/`.
+- **[STRICTLY FORBIDDEN]** Do NOT confuse an API with a surface. APIs belong to architecture containers or function-level API contracts.
 
-## Verification Checklist (Evidence Required)
-- [ ] **Target Surface Resolved:** Located or created surface folder under `surfaces/[Surface Name]`.
-- [ ] **Business Responsibilities:** Documented actors, channels, and scope cleanly.
-- **DO NOT output fake checklists, i18n tables, or framework prose.**
+---
 
+## Rule: `common` Scope
+
+- **[MANDATORY]** `surfaces/common` — ONLY when a rule/API is used by **≥2 surfaces**. Never use as a default dumping ground.
+- **[MANDATORY]** `surfaces/[Surface]/common` — share between modules on this specific surface (not within a single `CMP-*`).
+- For sharing within one `CMP-*` → use `/module CMP-… common`.
+
+---
+
+## Rule: Overview Alignment
+
+- **[MANDATORY]** When authoring a surface overview, describe: target actors, their actions, interaction channels, and assigned business responsibilities. Keep descriptions in business terms rather than technical architecture.
+- **[MANDATORY]** Surface technical boundary: UI layout, component states, props, single-API data schemas specific to that screen.
+- **[STRICTLY FORBIDDEN]** Do NOT include system-level architecture details (backend server configuration, load balancers, database schemas) in surface documentation.
+
+---
+
+## Modifier: `/legacy`
+
+- **[MANDATORY]** If `adoption-inventory.md` is missing at workspace root → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** If file exists: look up surface ID → get legacy app/repo path → write `surfaces/[Surface]/legacy-surface.md`.
+- **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield commands.
+
+---
+
+## Verification Checklist
+
+- [ ] Target surface folder located or created under `surfaces/[Surface Name]/`.
+- [ ] Business responsibilities (actors, channels, scope) documented in business language.
+- [ ] `surfaces/common` reserved strictly for rules shared across ≥2 surfaces.

@@ -8,8 +8,7 @@
  * External `@projectId` paths are legacy and disabled in normal runtime.
  */
 
-import { existsSync } from 'node:fs'
-import fg from 'fast-glob'
+import { existsSync, globSync } from 'node:fs'
 import path from 'node:path'
 import type { ArtifactgraphConfig } from '../types.js'
 import { packageRoot } from './platform-repos.js'
@@ -86,7 +85,7 @@ export function resolveGapSourceFiles(repoRoot: string, cfg: ArtifactgraphConfig
 function safeGlob(pattern: string, cwd: string): string[] {
   if (!existsSync(cwd)) return []
   try {
-    const hits = fg.sync(pattern, { cwd })
+    const hits = globSync(pattern, { cwd })
     return hits.map((rel) => (path.isAbsolute(rel) ? rel : path.join(cwd, rel)))
   } catch {
     return []

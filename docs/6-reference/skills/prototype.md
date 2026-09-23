@@ -12,7 +12,7 @@
 - Gọi qua slash command: `/prototype` và `/grill-prototype`.
 
 ## Input (Dữ liệu đầu vào)
-- Đọc đặc tả giao diện (`ir/design.yaml`) sau khi `docskit split` thành công.
+- Đọc đặc tả giao diện (`ir/design.yaml`) sau khi `forgekit split` thành công.
 - Các thẻ tags `#needs-component:*`, `#custom-slot:*`.
 
 ## Output (Kết quả mong đợi)

@@ -7,8 +7,7 @@
  *
  * External `@projectId` paths are legacy and disabled in normal runtime.
  */
-import { existsSync } from 'node:fs';
-import fg from 'fast-glob';
+import { existsSync, globSync } from 'node:fs';
 import path from 'node:path';
 import { packageRoot } from './platform-repos.js';
 /** Resolve one config path (specRoot, lexicon, command --dir token, …). */
@@ -74,7 +73,7 @@ function safeGlob(pattern, cwd) {
     if (!existsSync(cwd))
         return [];
     try {
-        const hits = fg.sync(pattern, { cwd });
+        const hits = globSync(pattern, { cwd });
         return hits.map((rel) => (path.isAbsolute(rel) ? rel : path.join(cwd, rel)));
     }
     catch {

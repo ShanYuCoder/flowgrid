@@ -17,13 +17,13 @@
 - File đích (`*.bundle.yaml` hoặc `01-backend-spec.yaml`) được điền giải pháp vào đúng vị trí `target.at` (thay thế `#missing_info`).
 - Xóa bỏ ID này khỏi mảng `pendingTechDebt` hoặc các tag `#tech-debt:QA-...`.
 - XÓA BỎ hoàn toàn file `qa/open/<id>.yaml` khỏi hệ thống (Đóng QA thành công).
-- `docskit split` chạy lại để làm mới dữ liệu IR.
+- `forgekit split` chạy lại để làm mới dữ liệu IR.
 
 ## Description / Ý nghĩa
 - Chuyên dùng để đóng các khoản nợ kỹ thuật (Tech Debt) hoặc các khoảng trống (Gaps) nghiệp vụ đã được ghi nhận trước đó từ các form AskQuestion.
 - Quá trình này **đơn nhiệm** (chỉ giải quyết 1 QA ID mỗi lần gọi) để đảm bảo độ chính xác tuyệt đối.
 - Agent phải đọc `target.path` từ file QA để biết chính xác cần vá file nào, không được tự ý phỏng đoán (guesswork) vị trí sửa.
-- Nếu đích sửa đổi là file `01-backend-spec.yaml`, Agent cần gọi tiếp `docskit openapi:gen --spec <01>` để cập nhật lại swagger.
+- Nếu đích sửa đổi là file `01-backend-spec.yaml`, Agent cần gọi tiếp `forgekit openapi_gen --spec <01>` để cập nhật lại swagger.
 
 ## Các Skill liên quan
 - **Trước đó:** Nhận đầu vào do các skill `grill-*` (bqa, dev, docs) tạo ra qua tuỳ chọn "Log as Tech Debt".

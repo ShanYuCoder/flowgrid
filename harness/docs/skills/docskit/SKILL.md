@@ -5,9 +5,9 @@ description: /docskit — MCP index for a conforming arc42 × C4 documentation h
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - You MUST read and strictly comply with ALL workflow steps, rules, and index routing policies below.
-> - Do NOT perform a shallow check. Verify your results against the **Verification Checklist** at the end of this skill before completing.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Use `docskit_journeys` before reading every journey file. Prefer targeted tool results over dumping `architecture/**`.
 
 # /docskit
 
@@ -53,23 +53,17 @@ The selected hub must contain `architecture/`. Never infer a sibling checkout.
 
 ## Index routing
 
-Do not merge repositories into one workspace graph. Route by intent:
-
-- Architecture ID / C4 path → Docskit (`DOCSKIT_ROOT`). Never CodeGraph for
-  architecture Markdown.
-- IR / registry / generation → pointer kits when present
-  (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
-- Symbol / call-graph for repo `X` → CodeGraph MCP of repo `X`
-  (`codegraph-<key>`, `--project-root` = checkout of `X`). Platform DNA wires
-  those servers from `platform-repos.local.json` /
-  `legacy-repos.local.json`; do not hand-edit `.cursor/mcp.json` for that.
-- ArtifactGraph stays local-only and must not index other repositories.
+- **[MANDATORY]** Route by intent — do NOT merge repositories into one workspace graph:
+  - Architecture ID / C4 path → Docskit (`DOCSKIT_ROOT`). **[STRICTLY FORBIDDEN]** Never CodeGraph for architecture Markdown.
+  - IR / registry / generation → pointer kits when present (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
+  - Symbol / call-graph for repo X → CodeGraph MCP of repo X (`codegraph-<key>`, `--project-root` = checkout of X). Platform DNA wires those servers from `platform-repos.local.json` / `legacy-repos.local.json`; **[STRICTLY FORBIDDEN]** do NOT hand-edit `.cursor/mcp.json` for that.
+  - ArtifactGraph stays local-only and must not index other repositories.
 
 ## Owned architecture family
 
 Docs `harness install --type=docs` also syncs `/architecture`, `/system-context`, `/containers`,
 `/grill`, `/overview`, `/surfaces`, `/module`, `/business-process`, `/db-erd`, `/cross-service`, `/architecture-grill`,
-`/deployment`, `/journey`, `/spec` and all `/legacy-*` variants, plus the `architecture-core` extract bundle.
+`/deployment`, `/journey`, `/spec`, `/adopt` and all `/legacy-*` variants, plus the `architecture-core` extract bundle.
 Consumer mode syncs only `/docskit`, its rule/schema, and targeted phase hook.
 
 ## Accelerators (optional)
@@ -97,4 +91,3 @@ tokens or token savings.
 - [ ] Strict adherence to index routing rules and load policy.
 - [ ] Verified root and setup path configurations.
 - [ ] Checked for all required extracts and accelerator fallback events if applicable.
-

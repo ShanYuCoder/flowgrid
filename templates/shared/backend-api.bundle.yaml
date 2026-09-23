@@ -30,26 +30,75 @@ spec:
         action: action
         method: POST
         path: /feature/action
+        purpose: "Tiếp nhận và thực thi thao tác nghiệp vụ chính từ giao diện hoặc dịch vụ khác"
+        sla:
+          rateLimit: "100/min"
+          timeoutMs: 3000
+        dataIntegrity:
+          transactional: true
+          concurrencyControl:
+            strategy: "optimistic_locking" # optimistic_locking | pessimistic_locking | none
+            versionField: "updated_at"
+            onConflictStatus: 409
+            conflictMessage: "Dữ liệu vừa được cập nhật bởi một phiên làm việc khác. Vui lòng thử lại."
+        asyncEvents:
+          - name: "FeatureActionExecutedEvent"
+            topic: "feature.events"
+            meaning: "Bắn sự kiện ngầm khi thao tác hoàn tất để xử lý đồng bộ dữ liệu và gửi thông báo"
         request: FeatureRequest
         response: FeatureResponse
         errorStorming:
           - code: 401
             tag: "#err:unauthorized"
             reason: "User not authenticated"
+          - code: 403
+            tag: "#err:idor-violation"
+            reason: "Tenant IDOR violation or insufficient role permission"
+          - code: 409
+            tag: "#err:conflict"
+            reason: "Concurrent edit conflict or unique constraint violation"
           - code: 422
             tag: "#err:validation"
-            reason: "Invalid payload"
-            fields: ["example_field"]
+            reason: "Invalid payload or boundary validation failure"
+            fields: ["record_code", "record_name"]
   requests:
     FeatureRequest:
       fields:
-        - name: example_field
+        - name: record_code
           type: string
+          meaning: "Mã định danh duy nhất của hồ sơ"
+          purpose: "Nhập mã định danh duy nhất"
+          validation:
+            prototype: "slug_uppercase"
+            required: true
+            rules:
+              - type: "regex"
+                pattern: "^[A-Z0-9_-]{5,20}$"
+              - type: "length"
+                min: 5
+                max: 20
+            uniqueCheck:
+              scope: "tenant_id"
+              table: "records"
+              column: "code"
+        - name: record_name
+          type: string
+          meaning: "Tên định danh hiển thị của hồ sơ"
+          purpose: "Nhập tên hồ sơ"
+          validation:
+            prototype: "text_clean"
+            required: true
+            rules:
+              - type: "length"
+                min: 3
+                max: 100
   responses:
     FeatureResponse:
       fields:
         - name: result
           type: string
+          meaning: "Mã trạng thái hoặc kết quả đầu ra chính thức của giao dịch"
+          purpose: "Trả về kết quả phản hồi cho caller"
 
 gen:
   codegen:

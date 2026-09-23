@@ -5,65 +5,75 @@ description: EXCLUSIVE /grill-docs — ONLY for reconciling BQA vs Dev conflicts
 disable-model-invocation: true
 ---
 
-# /grill-docs — Reconcile + codegen gate
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Read entire `ir/design.yaml` + `ir/spec.yaml`. Never cherry-pick keys from `*.bundle.yaml`.
 
-**Re-check only:** Reconcile BQA↔dev conflicts and bind mismatches. Do **not** author page inventory from scratch.
+# /grill-docs — Reconcile BQA ↔ Dev Conflicts + Codegen Gate
 
-## Mindset & Scope Alignment
+**Purpose:** Merge and reconcile contradictions between BQA business requirements and Dev technical specifications. Do NOT author page inventory from scratch.
 
-- **`/grill-bqa`**: Business/BQA view (UI layout, copy, user action flows, acceptance criteria). **NO technical/API/database debates.**
-- **`/grill-dev`**: Engineering/Dev view (Database tables, data types, API routes, `#reuse-api`, codegen tags).
-- **`/grill-docs`**: Merges and reconciles BOTH BQA Business requirements AND Dev Technical specifications when contradictions exist.
+| Skill | Owns |
+|---|---|
+| `/grill-bqa` | UI layout, copy, acceptance criteria — NO API/DB debates |
+| `/grill-dev` | DB tables, API routes, codegen tags — NO BQA business rules |
+| `/grill-docs` | Reconciles contradictions between BOTH above |
 
-## Load policy
+---
 
-**Read entire IR files** — do not cherry-pick keys from `*.bundle.yaml`.
+## Rule: Load Policy
 
-| Read (whole file) | Write | Do not Read |
-|-------------------|-------|-------------|
-| **`ir/design.yaml`** | Patch **`*.bundle.yaml`** then `pnpm spec:split` | Generated `*.md` |
+| Read (whole file) | Write | NEVER Read |
+|---|---|---|
+| **`ir/design.yaml`** | Patch `*.bundle.yaml` → `pnpm spec:split` | Generated `*.md` |
 | **`ir/spec.yaml`** (prose vs tech conflicts) | | |
+
+---
+
+## Rule: Missing Information / Conflict Resolution
+
+- **[MANDATORY]** Conflicts → `AskQuestion` wizard — one question at a time, **≥3 options**: (1) Recommended, (2) Other, (3) "Log as Tech Debt".
+  - ✅ Member picks → author the spec. "Log as Tech Debt" → create QA file + pointer.
+  - ❌ No `openQuestions` left on the bundle.
+- **[MANDATORY]** Deferred gaps from `qa-inbox.md` → resolve using `/qa-resolve`, NOT this skill.
+
+---
+
+## Rule: Codegen Gate
+
+- **[MANDATORY]** `bundle.gen.codegen.profile` (+ entity/module when required) MUST be set.
+  - Login/forgot/reset → `auth` (NOT `create`).
+  - ❌ If missing or wrong → do NOT set `grillStatus.full: done`. Report and hand back to `/grill-dev`.
+- **[MANDATORY]** After bundle is reconciled: `docskit_bundle_split` → `docs_render`.
+- **[RECOMMENDED]** If ArtifactGraph is available: use `artifactgraph_allowlist_check` + `artifactgraph_recommend_command` for `genDry`; never execute FE generation here.
+
+---
 
 ## Workflow
 
-0. Deferred gaps: `.cursor/extracts/qa-inbox.md`. Close a known id with **`/qa-resolve`**, not this skill.
-1. Resolve spec ↔ legacyEvidence ↔ design conflicts in **bundle**. Member pick now → **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt" then write the spec. Nếu member chọn "Log as Tech Debt" → QA file + pointer — **no** `openQuestions`.
-2. **Reconcile Common Patterns & Code Size:** Verify that the feature bundle inherits and complies with the common patterns specified by both BQA (business flows) and Dev (`#pattern`, `#split-hook:` codegen tags).
-3. **Reconcile API & Tech Decisions (`#reuse-api`):** Verify Dev tags on **page actions/items** (`#reuse-api` + `reuseFrom`) against BQA flows. Duplicate contracts must not get a new `api/<seq>/`.
-4. **Codegen gate:** `bundle.gen.codegen.profile` (and entity/module when required) must be set. Login/forgot/reset = `auth`, not `create`. If missing or wrong, **do not** set `grillStatus.full: done` — report and hand back to `/grill-dev`.
-5. Write/fix `bundle.gen` → `docskit_bundle_split` (fallback: `docskit split`).
-6. If ArtifactGraph is available, use `artifactgraph_allowlist_check` +
-   `artifactgraph_recommend_command` for `genDry`; never execute FE gen here.
-7. `docs_render` (fallback: `docskit render`).
-8. Handoff ID/path + recommendation to FE Codegenkit. Missing Codegenkit is a
-   pending handoff, not a reason to invent a local shell fallback.
+1. Resolve spec ↔ legacyEvidence ↔ design conflicts in bundle via AskQuestion wizard.
+2. Reconcile common patterns (BQA flows ↔ Dev `#pattern`, `#split-hook:` tags).
+3. Reconcile `#reuse-api` on page actions/items (no duplicate `api/<seq>/` for reused APIs).
+4. Verify codegen gate: `bundle.gen.codegen.profile` set correctly.
+5. Write/fix `bundle.gen` → `docskit_bundle_split` → `docs_render`.
+6. Handoff ID/path + recommendation to FE Codegenkit.
 
-## Accelerators (optional)
+---
 
-```text
-if ArtifactGraph available: reconcile/parity/tag hints + command recommendation
-else: model reconcile from scoped bundle slices (model fallback)
+## Out of Scope
 
-if Docskit available: resolve referenced CMP/FLOW IDs
-else: repository path conventions (deterministic fallback)
-```
+- **[STRICTLY FORBIDDEN]** No legacy source archaeology. No UI/API implementation. No `ir/*` direct writes.
 
-Missing optionals never block `/grill-docs`. After the existing fallback
-completes, emit exactly one `docskit.missing-optional` event per `runId` +
-optional against
-`.cursor/schemas/docskit/missing-optional-event.schema.json`. Deduplicate
-retries and report only actual `fileReads` / `contextBytes`.
-
-## Verification Checklist (Evidence Required)
-- [ ] **Conflicts reconciled** in `*.bundle.yaml` (quote paths), or deferred with `qa/open/QA-…`. No `openQuestions` on the bundle.
-- [ ] **codegen.profile** present on `bundle.gen` (same gate as `/grill-dev`).
-- [ ] **Split** succeeded.
-
-## Do not
-
-- Re-read legacy source or archaeology
-- Implement UI/API
+---
 
 ## Handoff
 
-→ `/prototype` after FE Codegenkit dry-run passes
+→ `/prototype` after FE Codegenkit dry-run passes.
+
+---
+
+## Verification Checklist
+
+- [ ] Conflicts reconciled in `*.bundle.yaml`, or deferred with `qa/open/QA-…`. No `openQuestions`.
+- [ ] `bundle.gen.codegen.profile` present and correct.
+- [ ] `docskit split` succeeded with zero errors.

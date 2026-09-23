@@ -2,10 +2,10 @@
 
 Tài liệu này giải thích cách hệ thống **Forgekit** vận hành dưới nắp capo, từ lúc bắt đầu hình thành ý tưởng (Bullet points) cho đến khi sinh ra mã nguồn và tài liệu test hoàn chỉnh.
 
-Sau khi gộp nhất 5 công cụ rời rạc, Forgekit được chia làm 3 bộ máy cốt lõi (Suites):
-1. **Bộ Docs**: Phụ trách xử lý Tài liệu, Đặc tả (Specs) cho cả Frontend, Backend, và Common.
-2. **Bộ Code**: Phụ trách sinh mã nguồn thực thi (Code FE/BE), sinh Unit Test, và sinh mã kiểm thử tự động (Playwright E2E).
-3. **Bộ Test**: Phụ trách quản lý, kiểm tra, và kết xuất các kịch bản kiểm thử (Test Case Documents) từ YAML sang Markdown.
+Hệ thống Forgekit được vận hành bởi 3 bộ máy cốt lõi (Suites):
+1. **Bộ Docs**: Phụ trách xử lý Tài liệu, Đặc tả (Specs) cho cả Frontend, Backend, và Common (chuẩn Arc42, Data Dictionary, State Matrix).
+2. **Bộ Code**: Phụ trách sinh mã nguồn thực thi (Code FE/BE theo Adapters), sinh Unit Test, và sinh mã kiểm thử tự động (Playwright E2E).
+3. **Bộ Test**: Phụ trách quản lý, kiểm tra, và kết xuất các kịch bản kiểm thử (Test Case Documents) theo chuẩn IEEE 29119 Boundary Test Matrix.
 
 ---
 
@@ -38,15 +38,22 @@ Khi lập trình viên đưa vào các gạch đầu dòng (Bullets) tự nhiên
   - Nếu BE cần trả ra dữ liệu nhưng chưa có API → Hệ thống nảy sinh thẻ `#needs-endpoint`.
   - Nếu phát hiện logic mới hoàn toàn → Đề xuất `#registry-miss`.
 
-### Giai đoạn 2: Phản biện & Bóc tách (Grill Phase)
-Quá trình thảo luận giữa Agent và Lập trình viên có thể tạo ra những điểm mù hoặc quyết định cần trì hoãn:
-- **QA & Tech Debt**: Thay vì ghi nháp vào Spec, hệ thống ép buộc phải đẻ ra một file vật lý tại thư mục `qa/open/QA-<id>-<NNNN>.yaml`.
-- File này chứa phân loại rõ ràng: `kind: customer` (Chờ BA/Khách hàng xác nhận) hoặc `kind: tech-debt` (Nợ kỹ thuật cần xử lý sau).
+### Giai đoạn 2: Phản biện & Bóc tách Nghiệp Vụ (Deep-Grill Phase)
+Quá trình thảo luận giữa Agent và Lập trình viên không chấp nhận các bản đặc tả hời hợt:
+- **Bắt buộc đào sâu Dynamic 5-Tier Validation**: Xác lập prototype presets, ranh giới [min, max], format regex, ràng buộc phụ thuộc chéo, và kiểm tra trùng lặp DB unique async.
+- **Bắt buộc 6 Khối Kỹ Thuật Cho Mọi Action**: Khóa double-submit tức thì, debounce, loading indicator, payload transformation (trim/XSS/typecast), API contract + optimistic locking concurrency, và ma trận phản hồi kết quả 4 tầng (200, 422, 409, 401, 500, Offline).
+- **Thiết lập Ma Trận Trạng Thái (State & Permission Matrix)**: Khóa readonly/editable cho form fields và ẩn/hiện nút hành động theo từng trạng thái bản ghi và RBAC role.
+- **Đặc tả chi tiết Khối Giao Diện Tùy Biến (Custom UI Blocks)**: Kích thước hình học, bảng màu semantic tokens, kiểu chữ và vi tương tác nếu là widget mới ngoài base kit.
+- **QA & Tech Debt**: Bất kỳ điểm mù nào chưa thể chốt ngay phải được cô lập thành file vật lý tại thư mục `qa/open/QA-<id>-<NNNN>.yaml` (`kind: customer` hoặc `kind: tech-debt`).
 
-### Giai đoạn 3: Biên dịch & Liên kết (Render Phase)
-Khi bạn chạy lệnh của **Bộ Docs** (ví dụ `forgekit build`):
-- Engine `open-qa.mjs` sẽ quét toàn bộ thư mục `qa/open/`.
-- Nó tự động bế các câu hỏi mở và nợ kỹ thuật nối thẳng vào file Markdown cuối cùng (Dưới dạng tag `#missing_info QA-...` hoặc `pendingTechDebt[]`).
+### Giai đoạn 3: Biên dịch & Kết Xuất Chuẩn Mực (Render Phase)
+Khi bạn chạy lệnh của **Bộ Docs** (ví dụ `forgekit render` hoặc `forgekit build`):
+- Rendering Engine (`render-design-tables.mjs`) chuyển hóa 100% cấu trúc kỹ thuật sang các bảng Markdown tự nhiên chuẩn Arc42:
+  - Bảng **Data Dictionary Table (6 cột)** cho trường nhập liệu và quy tắc validation.
+  - Bảng **State & Permission Matrix Table** cho trạng thái màn hình và phân quyền.
+  - Khối **Action Flows 4 Giai Đoạn & Outcomes Matrix** chi tiết.
+- **Loại bỏ hoàn toàn raw YAML dump (` ```yaml `)** ra khỏi file `spec.md`.
+- Engine `open-qa.mjs` quét toàn bộ thư mục `qa/open/` để tổng hợp nợ kỹ thuật vào `qa/index.md`.
 
 ### Giai đoạn 4: Đóng luồng (Resolution)
 - Khi vấn đề được giải quyết, file YAML đó sẽ được Agent hoặc Lập trình viên di dời từ `qa/open/` sang `qa/resolved/`.

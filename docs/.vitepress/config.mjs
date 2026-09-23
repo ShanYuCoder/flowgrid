@@ -122,6 +122,7 @@ export default withMermaid(
             { text: '/surfaces', link: '/6-reference/skills/surfaces' },
             { text: '/module', link: '/6-reference/skills/module' },
             { text: '/business-process', link: '/6-reference/skills/business-process' },
+            { text: '/background-logic', link: '/6-reference/skills/background-logic' },
             { text: '/db-erd', link: '/6-reference/skills/db-erd' }
           ]
         },

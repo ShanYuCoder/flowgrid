@@ -4,52 +4,48 @@ description: EXCLUSIVE /grill-integration-spec — ONLY for auditing backend int
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform shallow checks. Verify your results against the **Verification Checklist** at the end of this skill before completing.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
 # /grill-integration-spec — Integration Contract Audit
 
-After `/api-integration`, before Codegenkit BE `/api`. No code implementation on the docs hub.
+After `/api-integration`. Before Codegenkit BE `/api`. No code on docs hub.
 
-Shared extracts: `.cursor/extracts/api-integration-spec.md`, `api-codegen-readiness.md`, `api-codegen-tags.md`, `call-external.md`, `entity-relationship.md`, `agent-discipline.md`, `verify-gate.md`
+Shared extracts: `api-integration-spec.md`, `api-codegen-readiness.md`, `api-codegen-tags.md`, `call-external.md`, `entity-relationship.md`, `agent-discipline.md`, `verify-gate.md`
 
-## Goal
+---
 
-- Contract đủ cho implement webhook/partner API
-- OpenAPI `securitySchemes` + mock khớp `01-backend-spec.yaml`
-- Codegen-ready: `docskit api:check` + `docskit openapi:gen` / `openapi:render`
-- Do **not** use `ir/design.yaml` as BE input (integrations usually have no FE IR)
+## Rule: Goal & Scope
 
-## Workflow
+- **[MANDATORY]** Contract must be sufficient to implement webhook and partner APIs.
+- **[MANDATORY]** OpenAPI `securitySchemes` and mock definitions must match `01-backend-spec.yaml`.
+- **[MANDATORY]** Codegen-ready: `docskit api:check` + `docskit openapi:gen` / `openapi:render` must pass.
+- **[STRICTLY FORBIDDEN]** Do NOT use `ir/design.yaml` as BE input (integrations usually have no FE IR).
+- **[STRICTLY FORBIDDEN]** No BQA reports, no framework code snippets, no writing `ir/*`.
 
-1. Resolve `surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`; never a 01 on the slug leaf
-2. Audit auth, securitySchemes, idempotency, retry, and non-CRUD actions
-3. Enrich **01** with codegen tags (`#gen:*`, `#manual-service`, `#call-external`), `codegen.profile|entity|module`, `endpoints[].action`
-4. Run gates (docs hub):
-   `docskit api:check --spec surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`
-   `docskit openapi:gen --spec …/01-backend-spec.yaml`
-   `docskit openapi:render`
-5. Set `approval.status: reviewed` (or `approved`) in YAML
+---
 
-## Out of scope
+## Rule: Workflow Steps
 
-- **NO PROSE / NO BQA REPORTS:** Do NOT output Markdown reports, BQA 3-Pillars reports, or framework-specific code snippets.
-- Do not scaffold code classes. Do not Write `ir/*`.
+- **[MANDATORY]** Step 1: Resolve `surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`. Never a `01` directly on the slug leaf.
+- **[MANDATORY]** Step 2: Audit authentication, `securitySchemes`, idempotency keys, retry policies, and non-CRUD actions.
+- **[MANDATORY]** Step 3: Enrich `01` with codegen tags (`#gen:*`, `#manual-service`, `#call-external`), `codegen.profile|entity|module`, and `endpoints[].action`.
+- **[MANDATORY]** Step 4: Run gates:
+  - `docskit api:check --spec surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`
+  - `docskit openapi:gen --spec …/01-backend-spec.yaml`
+  - `docskit openapi:render`
+- **[MANDATORY]** Step 5: Set `approval.status: reviewed` (or `approved`) in YAML.
 
-## Verification Checklist (Evidence Required)
-- [ ] **Target Location:** Audited `01-backend-spec.yaml` under `…/integrations/…/api/<seq>/`.
-- [ ] **Auth & Idempotency Verified:** OpenAPI `securitySchemes` and dedup keys populated.
-- [ ] **Gates Executed:** `docskit api:check` and `openapi:gen` / `openapi:render` exit 0.
-- [ ] **Approval Updated:** `approval.status` set to `reviewed` (or `approved`) in YAML.
-- **DO NOT output fake checklists, i18n tables, or framework prose.**
+---
 
-## Guardrails
+## Verification Checklist
 
-- Do not require Portal testcase or FE model alignment
-- No "ready for code" without gate evidence
+- [ ] Target: `01-backend-spec.yaml` under `…/integrations/…/api/<seq>/`.
+- [ ] Auth + idempotency keys + retry policy verified and populated.
+- [ ] Gates executed: `api:check` + `openapi:gen` + `openapi:render` exit 0.
+- [ ] `approval.status` set to `reviewed` or `approved`.
+- [ ] No `openQuestions` in YAML; no `.md` written directly.
 
-## Done
+## Handoff
 
-- `approval.status`: `reviewed` (or `approved` if signed off)
-- Handoff Codegenkit `--type=be` `/api` with `--spec …/01-backend-spec.yaml` after `approved`
+- `approval.status: approved` → Codegenkit `--type=be` `/api` with `--spec …/01-backend-spec.yaml`

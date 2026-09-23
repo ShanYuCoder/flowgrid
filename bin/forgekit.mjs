@@ -272,6 +272,12 @@ async function main() {
       console.log('  - Đã bỏ qua bước xóa Agent Skills (giữ lại cache)');
     }
 
+    const vpPath = path.join(process.cwd(), '.vitepress');
+    if (fs.existsSync(vpPath)) {
+      fs.rmSync(vpPath, { recursive: true, force: true });
+      console.log('  - Đã xóa thư mục .vitepress/ (cấu hình docs/testcases)');
+    }
+
     const pkgPath = path.join(process.cwd(), 'package.json');
     if (fs.existsSync(pkgPath)) {
       try {

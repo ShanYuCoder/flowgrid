@@ -52,18 +52,18 @@ Missing accelerators never block the grill. Complete each scoped model or
 targeted-local fallback first, then follow
 the remainder of this skill.
 
-## Translation Rule
-Luôn bọc text tĩnh bằng i18n helper native của framework (VD: `__('key')`, `_localizer["key"]`, `i18n.t('key')`). 
-- Đọc block `i18n` từ `ir/design.yaml`.
-- Tự động sinh/cập nhật file ngôn ngữ tương ứng (`.json` cho NodeJS/PHP/Python, hoặc `.resx` cho Dotnet). 
-- KHÔNG trả về raw error message tĩnh không được bọc hàm dịch.
+## Translation Rule (i18n)
+Always wrap static text with native framework i18n helpers (e.g. `__('key')`, `_localizer["key"]`, `i18n.t('key')`).
+- **[MANDATORY]** Read the `i18n` block from `ir/design.yaml`.
+- **[MANDATORY]** Automatically generate or update the corresponding translation locale files (`.json` for NodeJS/PHP/Python, or `.resx` for .NET).
+- **[STRICTLY FORBIDDEN]** Do NOT return unlocalized static raw error messages without an i18n wrapper.
 
 ## Profile Handling Behavior
-LƯU Ý QUAN TRỌNG: AI không được tự ý viết code lại từ đầu. Lệnh `codegenkit api-gen` (Script Engine) luôn luôn chạy trước để sinh ra bộ khung code cơ sở (Scaffolding). Tùy thuộc vào giá trị của `gen.codegen.profile`, AI chỉ được phép đọc bộ khung có sẵn đó, sau đó bổ sung và điều chỉnh logic tương ứng:
-- **`profile: auth`**: Bổ sung logic xác thực (Login, JWT token, mã hóa bcrypt) vào bộ khung.
-- **`profile: select-item`**: Tinh gọn bộ khung list thành API danh sách siêu nhẹ trả về `id`, `name`/`label` cho Dropdown.
-- **`profile: setting`**: Điều chỉnh bộ khung để đọc/ghi cấu hình tĩnh dạng Key-Value hoặc file JSON.
-- **`profile: free`**: Bổ sung tự do các nghiệp vụ theo yêu cầu `summary` / `purpose` của spec.
-- **`profile: export`**: Bổ sung luồng truy xuất dữ liệu lớn và sinh file export (CSV/Excel).
-- **`profile: import`**: Bổ sung luồng upload file, parse dữ liệu, validate hàng loạt và bulk insert.
-- **`profile: dashboard-stats`**: Bổ sung logic query tổng hợp (aggregation), gom nhóm dữ liệu trả về số liệu thống kê.
+**[CRITICAL INTERLOCK]** AI MUST NOT rewrite code from scratch. The CLI command `codegenkit api-gen` (Script Engine) MUST run first to emit the foundation scaffolding. Depending on `gen.codegen.profile`, AI reads the scaffolded base and enriches the targeted logic:
+- **`profile: auth`**: Inject authentication logic (Login, JWT token, bcrypt password hashing).
+- **`profile: select-item`**: Streamline into a lightweight selection list returning `id`, `name`/`label` for dropdown components.
+- **`profile: setting`**: Adapt scaffold to read/write static Key-Value configurations or JSON store.
+- **`profile: free`**: Implement domain-specific requirements according to the spec's `summary` / `purpose`.
+- **`profile: export`**: Implement large-dataset retrieval and file export generation (CSV/Excel).
+- **`profile: import`**: Implement file upload parsing, bulk validation, and batch insert.
+- **`profile: dashboard-stats`**: Implement aggregation queries, grouping data to return statistical metrics.

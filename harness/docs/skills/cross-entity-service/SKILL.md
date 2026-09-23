@@ -4,23 +4,29 @@ description: EXCLUSIVE #cross-entity-service hashtag — ONLY for cross-aggregat
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform shallow checks. Verify your results against the **Verification Checklist** at the end of this skill before completing.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Read `.cursor/extracts/cross-entity-service.md` for trigger criteria, spec/OpenAPI tags, and implementation rules.
 
-# #cross-entity-service
+# #cross-entity-service — Cross-Aggregate Orchestration Tag
 
-Read `.cursor/extracts/cross-entity-service.md` for when to use, spec/OpenAPI tags, and code rules.
+Used from: `/api-spec`, `/grill-api-spec`, and Codegenkit BE `/api` when this hashtag is present.
 
-Used from `/api-spec`, `/grill-api-spec`, and Codegenkit BE `/api` when hashtag is present.
+---
 
-## Target / ID Resolution Rule
+## Rule: ID Resolution
 
-- User prompt MAY specify a function ID or API endpoint slug (e.g. `API-WORKFORCE-001`).
-- Agent MUST use `docskit_route` or `docskit_get_element` (or glob) to locate `…/api/<seq>/01-backend-spec.yaml` (or `common/yaml`). Never `ir/design.yaml` as the BE contract.
+- **[MANDATORY]** Use `docskit_route` or `docskit_get_element` (or glob) to locate `…/api/<seq>/01-backend-spec.yaml` (or `common/yaml`). NEVER treat `ir/design.yaml` as the BE contract.
 
-## Verification Checklist (Evidence Required)
-- [ ] **Target Spec Located:** Located `01-backend-spec.yaml` via ID or path resolution.
-- [ ] **Hashtag Applied:** Documented `services[]` and added `#cross-entity-service` in spec YAML.
-- **DO NOT output fake checklists, i18n tables, or framework prose.**
+---
 
+## Rule: Application
+
+- **[MANDATORY]** When `#cross-entity-service` is present in the spec: document the `services[]` array and add the hashtag to the spec YAML.
+
+---
+
+## Verification Checklist
+
+- [ ] `01-backend-spec.yaml` located via ID or path resolution.
+- [ ] `services[]` documented; `#cross-entity-service` applied in spec YAML.

@@ -17,17 +17,16 @@
 ## Output (Kết quả mong đợi)
 - File `*.bundle.yaml` chứa thông tin chức năng tại thư mục `surfaces/<surface>/CMP-*/<numeric-path>/`. (Tuân thủ nghiêm ngặt cấu trúc của [feature.bundle.yaml](file:///home/vutv/workspace/forgekit/.forgekit/templates/feature.bundle.yaml)).
 - Thư mục được tự động sinh dựa trên số của Draft ID.
-- Quá trình chạy tool `docskit split` sẽ sinh ra các file trung gian trong `ir/` và `pnpm docs:render` sinh ra `ir/generated/spec.md`.
+- Quá trình chạy tool `forgekit split` sẽ sinh ra các file trung gian trong `ir/` và `forgekit render` sinh ra `ir/generated/spec.md`.
 
 ## Description / Ý nghĩa
 - Chuyên dùng để khởi tạo hoặc viết đặc tả chi tiết cho một chức năng/màn hình cụ thể (Function Detail).
 - Brainstorm 2 mặt dữ liệu cốt lõi: 
-  - Business (Dành cho Stakeholder, mô tả chuẩn Arc42, kịch bản nghiệp vụ bằng ngôn ngữ tự nhiên).
-  - Kỹ thuật (Dev/QA: Các rule validate, State machine, Edge cases, UI Permissions).
-- Bắt buộc phải ánh xạ (map) toàn bộ rules/validations vào đúng item UI trong `design.sections[]` thông qua các cấu hình `validation`, `messages`, `states` (disabledWhen, visibleWhen), `action`.
-- Tái sử dụng (Reuse) API thông qua `#reuse-api` thay vì tự ý tạo mới.
-- Khai báo rõ 3 luồng kết quả cho mọi UI action: `onSuccess`, `onCommonError`, `onSpecificError`.
-- **Tuyệt đối không** sinh nội dung ra file `.md` bằng tay, mà phải luôn ghi vào YAML và để engine `docskit` lo việc chuyển đổi thành Markdown.
+  - **Business:** Khối `userStories` chuyên sâu (Primary Story, `screenAccess` hỗ trợ 3 loại: `directRoute` cho URL trực tiếp, `sidebarMenu` cho menu trái đa cấp + text label, `contextualAction` cho nút bấm kích hoạt từ màn hình A, Screen Handoff từ màn nào sang màn nào, 5 kịch bản chi tiết: Tải dữ liệu, Nhập liệu/Validate, Nộp thành công, Ngoại lệ/Lỗi, Tác vụ ngầm, và Acceptance Criteria).
+  - **Kỹ thuật:** Phân định rõ ràng trên từng element giữa `meaning` (**Ý nghĩa nghiệp vụ**) và `purpose` (**Mục đích thao tác**).
+- Mọi rule validation bắt buộc đi kèm trường `messages` tiếng Việt cụ thể.
+- Mọi hành động tương tác (Actions) phải định nghĩa rõ: `validateFormBeforeSubmit`, `feedback` (loadingText, disableWhileSubmitting), `apiRefs`, `onSuccess` (toast, navigation handoff, backgroundTrigger), `onSpecificError` (map lỗi 422, 409 conflict, 403), `onCommonError`.
+- **Tuyệt đối không** sinh nội dung ra file `.md` bằng tay, mà phải luôn ghi vào YAML và để engine `forgekit split` lo việc chuyển đổi sang `ir/spec.yaml` và `ir/generated/spec.md`.
 
 ## Các Skill liên quan
 - **Trước đó:** Không có bắt buộc, thường được gọi trực tiếp đầu tiên khi có yêu cầu (hoặc sau khi chốt `business-process`).

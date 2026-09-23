@@ -8,7 +8,7 @@ disable-model-invocation: true
 # /docs-mark
 
 **Owner:** ArtifactGraph (common harness)  
-Member annotation sau grill A/B/C — **không** bulk `/spec` / `/dev-grill-docs`.
+Member annotation following grill A/B/C confirmation — NOT for bulk `/spec` / `/dev-grill-docs`.
 
 Hub policy (docs hub): `platform/toolchain/PLATFORM-MARK.md` (alias: docs-mark).  
 Technical marks SSOT on the docs hub: `surfaces/common/integrations/*`,

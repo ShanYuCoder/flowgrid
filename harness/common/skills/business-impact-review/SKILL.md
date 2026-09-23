@@ -1,6 +1,6 @@
 ---
 name: business-impact-review
-description: Đánh giá bán kính ảnh hưởng (Blast-radius) toàn diện xuyên suốt các kho lưu trữ (Cross-repo) và các phân hệ (Cross-surface).
+description: Comprehensive blast-radius evaluation across repositories (Cross-repo) and functional surfaces (Cross-surface).
 disable-model-invocation: true
 ---
 
@@ -23,15 +23,30 @@ Missing/empty map or missing key → **Gaps** + **`/configure-repo-maps`**; neve
 guess paths. Then remind `platform-dna codegraph:wire` if needed. Ambiguous
 matches → ask or Gaps.
 
-## Workflow
+## Context - Action - Constraint Model (CAC)
 
-1. Scope changed public/protected methods, routes, Jobs, Events, Listeners,
-   Commands and Schedules from diff/user files.
-2. **[CRITICAL] Phân tích chéo (Cross-Boundary Analysis):**
-   - **Cross-repo (FE ↔ BE):** Quét toàn bộ các nhánh FE/Mobile đang gọi API bị thay đổi để đảm bảo contract (payload/response) không bị gãy.
-   - **Cross-surface (BE Surface A ↔ BE Surface B):** Truy vết các Event, Job, DB Schema để xem các Listener/Consumer ở Surface khác có bị side-effect làm sập hệ thống không.
-3. Trace each reachable vertical path:
+### Context
+Execution triggered by `/business-impact-review` against uncommitted diffs, PR branches, or specified modified files/routes spanning cross-repo (FE ↔ BE) or cross-surface boundaries.
 
+### Action (2-Stage Phased Protocol)
+
+#### Stage 1: Candidate Indexing & Blast-Radius Manifest
+1. **Symbol & Route Scoping:** Extract all modified public/protected methods, API routes, Jobs, Events, Listeners, Commands, and DB schemas from diff.
+2. **Candidate Index Generation:** Perform targeted symbol/caller indexing (using `codegraph-<key>` or caller search across repos listed in `platform-repos.local.json`/`legacy-repos.local.json`).
+3. **Compile Candidate Manifest:** Produce an indexed list of potential blast-radius targets categorized into:
+   - Callers (FE/Mobile consumers, cross-repo API clients)
+   - Vertical process paths (Controller → Service → Repository → DB)
+   - Cross-surface listeners (Shared Events, Queue consumers, DB triggers)
+4. **Workload Threshold Interlock (Law 2):**
+   - **If total candidates ≤ 5:** Execute Stage 2 deep inspection directly in the current session.
+   - **If total candidates > 5 (or spanning > 1 repository):**
+     - **[MANDATORY HARD STOP IN CHAT]**
+     - Author an implementation plan / Plan Mode document (brain dir / `plan.md`).
+     - Partition candidate inspection into sequential **Phases** (each phase capped at 3–5 candidate call-sites/paths).
+     - **Phase Boundary Context Pruning:** At the end of each phase, persist analysis findings into the output report on disk. For each subsequent phase, load fresh state from disk instead of maintaining full AST/diff context in conversational RAM.
+
+#### Stage 2: Phased Deep-Dive Inspection
+Inspect each candidate path sequentially across the vertical stack:
 ```text
 Client/FE or Scheduler/Webhook
   → route/command/job
@@ -43,20 +58,22 @@ Client/FE or Scheduler/Webhook
   → response/error/status mapping
   → FE/consumer/next async hop
 ```
+Apply `risk-classes.md`: authZ/IDOR, request bag, trust boundary, over-broad parse, null/empty, error collapsing, hardcode/magic, async context/idempotency, business rules, transactions, and contract compatibility.
 
-4. Apply `risk-classes.md`: authZ/IDOR, request bag, trust boundary,
-   over-broad parse, null/empty, error collapsing, hardcode/magic,
-   async context/idempotency, business rules, transactions and compatibility.
-5. Yêu cầu dùng CodeGraph (`codegraph-<key>`) và ArtifactGraph theo chuẩn Đạo luật 8 để nhảy repo.
+### Constraints
+- **[STRICTLY FORBIDDEN]** to rely solely on naive single-pass grep scripts that produce false negatives when member code is non-compliant or uses dynamic routing.
+- **[STRICTLY FORBIDDEN]** to dump > 5 candidate analyses in a single chat turn.
+- **[MANDATORY]** Write analysis findings directly to disk at each phase boundary.
+- **[MANDATORY]** Maintain read-only analysis; do not generate or modify application code unless explicitly requested.
 
-## Required report
+## Required Report
 
 ```text
 Summary / ship recommendation
-Changed symbols
+Changed symbols & Candidate Index
 Horizontal callers
 Vertical process paths
-Cross-Boundary Impact (FE/BE & Surfaces)  <-- BẮT BUỘC BÁO CÁO TƯỜNG MINH
+Cross-Boundary Impact (FE/BE & Surfaces)  <-- MANDATORY EXPLICIT SECTION
 Findings: severity · class · evidence · impact · verify
 Unsearched repos / residual risks
 Targeted test plan

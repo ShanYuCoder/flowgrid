@@ -4,76 +4,79 @@ description: EXCLUSIVE /api-update — ONLY for updating/syncing backend contrac
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform shallow checks. Verify your results against the **Verification Checklist** at the end of this skill before completing.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
 # /api-update — Portal Sync & BE-Only Updates
 
 No Laravel code. No `codegen` / `#gen:*` — grill adds those after sync.
 
-Shared extracts: `.cursor/extracts/api-spec-sync.md`, `spec-evolution.md`, `entity-relationship.md`, `derived-data.md`, `agent-discipline.md`
+Shared extracts: `api-spec-sync.md`, `spec-evolution.md`, `entity-relationship.md`, `derived-data.md`, `agent-discipline.md`
 
-## Target / ID Resolution Rule
+---
 
-- User prompt MAY provide a full path OR just a function/module/screen ID (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`, `login`).
-- If an ID is provided, Agent MUST use `docskit_route` or `docskit_get_element` (or glob search) to resolve the exact target folder under `surfaces/...`. Do NOT force the user to prompt the full folder path.
+## Rule: Modes
 
-## Modes
+- **[MANDATORY]** Select the correct mode from user prompt:
 
-| Mode | Prompt | Sửa gì |
-|------|--------|--------|
-| **portal-sync** (default) | `/api-update <ID or path>` | Diff portal `ir/design.yaml` → patch `01` (+ mock); **regen** `02` via `openapi:gen` |
-| **be-only** | `/api-update <ID or path> --be-only` | Chỉ `beOnlyRequirements`, `derivedData`, validation nội bộ — **không** đổi FE contract |
+  | Mode | Prompt | Action |
+  |---|---|---|
+  | `portal-sync` (default) | `/api-update <ID or path>` | Diff portal `ir/design.yaml` → patch `01` (+ mock); **regen** `02` via `openapi:gen` |
+  | `be-only` | `/api-update <ID or path> --be-only` | Only `beOnlyRequirements`, `derivedData`, internal validation — do NOT change FE contract |
 
-## Input & Folder Location
+---
 
-Same leaf as the FE bundle. Trio lives under `api/<seq>/` — never next to `*.bundle.yaml`.
+## Rule: ID Resolution & Folder Location
 
-```text
-surfaces/<surface>/CMP-*/<NN…>/     # e.g. CMP-ADM-009/01/01/01
-  <slug>.bundle.yaml
-  ir/
-  api/<seq>/
-    01-backend-spec.yaml   # tech SSOT — patch here
-    02-openapi.yaml        # regenerate: docskit openapi:gen (do not hand-edit as SSOT)
-    03-mock-data.yaml
-```
+- **[MANDATORY]** If an ID is provided (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`) → use `docskit_route` or glob to resolve to `…/api/<seq>/01-backend-spec.yaml`. Do NOT force user to provide full filesystem path.
+- **[MANDATORY]** Trio lives under `api/<seq>/` — never adjacent to `*.bundle.yaml`.
+- Common APIs: `…/common/yaml/<slug>/01-backend-spec.yaml` (one trio per API).
 
-Common APIs: `…/common/yaml/<slug>/01-backend-spec.yaml` (one trio per API).
+---
 
-## Workflow (portal-sync)
+## Rule: Portal-Sync Workflow
 
-1. Resolve ID to leaf `…/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml` (or common/yaml); read 01 + mock
-2. Scan portal **`ir/design.yaml`** on the same leaf — **page actions/items** (`apiRefs`, `#reuse-api`, `reuseFrom`) for which APIs the screen calls. Do not treat projected `design.api` as BE SSOT. `#reuse-api` actions → do not invent a new 01.
-3. Diff requirements, endpoints, acceptance vs backend `01-backend-spec.yaml`
-4. Patch **`01-backend-spec.yaml`** (and `03-mock-data.yaml` if samples change)
-5. `docskit api:check --spec …/01-backend-spec.yaml` then `docskit openapi:gen --spec …/01-backend-spec.yaml` (writes sibling 02)
-6. Bump `feature.version` on 01
-7. `changeLog` entry
-8. **No** direct `.md` file writing — user runs `pnpm docs:render`
+1. **[MANDATORY]** Read entire `ir/design.yaml` (page actions/items, `apiRefs`, `#reuse-api`, `reuseFrom`).
+   - `#reuse-api` actions → do NOT create a new `01`.
+   - Do NOT treat projected `design.api` as BE SSOT.
+2. **[MANDATORY]** Diff requirements, endpoints, acceptance vs `01-backend-spec.yaml`.
+3. **[MANDATORY]** Patch `01-backend-spec.yaml` (+ `03-mock-data.yaml` if samples change).
+4. **[MANDATORY]** Run: `docskit api:check --spec …/01-backend-spec.yaml` → `docskit openapi:gen --spec …/01-backend-spec.yaml` (writes sibling `02`).
+5. **[MANDATORY]** Bump `feature.version` + add `changeLog` entry.
+6. **[STRICTLY FORBIDDEN]** Never hand-edit `02-openapi.yaml` as SSOT. Never write `.md` directly.
 
-## Out of scope
+---
 
-- **NO PROSE / NO BQA REPORTS:** Do NOT output Markdown reports, BQA 3-Pillars reports, or framework-specific code snippets.
+## Rule: Missing Information / Unknown Facts
 
-## Verification Checklist (Evidence Required)
-- [ ] **ID Resolved:** Target is `…/api/<seq>/01-backend-spec.yaml` (or `common/yaml/<slug>/`), not a 01 on the FE leaf.
-- [ ] **01 patched; 02 regenerated:** Did not treat `02-openapi.yaml` as hand-edited SSOT.
-- [ ] **Gates:** `docskit api:check` and `docskit openapi:gen` ran.
-- [ ] **No Direct Markdown:** Did NOT write `.md` files directly.
-- **DO NOT output fake checklists, i18n tables, or gross combined files.**
+- **[MANDATORY]** External integrations or unknowns → trigger `AskQuestion` wizard, presenting ≥3 options: (1) Recommended, (2) Other, (3) "Log as Tech Debt (Pending)".
+  - ✅ "Log as Tech Debt" → create `qa-inbox.md` entry; close later with `/qa-resolve`.
+  - ❌ Never write `openQuestions` in YAML.
+- Export/import/custom → add endpoint stub + `pendingTechDebt.expectedWhenDone` if not merging this session.
 
-## Done
+---
 
-- Portal delta in `01` or, if member Confirmed defer, `pendingTechDebt` with `id: QA-<feature.id>-NNNN` plus `qa/open/` file (not `openQuestions`)
-- `source.portalRefs` current
-- `changeLog` + version bumped
-- Handoff: `/grill-api-spec {slug}` (re-run gates + codegen tags). Closing a listed QA → `/qa-resolve <id>` + solution, not this skill.
+## Rule: Guardrails
 
-## Guardrails
+- **[STRICTLY FORBIDDEN]** Do NOT split slug folder for child functions in the same bounded context.
+- **[STRICTLY FORBIDDEN]** Do NOT rename API fields for FE convenience.
+- **[STRICTLY FORBIDDEN]** No BQA reports, no framework code snippets.
 
-- Do not split slug folder for child functions in same bounded context
-- Do not rename API fields for FE convenience
-- External integrations → **AskQuestion** wizard form với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt (Pending)" then write into `01`; if member selects "Log as Tech Debt" → `qa-inbox.md`, close later **`/qa-resolve`**; grill adds `#call-external`
-- Export/import/custom → add endpoint stub + `pendingTechDebt.expectedWhenDone` if not merging this session
+---
+
+## Done Criteria
+
+- Portal delta in `01`; or if deferred: `pendingTechDebt` with `id: QA-<feature.id>-NNNN` + `qa/open/` file.
+- `source.portalRefs` current.
+- `changeLog` + version bumped.
+- Handoff: `/grill-api-spec {slug}` (re-run gates + codegen tags).
+
+---
+
+## Verification Checklist
+
+- [ ] Target is `…/api/<seq>/01-backend-spec.yaml` (or `common/yaml/<slug>/`), not a `01` on the FE leaf.
+- [ ] `01` patched; `02` regenerated via `openapi:gen` (not hand-edited).
+- [ ] Gates passed: `docskit api:check` + `docskit openapi:gen`.
+- [ ] `changeLog` + `feature.version` bumped.
+- [ ] No `.md` written directly. No `openQuestions` in YAML.

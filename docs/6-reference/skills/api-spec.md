@@ -14,7 +14,7 @@
 ## Output (Kết quả mong đợi)
 - Nếu API là mới hoàn toàn: Tạo thư mục `api/<seq>/` và sinh file `01-backend-spec.yaml` theo đúng chuẩn (Tuân thủ nghiêm ngặt cấu trúc của [`backend-api.bundle.yaml`](file:///home/vutv/workspace/forgekit/.forgekit/templates/backend-api.bundle.yaml)).
 - Nếu API gọi lại đồ cũ: Đánh tag `#reuse-api` và tham chiếu `reuseFrom:` trên file bundle hiện tại, **KHÔNG** sinh ra bộ 3 file api mới (`01`, `02`, `03`).
-- File `02-openapi.yaml` (nếu sinh file 01 mới, thì sau đó chạy lệnh `docskit openapi:gen`).
+- File `02-openapi.yaml` (nếu sinh file 01 mới, thì sau đó chạy lệnh `forgekit openapi_gen`).
 
 ## Description / Ý nghĩa
 - Chuyên dùng để thiết kế hợp đồng Backend API (Backend API Contract).

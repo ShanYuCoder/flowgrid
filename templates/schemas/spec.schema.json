@@ -9,6 +9,14 @@
     "status": { "type": "string", "description": "Feature lifecycle status." },
     "owner": { "type": "string", "description": "Feature owner." },
     "summary": { "type": "string", "description": "Short business summary." },
+    "userStories": {
+      "description": "Structured in-depth user stories and screen journey.",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "object" },
+        { "type": "array" }
+      ]
+    },
     "requirements": {
       "type": "array",
       "description": "Business requirements for the feature.",
@@ -234,6 +242,13 @@
       "type": "object",
       "description": "Surface CSS for BA/QA plus FE. Extra keys allowed.",
       "properties": {
+        "primitive": { "type": "string", "description": "Shadcn primitive e.g. #ui: Card, #ui: Dialog, #ui: Table, #ui: Select, #ui: Form" },
+        "colorToken": { "type": "string", "description": "Theme color token e.g. #common:primary, #common:status-chip, bg-muted" },
+        "className": { "type": "string", "description": "Tailwind / CSS class string e.g. grid grid-cols-1 md:grid-cols-2 gap-4 border rounded-xl" },
+        "typography": { "type": "string", "description": "Font styling e.g. text-lg font-semibold tracking-tight" },
+        "variant": { "type": "string" },
+        "size": { "type": "string" },
+        "layoutMode": { "type": "string" },
         "background": { "type": "string" },
         "color": { "type": "string" },
         "borderRadius": { "type": "string" },
@@ -304,6 +319,7 @@
         "id": { "type": "string" },
         "kind": { "$ref": "#/$defs/kindType" },
         "label": { "type": "string" },
+        "meaning": { "type": "string" },
         "purpose": { "type": "string" },
         "copy": { "$ref": "#/$defs/zoneItemCopy" },
         "widget": { "$ref": "#/$defs/widgetType" },
@@ -379,9 +395,12 @@
         "id": { "type": "string" },
         "kind": { "$ref": "#/$defs/kindType" },
         "label": { "type": "string" },
+        "meaning": { "type": "string" },
         "purpose": { "type": "string" },
+        "primitive": { "type": "string", "description": "Shadcn primitive tag e.g. #ui: Card, #ui: Dialog, #ui: Table, #ui: Form, #ui: Select, #ui: Badge" },
         "visual": { "$ref": "#/$defs/uiVisual" },
         "interaction": { "$ref": "#/$defs/uiInteraction" },
+        "dynamicProps": { "type": "object", "description": "Dynamic section props e.g. layout mode, responsive breakpoint, theme tokens, state handlers" },
         "validation": { "$ref": "#/$defs/fieldValidation" },
         "tags": {
           "type": "array",
@@ -413,6 +432,7 @@
       "properties": {
         "key": { "type": "string" },
         "title": { "type": "string" },
+        "meaning": { "type": "string" },
         "purpose": { "type": "string" },
         "widget": { "$ref": "#/$defs/widgetType" },
         "variant": { "$ref": "#/$defs/variantType" },
@@ -431,6 +451,7 @@
       "properties": {
         "name": { "type": "string" },
         "label": { "type": "string" },
+        "meaning": { "type": "string" },
         "purpose": { "type": "string" },
         "type": { "type": "string" },
         "widget": { "$ref": "#/$defs/widgetType" },
@@ -450,6 +471,7 @@
         "id": { "type": "string" },
         "text": { "type": "string" },
         "label": { "type": "string" },
+        "meaning": { "type": "string" },
         "purpose": { "type": "string" },
         "icon": { "type": "string" },
         "variant": { "$ref": "#/$defs/variantType" },
@@ -649,6 +671,45 @@
         "min": { "type": "string" },
         "max": { "type": "string" },
         "pattern": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "screenAccess": {
+      "type": "object",
+      "properties": {
+        "accessType": {
+          "type": "string",
+          "enum": ["directRoute", "sidebarMenu", "contextualAction"]
+        },
+        "directRoute": {
+          "type": "object",
+          "properties": {
+            "routePath": { "type": "string" },
+            "isPublic": { "type": "boolean" },
+            "urlParams": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "sidebarMenu": {
+          "type": "object",
+          "properties": {
+            "menuHierarchy": { "type": "array", "items": { "type": "string" } },
+            "menuLabel": { "type": "string" },
+            "icon": { "type": "string" },
+            "badge": { "type": "string" }
+          }
+        },
+        "contextualAction": {
+          "type": "object",
+          "properties": {
+            "sourceScreen": { "type": "string" },
+            "triggerControl": { "type": "string" },
+            "navigationType": {
+              "type": "string",
+              "enum": ["pageRedirect", "modalDialog", "drawer", "tabSwitch"]
+            },
+            "inputsReceived": { "type": "array", "items": { "type": "string" } }
+          }
+        }
       },
       "additionalProperties": true
     }

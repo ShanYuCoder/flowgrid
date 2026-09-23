@@ -4,36 +4,102 @@ description: /business-process — Models business action flows (actor + surface
 disable-model-invocation: true
 extractBundle: architecture-core
 ---
+
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+
 # /business-process
-**Target Paths:** resolve with `.cursor/extracts/common-scope.md` §4 — not a free `[Target Path]/Common/Business processes`.
-**Guidelines:** Use standard MD + Mermaid `flowchart` or `sequenceDiagram`. Model the process by business actions on surfaces, not by repo/service topology.
 
-**Placement (mandatory): Business-process MUST be documented across 2 distinct perspectives:**
-1. **When co-activated with `/common` or for `surfaces`:**
-   - Write pure Markdown (and simple flows) describing the business logic AT THE UI SURFACE level.
-   - Use user/business language. Model the interaction strictly as `[Actor] <-> [Surface] <-> [Representative System/3rd Party Name]`.
-   - DO NOT include hidden backend services, database operations, or deep technical interactions with 3rd parties.
-   - Placement: `surfaces/**/common/` (e.g. `surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` or `surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md`).
-2. **When co-activated with `/architecture` skill:**
-   - Focus on pure technical Mermaid sequence diagrams (`sequenceDiagram`) representing the ENTIRE long-running technical flow.
-   - Dig deep into backend services, database interactions, internal routing, cronjobs, external APIs, and detailed 3rd-party handshakes.
-   - Placement: `architecture/03-business-process/`.
+**Mindset:** Model the process by **business actions on surfaces**, not by repository or service topology.
 
-**Additional routing rules:**
-- Never write FLOW next to a single function bundle. VitePress/publish menu uses **Mã quy trình** only (vd `FLOW-PORTAL-AUTH-CHANGE`), not the H1.
+---
 
-## Process meaning
-- Start from the business question: who is doing what on which surface/channel.
-- Show handoffs, decisions, exceptions, and outcomes.
-- A process can touch multiple surfaces or modules, but the primary lens is business action, not technical boundary.
-- Use `sequenceDiagram` when interactions between actors/surfaces matter; use `flowchart` when decision paths matter more.
-- **MANDATORY ERROR FLOWS IN DIAGRAMS:** When generating Mermaid `flowchart` or `sequenceDiagram`, Agent MUST explicitly model error paths and exception handling. This includes:
-  - Global error redirects (e.g., 401 Unauthorized redirect to login, 403 IDOR blocking).
-  - Validation failures (422) returning to the form state.
-  - Conflict exceptions (409) and their UI resolutions.
-- Do not describe the process as a service map unless the service boundary is the actual business concern.
+## Rule: Audit Interlock
 
-## Modifiers (If /legacy is used)
-Khi gọi kèm `/legacy` (vd: `/legacy /business-process`):
-- Tham chiếu source từ `legacy-repos.local.json`.
-- Khảo cổ: truy vết flow nghiệp vụ từ hệ thống cũ để ánh xạ thành các luồng `FLOW-*` tương ứng theo actor / surface / action / outcome. Đưa vào cùng thư mục đang thao tác nhưng tên file thêm tiền tố `legacy-` ở đầu (vd: `legacy-process.md`).
+- **[MANDATORY]** Always run static audit first: `node engines/spec/lib/audit-flow-gaps.mjs <target-flow.md>`.
+  - ✅ Consume JSON gap report to fix issues or trigger AskQuestion wizard (≥3 options).
+  - ❌ Do not skip audit and proceed to authoring directly.
+
+---
+
+## Rule: Missing Information Handling & Workload Threshold (Law 2)
+
+- **[MANDATORY]** When required flow sections are absent, evaluate total missing volume:
+  - **Small Scope (≤5 questions):** Trigger `AskQuestion` wizard — one question at a time, **≥3 options**: (1) `(Recommended)`, (2) `Other`, (3) `Log as Tech Debt (Pending)`.
+  - **Large Scope (≥10 gaps/steps):** **[MANDATORY HARD STOP IN CHAT]**. Do not spam single questions in chat. Generate an implementation plan / Plan Mode document partitioned into sequential Phases (3–5 gaps per phase) with disk offloading at boundaries.
+- **[STRICTLY FORBIDDEN]** Do NOT invent actors, permissions, or background logic — always confirm with user.
+
+---
+
+## Rule: Target Path Resolution
+
+- **[MANDATORY]** Resolve placement path via `.cursor/extracts/common-scope.md` §4.
+  - Surface-level: `surfaces/**/common/processes/FLOW-*.md`
+  - Architecture-level: `architecture/03-business-process/`
+- **[STRICTLY FORBIDDEN]** Do NOT use an unstandardized path like `[Target Path]/Common/Business processes`.
+
+---
+
+## Rule: Placement by Co-activation Context
+
+### When co-activated with `/common` or for surfaces:
+- **[MANDATORY]** Write pure Markdown describing business logic at the **UI surface level**.
+- **[MANDATORY]** Structure MUST follow the 6-section "Deep-dive Business Flow Specification":
+
+  1. `## 1. Context & Business Authorization Matrix` — trigger, actor table, permissions per screen `[W-*]`.
+  2. `## 2. Multi-tier User Story Chain` — Setup Story, Primary Story, Tracking Story, **System Story** (if background logic exists).
+  3. `## 3. Business Rules (BR-*) & State Lifecycle` — BR-* table + state transition matrix.
+  4. `## 4. Stage-by-Stage Journey Specification` — user actions, Data Handoff between screens (fields passed, destination targets), background processing (idempotency, retry), state feedback.
+  5. `## 5. Traceability Matrix` — 1:1 table: User Story Step ↔ Screen `[W-*]` ↔ Sequence Diagram ↔ Technical Component.
+  6. `## 6. Cross-Screen Business Sequence Diagram` — Mermaid `sequenceDiagram` showing screen-to-screen journey, actors, button actions, storage (DB Table, S3), and `rect` segments for background workers.
+
+- **[STRICTLY FORBIDDEN]** Do NOT include raw HTTP verbs (`POST /api/v1/...`), SQL queries, or DB column schema in this file.
+
+### When co-activated with `/architecture`:
+- **[MANDATORY]** Focus on technical `sequenceDiagram` for entire long-running flow: backend services, DB interactions, cronjobs, external APIs, 3rd-party handshakes.
+- Placement: `architecture/03-business-process/`.
+
+---
+
+## Rule: Background Logic
+
+- **[RECOMMENDED]** Pure CRUD flows do NOT require background logic sections — diagram ends at data persistence.
+- **[MANDATORY]** When a flow **has** background jobs / event triggers / 3rd-party sync:
+  1. Add **System Story** in Section 2 describing what the system executes autonomously.
+  2. Add **Retry / Timeout / Fallback** rules + failure scenarios in Sections 3 & 4.
+  3. Add `rect rgb(...)` segment in Mermaid diagram showing the Worker flow.
+
+---
+
+## Rule: Diagram Quality
+
+- **[MANDATORY]** Use `sequenceDiagram` when interactions between actors/surfaces/screens matter; `flowchart` when decision branching paths dominate.
+- **[MANDATORY]** Every Mermaid diagram MUST explicitly model error paths using `alt / else` (e.g.: invalid data, 3rd-party gateway failure, timeout, with UI recovery path).
+  - ✅ `alt Invalid data error` → `else Timeout failure` block
+  - ❌ Happy-path-only diagrams without error branches.
+
+---
+
+## Rule: Publishing & Naming
+
+- **[MANDATORY]** FLOW file must use **Process Code** as VitePress menu key (e.g. `FLOW-PORTAL-AUTH-CHANGE`), not the H1 heading.
+- **[STRICTLY FORBIDDEN]** Do NOT write FLOW files adjacent to a single function bundle.
+
+---
+
+## Modifier: `/legacy`
+
+- **[MANDATORY]** If `adoption-inventory.md` does NOT exist at workspace root → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** If file exists: look up `FLOW-*` candidates and map legacy module/screens. Write with `legacy-` prefix (e.g. `legacy-FLOW-checkout.md`).
+- **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield commands.
+
+---
+
+## Verification Checklist
+
+- [ ] Audit script run; all gaps resolved or AskQuestion wizard triggered.
+- [ ] All 6 sections present (surface-level flow) or technical `sequenceDiagram` (architecture-level flow).
+- [ ] System Story + Retry/Fallback rules present when background logic exists.
+- [ ] Mermaid diagram includes `alt / else` error paths.
+- [ ] No raw HTTP verbs, SQL, or DB columns in surface-level FLOW file.
+- [ ] File placed at correct path per `common-scope.md`; named with `FLOW-*` prefix.

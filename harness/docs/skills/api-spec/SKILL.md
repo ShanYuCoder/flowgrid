@@ -4,137 +4,133 @@ description: EXCLUSIVE /api-spec — ONLY for authoring backend API contract YAM
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
-> - Do NOT perform shallow checks. Verify your results against the **Verification Checklist** at the end of this skill before completing.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Read template `.forgekit/templates/backend-api.bundle.yaml` BEFORE generating any YAML.
+> If missing → STOP: *"Template missing. Run `forgekit init`."*
+> **[MANDATORY]** Read entire `ir/design.yaml` first (actions + nested items with `apiRefs`). If `ir/` is missing, read `*.bundle.yaml`.
 
 # /api-spec — Backend API Contract
 
-> [!CRITICAL] TEMPLATE REQUIREMENT
-> You MUST read the template `.forgekit/templates/backend-api.bundle.yaml` BEFORE generating any API spec.
-> If this file is missing, you MUST STOP immediately and report an error to the user: "Template missing. Please run `forgekit init` to generate templates." DO NOT attempt to guess the format or generate the YAML without it.
+**SSOT:** `…/api/<seq>/01-backend-spec.yaml` only. Do **not** write `bundle.spec.api`.
 
-**SSOT contract:** `…/api/<seq>/01-backend-spec.yaml` only. Do **not** write `bundle.spec.api`.
+Shared extracts: `spec-evolution.md`, `api-spec-sync.md`, `entity-relationship.md`, `derived-data.md`, `agent-discipline.md`, `verify-gate.md`.
 
-**Screen inventory (which APIs this page calls):** entire **`ir/design.yaml`** — `design.actions` and nested `sections`/`zones` items with `apiRefs` or `#reuse-api`. After a **new** 01 exists, `docskit split` projects slim `api.endpoints` onto `ir/design.yaml` for FE/testkit. Reused APIs stay as `#reuse-api` + `reuseFrom` on the action/item (they do **not** appear in projected `api`).
+Hashtag extracts: `#call-external` → `call-external.md`; `#cross-entity-service` → `cross-entity-service.md`.
 
-No Laravel/Python code in this step.
+---
 
-Shared extracts: `.cursor/extracts/spec-evolution.md`, `api-spec-sync.md`, `entity-relationship.md`, `derived-data.md`, `agent-discipline.md`, `verify-gate.md`
+## Rule: Audit Interlock
 
-Hashtags (read extract when tag present):
-- `#call-external` → `.cursor/extracts/call-external.md`
-- `#cross-entity-service` → `.cursor/extracts/cross-entity-service.md`
-- `#reuse-api` → Gắn trên **action/item** của page (bundle → `ir/design.yaml`), kèm `reuseFrom` tới `01-backend-spec.yaml` đã có. **KHÔNG** gen trio mới.
+- **[MANDATORY]** Always run static audit first: `node engines/spec/lib/audit-api-gaps.mjs <target-api.bundle.yaml>`.
+  - ✅ Consume JSON gap report to fix issues or trigger AskQuestion wizard (≥3 options).
+  - ❌ Do not skip audit and proceed to authoring directly.
 
-## Input
+---
 
-Portal leaf. **Read the entire `ir/design.yaml` first** (actions + nested items that call APIs). If `ir/` is missing, Read `*.bundle.yaml` `design.actions` / sections the same way. Do **not** invent endpoints from memory or from old `bundle.spec.api`.
+## Rule: Missing Information Handling & Workload Threshold (Law 2)
 
-```text
-surfaces/<surface>/CMP-*/<số>/<số>/…/   # leaf màn (NN = chuỗi số dưới CMP)
-  ir/design.yaml     # inventory: actions[].apiRefs | tags #reuse-api + reuseFrom
-  *.bundle.yaml      # authoring if not split yet
-```
+- **[MANDATORY]** When API facts are unknown or ambiguous, evaluate total missing volume:
+  - **Small Scope (≤5 questions):** Trigger `AskQuestion` wizard — one question at a time, **≥3 options**: (1) `(Recommended)`, (2) `Other` (free text), (3) `Log as Tech Debt (Pending)`.
+  - **Large Scope (≥10 gaps/endpoints):** **[MANDATORY HARD STOP IN CHAT]**. Do not spam single questions in chat. Generate an implementation plan / Plan Mode document partitioned into sequential Phases (3–5 endpoints/gaps per phase) with disk offloading at boundaries.
+  - ✅ If member selects "Log as Tech Debt" → create `qa-inbox.md` entry `QA-<feature.id>-NNNN`. Set `pendingTechDebt[].id` to same ID.
+  - ❌ Never write `openQuestions` in YAML. Do not invent endpoint logic.
 
-**Không có Portal FE** (webhook, partner API, public API) → dùng `/api-integration`, không dùng command này.
+---
 
-## STRICT OUTPUT & FOLDER STRUCTURE (PRODUCT/SURFACES ONLY)
+## Rule: API Reuse (Search Before Creating)
 
-> [!CAUTION] NO GROSS FILES / NO MARKDOWN CREATION
-> - **NEVER** combine multiple modules or multiple screens into a single gross file (e.g. `04-api-spec-cmp-adm-000-and-009.md`).
-> - **NEVER** write `.md` files directly. Markdown is generated ONLY by `pnpm docs:render`.
-> - **EVERY** API contract MUST be scoped under its corresponding `surfaces/...` directory.
+- **[MANDATORY]** Before creating any new contract trio, scan in hierarchical order:
+  1. Sibling screens on this `CMP-*`: `surfaces/<surface>/CMP-*/<NN…>/api/<seq>/`
+  2. LCA `common/yaml/` (cluster → module → surface → global)
+  3. Other modules on the same surface
+- **[MANDATORY]** If existing `01-backend-spec.yaml` is found for this action: tag `#reuse-api` + `reuseFrom: <path>` on the **page action/item** in `ir/design.yaml`. Do NOT duplicate the contract.
+- **[STRICTLY FORBIDDEN]** Do NOT create `api/<seq>/` folders for `#reuse-api` actions.
+- **[STRICTLY FORBIDDEN]** Do NOT run `openapi:gen` for reused APIs. If every action is `#reuse-api` → zero `api/` folders created.
+- Only author a new trio for **NEW unique** `apiRefs` with no existing `01`.
 
-```text
-# Function API — cùng leaf với FE bundle; trio KHÔNG sát leaf
-surfaces/<surface>/CMP-*/01/01/01/     # ví dụ CMP-ADM-009/01/01/01
-  <slug>.bundle.yaml
-  ir/design.yaml
-  ir/spec.yaml
-  api/01/                      # <seq> = một API / một primary entity
-    01-backend-spec.yaml       ← MUST BE VALID YAML (double-quote colons)
-    02-openapi.yaml
-    03-mock-data.yaml
-  api/02/                      # API thứ hai của cùng màn (nếu có)
+---
 
-# Common API (LCA common/yaml/ — xem common-scope.md)
-surfaces/<surface>/CMP-*/common/yaml/<component-slug>/
-# or …/CMP-*/<NN>/common/yaml/ or surfaces/<surface>/common/yaml/ or surfaces/common/yaml/
-├── 01-backend-spec.yaml
-├── 02-openapi.yaml
-└── 03-mock-data.yaml
-```
+## Rule: Middleware Injection
 
-One `01-backend-spec.yaml` = one module + one primary entity. Never dump every screen API into one file.
+- **[MANDATORY]** Before authoring: scan `surfaces/<surface>/common/yaml/` and `surfaces/common/yaml/` for common middlewares (auth, rate-limit).
+  - ✅ If found: inject `#middleware: <id>` on endpoint; do not duplicate logic.
+  - ❌ Never duplicate middleware logic in individual endpoint specs.
 
-`docskit api:check --spec …/api/01/01-backend-spec.yaml` before handoff. `docskit openapi:gen --spec …/01-backend-spec.yaml` writes sibling `02-openapi.yaml`.
+---
 
-Member review: `pnpm docs:render` then `pnpm docs:dev`.
+## Rule: Explicit URI Naming
 
-## STRICT API REUSE & EXPLICIT URI NAMING RULES
+- **[MANDATORY]** All endpoints MUST use explicit action suffixes:
+  - `POST /api/v1/…/create`
+  - `PUT /api/v1/…/{id}/update`
+  - `POST /api/v1/…/{id}/duplicate`
+  - `DELETE /api/v1/…/{id}/delete`
+  - `GET /api/v1/…/{id}/detail`
+  - `GET /api/v1/…/list` or `/search`
+- **[STRICTLY FORBIDDEN]** Never use ambiguous RESTful paths without action suffixes (e.g. bare `PUT /users/{id}`).
 
-> [!IMPORTANT] COMMON MIDDLEWARE & API RESOLUTION (MANDATORY)
-> Before authoring a new API spec, the Agent MUST:
-> 1. Scan `surfaces/<surface>/common/yaml/` and `surfaces/common/yaml/` for defined common middlewares or APIs.
-> 2. If the endpoint requires common cross-cutting logic (e.g. auth, rate-limit), inject `#middleware: <id>` instead of rewriting the logic.
-> 3. Verify `#reuse-api` before creating a new endpoint (see below).
+---
 
-> [!IMPORTANT] API REUSE BEFORE DEFINING NEW ENDPOINTS
-> - **Search First:** Before any trio, scan existing `01-backend-spec.yaml` under:
->   1. Sibling screens on this CMP: `surfaces/<surface>/CMP-*/<NN…>/api/<seq>/`
->   2. LCA `common/yaml/` (cluster → module → surface → global)
->   3. Other modules on the same surface
->   Use `docskit_route` / glob, or ArtifactGraph when available. Walk **this screen’s** `ir/design.yaml` actions/items for `#reuse-api` / `reuseFrom` (grill-dev / `/spec` tags reuse on the **page action**, not on a removed `spec.api` block).
-> - **Tag `#reuse-api`:** If the action/item uses an API that already has a trio, set `tags: ["#reuse-api"]` and `reuseFrom:` to the **existing** `…/01-backend-spec.yaml` (or `common/yaml/…`). Write that on the **bundle** `design.actions` / item, then split. Do **not** copy the contract.
-> - **SKIP YAML Generation:** Do **NOT** create `api/<seq>/` for `#reuse-api` actions. Do **not** run `openapi:gen` for them.
-> - **Whole screen reuse:** If **every** API-calling action/item is `#reuse-api`, create **zero** `api/` folders. Handoff is the `reuseFrom` list only.
-> - Only generate a new trio for **NEW unique** `apiRefs` (no existing 01 for that action/path).
+## Rule: Endpoint Error Storming
 
-> [!IMPORTANT] EXPLICIT ACTION SUFFIX URI NAMING (NO AMBIGUOUS RESTFUL PATHS)
-> - Do **NOT** rely on implicit RESTful HTTP methods alone to guess intent (e.g. `GET /users/{id}` vs `PUT /users/{id}`).
-> - Always append explicit action suffixes to URI paths for clarity and non-ambiguity:
->   - **Create:** `POST /api/v1/.../create`
->   - **Update:** `PUT /api/v1/.../{id}/update`
->   - **Duplicate:** `POST /api/v1/.../{id}/duplicate` (or `PUT`)
->   - **Permissions:** `PUT /api/v1/.../{id}/permissions`
->   - **Delete:** `DELETE /api/v1/.../{id}/delete`
->   - **Detail:** `GET /api/v1/.../{id}/detail`
->   - **List:** `GET /api/v1/.../list` (or `search`)
+- **[MANDATORY]** Apply `#err:*` tags based on endpoint nature:
+  - Endpoint with `{id}` parameter → MUST have `#err:not-found` (404) + `#err:idor-violation` (403 TENANT_IDOR_VIOLATION).
+  - Form submit (POST/PUT) → MUST have `#err:validation` (422) with explicit field rules.
+  - Permission-checked route → MUST have `#err:permission-denied` (403 PERMISSION_DENIED).
+  - Conflict/duplicate actions → MUST have `#err:conflict` (409 RESOURCE_DUPLICATE / STATE_INVALID).
+  - Public/master-data routes with `auth: false` → omit IDOR/auth errors.
+- **[RECOMMENDED]** Global errors (`401`, `503`, `500`) → handled by OpenAPI `$ref: '#/components/responses/…'`; do NOT duplicate per-endpoint.
 
-> [!IMPORTANT] ENDPOINT ERROR STORMING & EXPLICIT ERROR MATRIX
-> - **Global Error Delegation:** `401 Unauthorized` (`#err:unauthorized`), `503 Maintenance` (`#err:maintenance`), `500 System` (`#err:system`) handled globally via OpenAPI `$ref: '#/components/responses/...'`. Do NOT duplicate in endpoint specs.
-> - **Endpoint Nature Storming (Explicit Documenting):**
->   - **Detail / Update / Delete with `{id}` parameter:** MUST document `#err:not-found` (`404`) and `#err:idor-violation` (`403 TENANT_IDOR_VIOLATION`).
->   - **Form Submit (POST / PUT):** MUST document `#err:validation` (`422`) with explicit field validation rules.
->   - **Permission Checked Routes:** MUST document `#err:permission-denied` (`403 PERMISSION_DENIED`).
->   - **Conflict / Duplicate Actions:** MUST document `#err:conflict` (`409 RESOURCE_DUPLICATE` / `STATE_INVALID`).
->   - **Public / Master Data Routes:** Explicitly set `auth: false` and omit irrelevant auth/IDOR errors.
+---
 
-## Workflow (summary)
+## Rule: Folder Structure
 
-1. Feature group, module prefix, Platform/Tenant, aggregates, pivot M-N, relationships
-2. **Inventory from design:** List every action/item with `apiRefs` or `#reuse-api`. Scan sibling `…/api/<seq>/` and `common/yaml/`. Reuse → `reuseFrom` only, **no** new trio. Unique `apiRefs` → author `api/<seq>/01`.
-3. **Explicit URIs:** Apply explicit action suffixes (`/create`, `/{id}/update`, `/{id}/duplicate`, `/{id}/delete`, `/{id}/detail`).
-4. Split endpoints by lifecycle, permission, pagination, payload weight into individual function slugs
-5. Reuse detail API for detail + edit initial data; `select-items` for dropdowns
-6. **Endpoint Error Storming:** Classify errors per endpoint nature using `#err:*` tags. Include `errorStorming` in `01-backend-spec.yaml` and corresponding `$ref` responses in `02-openapi.yaml`.
-7. Request/response, validation, filters, errors; then `docskit openapi:gen --spec …/api/<seq>/01-backend-spec.yaml` for `02-openapi.yaml` (OpenAPI 3.0.3). Refine `01` and re-gen rather than a second stack-specific generator.
-8. Không đoán: **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other (nhập text tự do), và (3) "Log as Tech Debt (Pending)" rồi ghi `01`. Không `openQuestions`. Nếu member chọn "Log as Tech Debt" → `qa-inbox.md` (`QA-<feature.id>-NNNN`). `pendingTechDebt[].id` = cùng id đó khi Confirm defer.
-9. Domain tags only (`#call-external`, `#cross-entity-service`, `#err:*`) — **no** `#gen:*` or `codegen` block (grill adds those)
-10. Update `.harness/progress.md` when present
+- **[MANDATORY]** Function API trio placed AT the leaf alongside FE bundle:
+  ```
+  surfaces/<surface>/CMP-*/01/01/01/
+    <slug>.bundle.yaml
+    ir/design.yaml / ir/spec.yaml
+    api/01/
+      01-backend-spec.yaml   ← VALID YAML (double-quote all colons)
+      02-openapi.yaml
+      03-mock-data.yaml
+  ```
+- **[MANDATORY]** Common APIs → LCA `common/yaml/<component-slug>/`.
+- **[MANDATORY]** One `01-backend-spec.yaml` = one module + one primary entity. Never dump every screen API into one file.
+- **[STRICTLY FORBIDDEN]** Never write `.md` directly. Never combine multiple modules/screens into one gross monolithic file.
 
-## Verification Checklist (Evidence Required)
-- [ ] **Reuse vs new:** Every API-calling **action/item** on `ir/design.yaml` is either `#reuse-api` + `reuseFrom` (no new trio), or a **new** unique API with its own `…/api/<seq>/` trio.
-- [ ] **No duplicate trio:** Did not generate `01/02/03` for `#reuse-api` or for an API that already lives on another màn / common.
-- [ ] **Folder Location (new APIs only):**
-  - **Common APIs:** LCA `common/yaml/<slug>/`.
-  - **Function APIs:** `surfaces/<surface>/CMP-*/<NN…>/api/<seq>/` (never 01 on the FE leaf).
-- [ ] **YAML Trio Generated:** Only for **new** unique APIs (skip this item when the screen is 100% `#reuse-api`).
-- [ ] **Error Matrix Documented:** For **new** trios only — `#err:*` on 01 and `$ref` on generated 02.
-- [ ] **No Direct Markdown:** Did NOT write `.md` files directly (Markdown is generated by `pnpm docs:render`).
-- [ ] **Strict YAML Syntax:** All strings with colons (`:`) in YAML files are double-quoted (`"..."`).
-- **DO NOT output fake checklists, i18n tables, or gross combined files.**
+---
 
+## Rule: YAML Syntax Safety
 
+- **[MANDATORY]** All strings containing `:` must be double-quoted.
+  - ✅ `summary: "Create: New Employee Registration"`
+  - ❌ `summary: Create: New Employee Registration`
+- **[MANDATORY]** Run `docskit api:check --spec …/api/01/01-backend-spec.yaml` before handoff.
+- **[MANDATORY]** Domain tags only (`#call-external`, `#cross-entity-service`, `#err:*`). No `#gen:*` or `codegen` block from this skill.
 
+---
+
+## Workflow
+
+1. Identify feature group, module prefix, Platform/Tenant, aggregates, and pivot M-N relationships.
+2. List every action/item from `ir/design.yaml` with `apiRefs` or `#reuse-api`.
+3. Scan sibling + common APIs; apply reuse or create new trio.
+4. Apply explicit URI action suffixes.
+5. Apply error storming `#err:*` per endpoint nature.
+6. Run `docskit openapi:gen --spec …/api/<seq>/01-backend-spec.yaml` to generate `02-openapi.yaml`.
+7. AskQuestion wizard for any unresolved unknowns.
+8. Update `.harness/progress.md`.
+
+---
+
+## Verification Checklist
+
+- [ ] Audit script run; all gaps resolved or wizard triggered.
+- [ ] Every action/item is either `#reuse-api + reuseFrom` or has new `api/<seq>/` trio.
+- [ ] No duplicate trio created for reused APIs.
+- [ ] All new endpoints use explicit action URI suffixes.
+- [ ] `#err:*` tags applied per endpoint nature (not-found + IDOR on `{id}`, validation on POST/PUT, etc.).
+- [ ] Strings with `:` in YAML are double-quoted. No `.md` written directly.
+- [ ] `docskit api:check` passed with zero errors.

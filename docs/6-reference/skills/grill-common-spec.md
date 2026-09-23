@@ -12,7 +12,7 @@
 
 ## Output (Kết quả mong đợi)
 - Vá lại file `.bundle.yaml` (nếu phát hiện ra lỗi logic/thiết kế).
-- Nếu pass toàn bộ các bước kiểm tra, Agent sẽ hướng dẫn Member gõ lệnh `docskit split` để sinh ra `ir/design.yaml`, và gọi hệ thống sinh code Frontend `/gen-common`.
+- Nếu pass toàn bộ các bước kiểm tra, Agent sẽ hướng dẫn Member gõ lệnh `forgekit split` để sinh ra `ir/design.yaml`, và gọi hệ thống sinh code Frontend `/gen-common`.
 - **CẤM ĐOÁN:** KHÔNG ĐƯỢC sinh ra file tài liệu mới. KHÔNG bàn giao file common bundle này cho hệ thống Backend (`/api`).
 
 ## Description / Ý nghĩa
@@ -25,4 +25,4 @@
 
 ## Các Skill liên quan
 - **Trước đó:** `/common-spec`
-- **Sau đó:** `docskit split` và Codegenkit `/gen-common`.
+- **Sau đó:** `forgekit split` và Codegenkit `/gen-common`.

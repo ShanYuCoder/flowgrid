@@ -6,10 +6,10 @@
 ## Cách dùng (Command/Trigger)
 - Gọi qua slash command: `/docskit` (để tra cứu, phân giải thư mục, đọc cấu trúc C4 Markdown).
 - Sử dụng qua CLI (Terminal) trong quá trình tự động hoá:
-  - `pnpm docs:split -- <bundle.yaml>` (hoặc `forgekit split` / `docskit split`)
-  - **`pnpm docs:split:all` (hoặc `forgekit split_all` / `docskit split-all`)**: Lệnh quét và phân tách **TOÀN BỘ** các file `*.bundle.yaml` có trong repo. (Thích hợp cho thành viên "lười" gõ đường dẫn dài ngoằng của lệnh split đơn lẻ).
-  - `pnpm docs:render` (hoặc `forgekit render` / `docskit render`)
-  - `pnpm forge:publish` (hoặc `forgekit publish` / `docskit publish`)
+  - `forgekit split <bundle.yaml>` (hoặc alias script `pnpm docs:split -- <bundle.yaml>`)
+  - **`forgekit split_all`** (hoặc alias script `pnpm docs:split:all`): Lệnh quét và phân tách **TOÀN BỘ** các file `*.bundle.yaml` có trong repo.
+  - `forgekit render` (hoặc alias script `pnpm docs:render`)
+  - `forgekit publish` (hoặc alias script `pnpm forge:publish`)
 
 ## Input (Dữ liệu đầu vào)
 - Lệnh `split`: Nhận đầu vào là một file `*.bundle.yaml` được chỉ định.
@@ -29,8 +29,8 @@
 - Đóng vai trò Fallback: Khi các tool xịn (như ArtifactGraph) bị lỗi hoặc không có, Docskit sẽ đóng vai trò dự phòng (fallback) để Agent vẫn có thể đọc Markdown bằng thuật toán tìm kiếm truyền thống.
 
 ## Các Skill liên quan
-- **Trước đó:** Gần như mọi skill chỉnh sửa YAML (như `/spec`, `/grill-bqa`, `/grill-dev`, `/update-spec`) đều phải kết thúc bằng việc gọi lệnh `docskit split` để ghi nhận thay đổi.
-- **Sau đó:** `docskit render` sẽ đưa dữ liệu lên VitePress (`pnpm docs:dev`).
+- **Trước đó:** Gần như mọi skill chỉnh sửa YAML (như `/spec`, `/grill-bqa`, `/grill-dev`, `/update-spec`) đều phải kết thúc bằng việc gọi lệnh `forgekit split` để ghi nhận thay đổi.
+- **Sau đó:** `forgekit render` sẽ đưa dữ liệu lên VitePress (`pnpm docs:dev`).
 
 ## Chú ý quan trọng
 - Tuyệt đối không tự ý dùng lệnh linux `cat` hay `echo` để sửa file Markdown được generate (`ir/generated/*.md`).

@@ -13,7 +13,7 @@
 
 ## Output (Kết quả mong đợi)
 - Sinh ra file cấu hình kỹ thuật dạng YAML Bundle: `common/yaml/<slug>/<slug>.bundle.yaml`. (Được sinh tại thư mục LCA).
-- Yêu cầu người dùng chạy lệnh `docskit split -- <path>` để chẻ file Bundle này ra thành `ir/design.yaml`, rồi dùng `docskit render` để sinh file đọc được.
+- Yêu cầu người dùng chạy lệnh `forgekit split <path>` để chẻ file Bundle này ra thành `ir/design.yaml`, rồi dùng `forgekit render` để sinh file đọc được.
 
 ## Description / Ý nghĩa
 - Khác biệt hoàn toàn với `/common` (chỉ viết quy tắc bằng Markdown cho con người đọc), kỹ năng `/common-spec` sinh ra các **cấu trúc kỹ thuật YAML** để máy (hệ thống Codegenkit) đọc và sinh code.

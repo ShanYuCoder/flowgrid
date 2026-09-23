@@ -2,32 +2,117 @@ id: TC-EXAMPLE-VALID
 title: Example flow with valid input should succeed
 summary: Ví dụ — luồng hợp lệ đi đến trạng thái thành công.
 story: |
-  Given điều kiện đầu vào hợp lệ
-  When thực hiện thao tác chính
-  Then thấy trạng thái thành công
+  Given điều kiện đầu vào hợp lệ và người dùng có quyền
+  When thực hiện thao tác nhập liệu và nhấn lưu
+  Then hệ thống tạo mới thành công và chuyển trạng thái
 refs:
   module: CMP-01-auth
   surface: admin
   scenario: SC-EXAMPLE
   example: EX-EXAMPLE-01
   screen: W-AD-AUTH-001
-coverage: [happy]
+coverage: [happy, boundary, validation, concurrency]
 priority: high
 automation: automated
-tags: [smoke, e2e, ui]
+tags: [smoke, e2e, ui, unit]
 dimensions:
   business: [workflow]
-  technical: [ui]
-  quality: []
-preconditions: []
-testData: {}
-steps: []
-expected: Success state is visible
-postcondition: []
+  technical: [ui, api]
+  quality: [reliability, security]
+
+preconditions:
+  - "User logged in with role 'ADMIN'"
+  - "No pre-existing record with code 'REC-2026-001'"
+
+# BẢNG MA TRẬN TEST PHÂN HOẠCH TƯƠNG ĐƯƠNG & PHÂN TÍCH GIÁ TRỊ BIÊN (TEST MATRIX)
+testMatrix:
+  - caseId: TC-VAL-01
+    facet: "positive_boundary"
+    description: "Nhập đúng giá trị biên tối thiểu (min boundary: 5 chars)"
+    input:
+      record_code: "REC01"
+      record_name: "Hồ sơ chuẩn A"
+      service_level: "STANDARD"
+    expected:
+      valid: true
+      status: 200
+      feedback: "Lưu hồ sơ thành công"
+
+  - caseId: TC-VAL-02
+    facet: "positive_boundary"
+    description: "Nhập đúng giá trị biên tối đa (max boundary: 20 chars)"
+    input:
+      record_code: "REC-2026-MAXIMUM-001"
+      record_name: "Hồ sơ chuẩn B"
+      service_level: "STANDARD"
+    expected:
+      valid: true
+      status: 200
+
+  - caseId: TC-VAL-03
+    facet: "negative_length"
+    description: "Nhập dưới độ dài tối thiểu (< 5 chars)"
+    input:
+      record_code: "REC"
+    expected:
+      valid: false
+      errorField: "record_code"
+      errorMessage: "Độ dài mã hồ sơ bắt buộc từ 5 đến 20 ký tự"
+
+  - caseId: TC-VAL-04
+    facet: "negative_format"
+    description: "Nhập sai định dạng regex (chứa ký tự đặc biệt hoặc chữ thường)"
+    input:
+      record_code: "rec_code_@!"
+    expected:
+      valid: false
+      errorField: "record_code"
+      errorMessage: "Mã hồ sơ chỉ được gồm chữ in hoa, chữ số và ký tự gạch (- _)"
+
+  - caseId: TC-VAL-05
+    facet: "negative_duplicate"
+    description: "Nhập mã đã tồn tại trong DB (remote unique violation)"
+    input:
+      record_code: "REC-EXISTING-001"
+    expected:
+      valid: false
+      status: 409
+      errorField: "record_code"
+      errorMessage: "Mã hồ sơ này đã tồn tại trên hệ thống. Vui lòng chọn mã khác."
+
+  - caseId: TC-ACT-06
+    facet: "concurrency_double_submit"
+    description: "Giả lập nhấn nút lưu liên tục 2 lần trong 100ms"
+    action: "double_click"
+    expected:
+      buttonDisabled: true
+      singleRequestSent: true
+      duplicatedCreated: false
+
+  - caseId: TC-SYS-07
+    facet: "network_interruption"
+    description: "Mất kết nối mạng khi đang gửi dữ liệu"
+    action: "simulate_offline"
+    expected:
+      bannerVisible: true
+      formDataPreserved: true
+
+steps:
+  - "Truy cập màn hình tạo mới theo URL hoặc Menu"
+  - "Nhập các trường dữ liệu theo bảng testMatrix"
+  - "Nhấn nút Lưu & Xác nhận"
+  - "Kiểm tra thông báo và trạng thái DOM tương ứng"
+
+expected: Success state is visible or appropriate error message is rendered
+postcondition:
+  - "Clean up test record if created successfully"
 feature: example-slug
 genType: e2e
 route:
   path: /example
   auth: guest
 testIds:
-  required: []
+  required:
+    - "fld_record_code"
+    - "fld_record_name"
+    - "btn_save_record"

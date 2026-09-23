@@ -15,7 +15,7 @@
 ## Output (Kết quả mong đợi)
 - File `*.bundle.yaml` đã được vá lỗi xung đột, xóa bỏ mâu thuẫn giữa Business và Technical.
 - File QA Tech Debt (`qa/open/QA-…`) nếu có vấn đề không thể tự dung hòa.
-- Chạy lệnh `pnpm spec:split` / `docskit split` để sinh lại Intermediate Representation (IR).
+- Chạy lệnh `forgekit split` để sinh lại Intermediate Representation (IR).
 
 ## Description / Ý nghĩa
 - Kỹ năng mang tính chất **hòa giải (Reconcile)**: Xóa bỏ các mâu thuẫn (conflicts) giữa góc nhìn Nghiệp vụ (BQA) và góc nhìn Lập trình (Dev/Tech).

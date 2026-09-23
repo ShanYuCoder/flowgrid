@@ -5,78 +5,87 @@ description: EXCLUSIVE /qa-resolve — close one qa/open file. Prompt is QA id +
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - Prompt already has a **solution** → that is Confirm. **Do not** AskQuestion again. Missing solution → **AskQuestion** wizard form (hiển thị từng question một) với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt" then **STOP**.
-> - You MUST follow ALL workflow steps; verify via the Verification Checklist with evidence.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-# /qa-resolve — Close one open QA
+# /qa-resolve — Close One Open QA
 
-**When:** Member has `QA-<page-id>-NNNN` (or `QA-<feature.id>-NNNN`) **and** a decision.
+**When:** Member provides `QA-<page-id>-NNNN` (or `QA-<feature.id>-NNNN`) **along with** an explicit decision/solution.
 
-**Not this skill:** Unknown answer → `/grill-bqa` / `/grill-dev` / `/grill-docs` / `/api-spec`. FE delta without a QA file → `/update-spec`. Portal/BE sync without closing a QA → `/api-update`.
+**Not this skill:**
+- Unknown answers needing brainstorming → `/grill-bqa` / `/grill-dev` / `/grill-docs` / `/api-spec`
+- FE delta without an existing QA file → `/update-spec`
+- Portal/BE sync without closing QA files → `/api-update`
 
 **Extract:** `.cursor/extracts/qa-inbox.md`
 
-## Prompt
+---
 
-```text
-/qa-resolve QA-cmp-adm-002-02-01-02-0001
-Giữ copy legacy cho title.
-```
+## Rule: Load Policy
 
-- Line 1 (or first token after the skill): **id** `QA-…`
-- Rest of the user message: **solution** (plain language). Apply it; do not invent extra business fields.
+| Read (whole file) | Write | NEVER do |
+|---|---|---|
+| `qa/open/<id>.yaml` | Patch `target.path` only | Read generated `*.md` as SSOT |
+| Target bundle **or** `01-backend-spec.yaml` (entire file) | Delete QA file after patch | Author `openQuestions` |
+| `ir/design.yaml` — ONLY to locate field if `at` is a design pointer | `docskit split` after patch | Full-screen rewrite (use `/spec`) |
 
-## Load policy
+---
 
-| Read (whole file) | Write | Do not |
-|-------------------|-------|--------|
-| `qa/open/<id>.yaml` | Same SSOT as `target.path` | Generated `*.md` as SSOT |
-| Target bundle **or** `01-backend-spec.yaml` (entire file) | Delete the QA file after patch | Author `openQuestions` |
-| `ir/design.yaml` only to locate the field if `at` is a design pointer | `docskit split` after bundle/`Q&A` list must refresh | Full-screen rewrite (`/spec`) |
+## Rule: Missing Solution Handling
 
-## Resolve the file
+- **[MANDATORY]** If user prompt includes a solution → treat as confirmed decision. **Do NOT** re-trigger AskQuestion wizard.
+- **[MANDATORY]** If user prompt provides **no solution**: trigger `AskQuestion` wizard with **≥3 options** (1. Recommended, 2. Other, 3. "Log as Tech Debt") + include `options[]` from the QA file if present. Then **STOP**.
+- **[STRICTLY FORBIDDEN]** Do NOT invent solutions. Do NOT inject business data absent from user prompt.
 
-1. `qa/open/<id>.yaml`. If missing, glob `qa/open/<id>.yaml` and `qa/open/QA-*-NNNN.yaml` whose `id:` matches. Zero hits → **STOP**, list `qa/open/` ids. Many hits → **STOP**, ask which file.
-2. Read `target.path`, `target.at`, `kind`, `skill`, `question`.
-3. If the user gave **no** solution: **AskQuestion** wizard form với **≥3 options** bao gồm: (1) Recommended, (2) Other, và (3) "Log as Tech Debt" (+ options from `options[]` if present) → **STOP**.
-4. If the user gave a solution: treat as Confirm. Do not re-open the wizard.
+---
 
-## Patch (one SSOT)
+## Rule: Resolving the QA File
 
-Use **`target.path`**, not guesswork:
+- **[MANDATORY]** Step 1: Locate `qa/open/<id>.yaml`. If missing, glob `qa/open/QA-*-NNNN.yaml` matching `id:`.
+  - Zero matches → **STOP**, list available `qa/open/` IDs to user.
+  - Multiple matches → **STOP**, prompt user to clarify which file to close.
+- **[MANDATORY]** Step 2: Read `target.path`, `target.at`, `kind`, `skill`, and `question` from the QA file.
 
-| `target.path` | Patch |
-|---------------|--------|
-| `*.bundle.yaml` | That bundle only (`target.at`). Not `spec.api`. |
-| `…/api/<seq>/01-backend-spec.yaml` or `common/yaml/<slug>/01-backend-spec.yaml` or integrations `01` | That **01**. `pendingTechDebt[]` drop the row whose `id` equals this QA id. Regen `02` via `docskit openapi:gen --spec <01>`. |
-| Missing / wrong path | **STOP** — do not invent a leaf. |
+---
 
-Then:
+## Rule: Patch Logic (One SSOT)
 
-- Write the solution into the field at `target.at` (replace `#missing_info` / empty / placeholder).
-- Remove this id from `#missing_info QA-…`, `#tech-debt:QA-…`, and any tag list.
-- **Delete** `qa/open/<id>.yaml`.
-- Feature bundle on the same leaf (from `target.path` or `QA-<page-id>-*`): `docskit split` / `pnpm docs:split` so `ir/spec.yaml` `"Q&A"` drops the id. Then `docskit split --check` when IR already existed.
-- Preserve error matrices (`onSuccess` / `onCommonError` / `onSpecificError`, `#err:*`) unless the solution is about those fields.
+- **[MANDATORY]** Use `target.path` to locate patch destination — never guess path:
 
-## Out of scope
+  | `target.path` | Patch Action |
+  |---|---|
+  | `*.bundle.yaml` | Patch `target.at` field only. Never patch `spec.api`. |
+  | `…/api/<seq>/01-backend-spec.yaml` or `common/yaml/<slug>/01-backend-spec.yaml` | Patch that `01`. Drop `pendingTechDebt[]` row for this QA id. Regenerate `02` via `docskit openapi:gen --spec <01>`. |
+  | Missing / invalid path | **STOP** — do not invent a fallback path. |
 
-- Other QA ids in the same folder (one prompt = one id).
-- Codegen / prototype / Playwright.
-- Inventing API endpoints or UI inventory.
+- **[MANDATORY]** Post-patch execution:
+  1. Write solution into field at `target.at` (replacing `#missing_info` / empty / placeholder).
+  2. Remove this ID from `#missing_info QA-…`, `#tech-debt:QA-…`, and all tag lists.
+  3. **Delete** `qa/open/<id>.yaml`.
+  4. Run `docskit split` / `pnpm docs:split` so `ir/spec.yaml` Q&A removes this ID.
+- **[MANDATORY]** Preserve existing error matrices (`onSuccess` / `onCommonError` / `onSpecificError`, `#err:*`) unless solution specifically alters those fields.
+
+---
+
+## Rule: Out of Scope
+
+- **[STRICTLY FORBIDDEN]** Do NOT close multiple QA IDs in a single invocation (strictly one ID per prompt).
+- **[STRICTLY FORBIDDEN]** No codegen, prototype, or Playwright generation. No inventing API endpoints or UI inventory.
+
+---
 
 ## Handoff (after close)
 
-- 01 still missing `codegen.profile` / `#gen:*` / `action` → tell member to run **`/grill-api-spec`**.
-- Bundle `gen` still empty while grill-dev was pending on this fact → **`/grill-dev`**.
-- Otherwise done.
+- `01` still missing `codegen.profile` / `#gen:*` / `action` → instruct member to run **`/grill-api-spec`**.
+- `bundle.gen` still empty while grill-dev was pending → **`/grill-dev`**.
+- Otherwise: execution complete.
+
+---
 
 ## Verification Checklist
 
-- [ ] Read `qa/open/<id>.yaml` and patched **only** `target.path`.
-- [ ] Solution came from the user prompt (or one AskQuestion turn if prompt had no solution).
-- [ ] QA file deleted; tags / `pendingTechDebt` / `#missing_info` for this id gone.
-- [ ] Split (and `openapi:gen` if 01) ran; `"Q&A"` on `ir/spec.yaml` no longer lists this id.
-- [ ] Did not write `openQuestions` or `bundle.spec.api`.
+- [ ] Read `qa/open/<id>.yaml`; patched only `target.path` field.
+- [ ] Solution sourced strictly from user prompt (or single AskQuestion turn).
+- [ ] QA file deleted; `pendingTechDebt` + `#missing_info` references removed for this ID.
+- [ ] `docskit split` executed; `ir/spec.yaml` Q&A reflects closed status.
+- [ ] Did not author `openQuestions` or `bundle.spec.api`.

@@ -8,7 +8,11 @@ import {
   renderZonesTable,
   renderZoneItemsTechTable,
   renderBehaviorTable,
-  renderActionsTable
+  renderActionsTable,
+  renderValidationDictionaryTable,
+  renderStateMatrixTable,
+  renderActionFlowsDetailed,
+  renderCustomWidgetSpecs
 } from './render-design-tables.mjs'
 import ejs from 'ejs'
 
@@ -60,7 +64,11 @@ export function renderWithTemplate(spec, context) {
     renderZonesTable,
     renderZoneItemsTechTable,
     renderBehaviorTable,
-    renderActionsTable
+    renderActionsTable,
+    renderValidationDictionaryTable,
+    renderStateMatrixTable,
+    renderActionFlowsDetailed,
+    renderCustomWidgetSpecs
   }
 
   const body = ejs.render(templateContent, { spec, context: ejsContext })

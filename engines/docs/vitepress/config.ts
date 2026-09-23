@@ -252,6 +252,9 @@ export default () => {
                 restartTimer = setTimeout(() => server.restart(), 300)
               }
 
+              server.watcher.on('change', (file) => {
+                if (file.endsWith('.yaml') || file.endsWith('.yml')) debouncedRestart()
+              })
               server.watcher.on('add', (file) => {
                 if (isSidebarRelevant(file)) debouncedRestart()
               })

@@ -14,7 +14,7 @@
 
 ## Output (Kết quả mong đợi)
 - Tạo ra thư mục tích hợp mới tại: `surfaces/integrations/<provider>/<slug>/api/<seq>/`.
-- Sinh ra bộ 3 file quen thuộc: `01-backend-spec.yaml`, `02-openapi.yaml` (dùng `docskit openapi:gen`), và `03-mock-data.yaml`.
+- Sinh ra bộ 3 file quen thuộc: `01-backend-spec.yaml`, `02-openapi.yaml` (dùng `forgekit openapi_gen`), và `03-mock-data.yaml`.
 - Dữ liệu `portalRefs` sẽ rỗng (empty), thay vào đó khai báo các mảng `integrationRefs[]` và `integrationBacklog[]`.
 
 ## Description / Ý nghĩa

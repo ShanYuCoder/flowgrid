@@ -4,10 +4,9 @@ _Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sử
 
 - [Docs](docs/index.md)
   - 1-guide
-    - [YAML/Markdown AI Workflow](docs/1-guide/ai-workflow.md)
+    - [Feature Artifact AI Workflow](docs/1-guide/ai-workflow.md)
     - [Start now](docs/1-guide/getting-started.md)
     - [System doc structure — canonical layer meanings, Operating Model và Architecture](docs/1-guide/system-doc-structure.md)
-    - [Feature Artifact Workflow](docs/1-guide/team-ai-workflow-slides.md)
     - [Backend Phase 3b Workflow](docs/1-guide/team-backend-phase3b-slides.md)
     - [Forgekit & Các Bộ Công Cụ (Kits)](docs/1-guide/toolkits.md)
   - 2-lifecycle

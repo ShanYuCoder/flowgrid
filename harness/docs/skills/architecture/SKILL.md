@@ -1,67 +1,57 @@
 ---
 name: architecture
-description: /architecture — route overview, surfaces, modules, functions, flows, and deployment.
+description: /architecture — Routes to child architecture skills based on layer. DO NOT invent topology.
 disable-model-invocation: true
 extractBundle: architecture-core
 ---
 
-# /architecture — router (business layers → skills)
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Use `docskit_route`, `docskit_list_ids`, or glob search to resolve target path before authoring.
 
-Ask which **business layer** (or infer). Then load the child skill.
+# /architecture — Architecture Router
 
-People map: [`platform/guide/start-now.md`](../../../platform/guide/start-now.md)  
-Tree + standards: [`platform/guide/SYSTEM-DOC-STRUCTURE.md`](../../../platform/guide/SYSTEM-DOC-STRUCTURE.md)
+---
 
-## Route map (business → skill)
+## Rule: Layer → Child Skill Routing
 
-| Ask / topic | Business layer | Next skill |
-|-------------|----------------|------------|
-| Operational area / persona / business purpose | Overview | **`/overview`** |
-| Common scope / Cross-service / Database / Business processes | Surfaces / Modules | **`/business-process`**, **`/db-erd`**, **`/cross-service`** |
-| Business surfaces (who does what on which channel) | Surfaces | **`/surfaces`** |
-| Common UX/UI rules and patterns (Markdown) | Common | **`/common`** |
-| Common technical bundles for codegen (YAML) | Common | **`/common-spec`**, **`/grill-common-spec`** |
-| Module / CMP box | Module | **`/module`** |
-| Screen / API detail / CRUD | Function | **`/spec`** (grill with **`/spec-grill`** as needed) |
-| Where it runs / Physical infrastructure | Deploy | **`/deployment`** |
-| Architectural decisions | ADR | **`/decision`** |
-| Architecture discussion / grilling | High-level Design | **`/grill`**, **`/architecture-grill`** |
+- **[MANDATORY]** Route based on the layer being authored:
 
-## Rules
+  | Layer | Child Skill |
+  |---|---|
+  | Product overview / operational areas | `/overview` |
+  | Business/interaction surfaces | `/surfaces` |
+  | Common UX/UI rules (Markdown) | `/common` |
+  | Common technical bundles for codegen (YAML) | `/common-spec` / `/grill-common-spec` |
+  | Module / CMP box | `/module` |
+  | Screen / API detail | `/spec` |
+  | Where it runs / Infrastructure | `/deployment` |
+  | Architectural decisions | `/decision` |
+  | Architecture grill / interview | `/grill` / `/architecture-grill` |
 
-- Format: MD + Mermaid (`flowchart` / `sequenceDiagram`)
-  - **MANDATORY ERROR FLOWS:** Any Mermaid diagram (node flowchart or sequence diagram) MUST explicitly model error paths and exception handling loops (e.g., Redirect on 401/403 IDOR, validation fail states).
-- Treat `Surfaces` as business surfaces, not projects or repos.
-- Product Code (`W-*`/`API-*`) stays in `surfaces/<surface>/CMP-*/<slug>/code/`
-- API endpoint/contract belongs to Function detail.
+---
+
+## Rule: Architecture vs Business Spec Boundary
+
+- **[MANDATORY]** Architecture = PURELY technical: system topology, internal services, cronjobs, database infrastructure, long cross-cutting technical flows.
+- **[STRICTLY FORBIDDEN]** `architecture/01-introduction` MUST NOT repeat Personas or detailed user use-cases. Mention user entry point lightly then jump to technical system composition.
+- **[STRICTLY FORBIDDEN]** API endpoints and contracts belong to Function detail (`/spec`, `/api-spec`), NOT architecture.
+- **[MANDATORY]** Treat Surfaces as business interaction surfaces (e.g. Admin Portal, Customer Web), not repositories or software projects.
+- **[MANDATORY]** Product Code (`W-*` / `API-*`) stays in `surfaces/<surface>/CMP-*/<slug>/code/`.
+
+---
+
+## Rule: Diagrams
+
+- **[MANDATORY]** Format: MD + Mermaid (`flowchart` or `sequenceDiagram`).
+- **[MANDATORY]** Every Mermaid diagram MUST explicitly model error paths and exception handling (e.g. Redirect on 401/403 IDOR, validation fail states).
+- **[MANDATORY]** Deployment diagrams → C4 `DEP-*` only when physical placement matters. Use a stub by default if placement is not confirmed.
 - One concern per edit.
-- **Architecture vs Business Spec Boundary:**
-  - Architecture is PURELY technical: system topology, internal services, cronjobs, database infrastructure, and long cross-cutting technical flows (e.g., the entire Auth system).
-  - `architecture/01-introduction` MUST NOT repeat Personas or detailed user use-cases. It should only lightly mention the user entry point (e.g., "Users access via Web Portal built with Next.js") and jump straight into technical system composition, cloud services, and backend communication.
 
-## Target / ID Resolution Rule
+---
 
-- User prompt MAY specify an ID, Operational Area, Surface, or CMP ID (e.g. `CMP-ADM-000`, `Admin Portal`).
-- Agent MUST use `docskit_route`, `docskit_list_ids`, or `docskit_get_element` (or glob search) to resolve target paths under `surfaces/...` or `overview/`.
+## Verification Checklist
 
-## After route
-
-Load the child skill + extract bundle `architecture-core`.
-
-## Accelerators (optional)
-
-Prefer `docskit_route` then `docskit_list_ids` / `docskit_validate_links` / `docskit_business_processes` before large edits.
-
-```text
-if Docskit available: targeted docskit_* tools for IDs / deps / processes / links
-else: Glob/search under architecture/ and surfaces/, then Read scoped Markdown
-
-When ArtifactGraph is missing, follow `/docskit` fallback evidence: continue
-with plain read tools and ID greps.
-```
-
-## Verification Checklist (Evidence Required)
-- [ ] **ID Resolved:** Used `docskit_route` or `docskit_get_element` to locate target architectural elements.
-- [ ] **Child Skill Routed:** Directed to correct child skill (`/overview`, `/surfaces`, `/module`, `/spec`).
-- **DO NOT output fake checklists, i18n tables, or framework prose.**
-
+- [ ] Used `docskit_route` or `docskit_get_element` to locate target element.
+- [ ] Routed to correct child skill.
+- [ ] Architecture boundary respected (no Personas, no UI copy, no API contracts).

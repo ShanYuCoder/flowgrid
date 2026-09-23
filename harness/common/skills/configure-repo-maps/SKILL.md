@@ -8,51 +8,51 @@ disable-model-invocation: true
 
 # /configure-repo-maps
 
-**Mục đích:** Điền đường dẫn checkout local vào map máy — không clone repo, không sửa portable catalog.
+**Purpose:** Populate local checkout directory paths into machine-local mapping files — do not clone repositories, do not alter portable catalogs.
 
-## Hard rules (bắt buộc)
+## Hard Rules
 
-1. **Chỉ ghi** `platform-repos.local.json` và/hoặc `legacy-repos.local.json` (merge-by-key).
-2. **Không** `git clone` / `git fetch` / connect remote / download source.
-3. **Không** sửa `platform-repos.json` / `legacy-repos.json` (portable: `root` chỉ `"."`).
-4. **Không** hand-edit JSON hộ member bằng cách paste cả file — nhận NL, hỏi key/path còn thiếu.
-5. Absolute path (hoặc `~` / drive Windows) → normalize rồi ghi vào `projects.<key>.root`.
+1. **[MANDATORY]** Write ONLY to `platform-repos.local.json` and/or `legacy-repos.local.json` (merge-by-key).
+2. **[STRICTLY FORBIDDEN]** Do NOT execute `git clone` / `git fetch` / connect remotes / download source archives.
+3. **[STRICTLY FORBIDDEN]** Do NOT edit `platform-repos.json` / `legacy-repos.json` (portable catalogs where `root` remains `"."`).
+4. **[STRICTLY FORBIDDEN]** Do NOT hand-edit entire JSON files on behalf of the member by pasting full files — accept natural language (NL) input and prompt for missing keys or paths.
+5. **[MANDATORY]** Normalize absolute paths (including `~` or Windows drives) and write to `projects.<key>.root`.
 
 ## Routing
 
 | Intent | File |
 |--------|------|
-| Platform / hub hiện tại (docs, portal, api, tests, …) | `platform-repos.local.json` |
-| Prefix / ý `legacy-*`, khảo cổ hệ cũ | `legacy-repos.local.json` |
+| Current platform / hub (docs, portal, api, tests, …) | `platform-repos.local.json` |
+| Prefix / concept `legacy-*`, legacy archaeology | `legacy-repos.local.json` |
 
-## Example prompts
+## Example Prompts (NL input from user)
 
 **Platform-only**
 
 ```text
-docs = base-docs ở ~/ws/base-docs, portal admin ở ~/ws/portal, api core ở ~/ws/api
+docs = base-docs at ~/ws/base-docs, portal admin at ~/ws/portal, api core at ~/ws/api
 ```
 
-→ merge `base-docs`, `portal`, `api` vào `platform-repos.local.json` (hỏi nếu key/role mơ hồ).
+→ Merge `base-docs`, `portal`, `api` into `platform-repos.local.json` (prompt if keys or roles are ambiguous).
 
 **Multi portal / API**
 
 ```text
-2 portal: admin ở ~/ws/portal, line ở ~/ws/line; 2 API: core ở ~/ws/api-core,
-scenario ở ~/ws/api-scenario; docs = ~/ws/base-docs; tests = ~/ws/base-tests
+2 portals: admin at ~/ws/portal, line at ~/ws/line; 2 APIs: core at ~/ws/api-core,
+scenario at ~/ws/api-scenario; docs = ~/ws/base-docs; tests = ~/ws/base-tests
 ```
 
-→ một key / checkout; hỏi path còn thiếu.
+→ Map one key per checkout; prompt for any missing paths.
 
 **Legacy**
 
 ```text
-legacy ERP ở D:\legacy\erp, key legacy-erp
+legacy ERP at D:\legacy\erp, key legacy-erp
 ```
 
-→ chỉ `legacy-repos.local.json`.
+→ Target strictly `legacy-repos.local.json`.
 
-## After write
+## After Write
 
-1. `platform-dna codegraph:wire` (khi dùng Cursor + CodeGraph).
-2. Checkout nào chưa có `.codegraph/`: `cd <root> && codegraph init`.
+1. Run `platform-dna codegraph:wire` (when utilizing Cursor + CodeGraph).
+2. For checkouts lacking `.codegraph/`: `cd <root> && codegraph init`.

@@ -4,24 +4,34 @@ description: /cross-service — Models inter-service and inter-system integratio
 disable-model-invocation: true
 extractBundle: architecture-core
 ---
-# /cross-service
-**Target Paths:** `<LCA>/common/cross-service.md` — same LCA as `.cursor/extracts/common-scope.md`.
-**Guidelines:** Use Mermaid `sequenceDiagram` for sync/async RPC, events, and messages. Focus on contract, direction, ownership, and handoff between services/systems.
 
-## When to use
-- Use when a flow crosses a service, system, or boundary.
-- Use for sync RPC, async messaging, event-driven handoffs, retries, idempotency, and integration contracts.
-- Do **not** use for internal code paths inside a single service.
-- Do **not** use for business action flows on a surface; that is `/business-process`.
-- Do **not** use for runtime journey narratives that focus on user/system step order across the whole product; that is `/journey`.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-## Flow meaning
-- Model the interaction between services, systems, or boundaries.
-- Include sync RPC, async messaging, and event-driven handoffs when relevant.
-- Do not model internal code paths inside a single service; that belongs elsewhere.
-- Keep the emphasis on integration contracts and ownership of the boundary.
+# /cross-service — Inter-Service & Inter-System Integrations
 
-## Modifiers (If /legacy is used)
-Khi gọi kèm `/legacy` (vd: `/legacy /cross-service`):
-- Tham chiếu source từ `legacy-repos.local.json`.
-- Khảo cổ: trace các luồng giao tiếp giữa các service / system / boundary cũ.
+**Target Path:** `<LCA>/common/cross-service.md` — LCA resolved from `.cursor/extracts/common-scope.md`.
+
+---
+
+## Rule: When to Use
+
+- **[MANDATORY]** Use when a flow crosses a service, system, or boundary: sync RPC, async messaging, event-driven handoffs, retries, idempotency, integration contracts.
+- **[STRICTLY FORBIDDEN]** Do NOT use for internal code execution paths inside a single service — that belongs in architecture internals.
+- **[STRICTLY FORBIDDEN]** Do NOT use for business action flows on a surface → use `/business-process`.
+- **[STRICTLY FORBIDDEN]** Do NOT use for runtime journey narratives focusing on user/system step order across the whole product → use `/journey`.
+
+---
+
+## Rule: Diagram Requirements
+
+- **[MANDATORY]** Use Mermaid `sequenceDiagram` for sync/async RPC, events, and messages.
+- **[MANDATORY]** Model: contract, direction, ownership, and handoff between services/systems.
+- **[MANDATORY]** Keep emphasis strictly on integration contracts and boundary ownership.
+
+---
+
+## Modifier: `/legacy`
+
+- **[MANDATORY]** Reference source mappings from `legacy-repos.local.json`.
+- **[MANDATORY]** Trace communication flows between legacy services/systems/boundaries.

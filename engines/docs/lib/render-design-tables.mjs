@@ -67,14 +67,295 @@ function formatValidation(validation, messages) {
     return [formatRecord(validation)]
   }
   const lines = []
+  if (validation.prototype) lines.push(`Kiểu mẫu: \`${validation.prototype}\``)
+  if (validation.required) lines.push(`Bắt buộc: Có${messages?.required ? ` ("${messages.required}")` : ''}`)
+  if (Array.isArray(validation.rules)) {
+    validation.rules.forEach(r => {
+      let desc = r.type
+      if (r.type === 'length') desc = `Độ dài ${r.min ?? 0}–${r.max ?? '∞'} ký tự`
+      else if (r.type === 'regex') desc = `Định dạng: \`${r.pattern}\``
+      else if (r.type === 'numeric_range') desc = `Giá trị trong khoảng ${r.min ?? '-∞'} đến ${r.max ?? '+∞'}`
+      if (r.message) desc += ` ➔ Báo lỗi: "${r.message}"`
+      lines.push(desc)
+    })
+  }
+  if (Array.isArray(validation.conditionalRules)) {
+    validation.conditionalRules.forEach(cr => {
+      lines.push(`Điều kiện (${cr.when}): Bắt buộc khi thỏa điều kiện${cr.apply?.message ? ` ➔ Báo lỗi: "${cr.apply.message}"` : ''}`)
+    })
+  }
+  if (validation.remoteCheck) {
+    const rc = validation.remoteCheck
+    lines.push(`Kiểm tra DB (${rc.endpoint}, trigger: ${rc.trigger || 'onBlur'})${rc.message ? ` ➔ Báo lỗi: "${rc.message}"` : ''}`)
+  }
   for (const [key, val] of Object.entries(validation)) {
+    if (['prototype', 'required', 'rules', 'conditionalRules', 'remoteCheck'].includes(key)) continue
     let msg = ''
     if (messages && messages[key]) {
-      msg = ` ==> ${messages[key]}`
+      msg = ` ➔ Báo lỗi: "${messages[key]}"`
     }
     lines.push(`${key}: ${formatRecord(val)}${msg}`)
   }
   return lines
+}
+
+/**
+ * Trích xuất tất cả các trường form từ cây sections để tạo Data Dictionary Table
+ */
+export function collectFormFields(nodes = []) {
+  const fields = []
+  function traverse(list) {
+    for (const node of list || []) {
+      if (node.bind?.field || node.validation || (node.kind && ['input', 'select', 'textarea', 'checkbox', 'radio', 'datepicker', 'switch'].includes(node.kind))) {
+        fields.push(node)
+      }
+      if (Array.isArray(node.items)) traverse(node.items)
+      if (Array.isArray(node.sections)) traverse(node.sections)
+    }
+  }
+  traverse(nodes)
+  return fields
+}
+
+/**
+ * Bảng Từ Điển Dữ Liệu & Quy Tắc Kiểm Tra Hợp Lệ (Data Dictionary Table 6 cột)
+ */
+export function renderValidationDictionaryTable(sections = []) {
+  const fields = collectFormFields(sections)
+  if (!fields.length) return ''
+
+  const rows = fields.map(f => {
+    const label = f.label || f.name || f.id || 'Trường'
+    const key = f.bind?.field || f.id || 'N/A'
+    const type = f.kind || f.widget || 'string'
+    const isRequired = f.validation?.required ? 'Bắt buộc' : 'Tùy chọn'
+    
+    const ruleParts = []
+    if (f.validation?.prototype) ruleParts.push(`Kiểu: \`${f.validation.prototype}\``)
+    if (Array.isArray(f.validation?.rules)) {
+      f.validation.rules.forEach(r => {
+        if (r.type === 'length') ruleParts.push(`Độ dài [${r.min ?? 0}, ${r.max ?? '∞'}]`)
+        else if (r.type === 'regex') ruleParts.push(`Regex: \`${r.pattern}\``)
+        else if (r.type === 'numeric_range') ruleParts.push(`Khoảng số: [${r.min}, ${r.max}]`)
+      })
+    }
+    if (Array.isArray(f.validation?.conditionalRules)) {
+      f.validation.conditionalRules.forEach(cr => {
+        ruleParts.push(`Phụ thuộc: \`${cr.when}\``)
+      })
+    }
+    if (f.validation?.remoteCheck) {
+      ruleParts.push(`Unique DB: \`${f.validation.remoteCheck.endpoint}\``)
+    }
+    const rulesText = ruleParts.length ? ruleParts.join('<br>') : 'Không áp dụng'
+
+    const msgParts = []
+    if (f.messages?.required) msgParts.push(`Required: "${f.messages.required}"`)
+    if (Array.isArray(f.validation?.rules)) {
+      f.validation.rules.filter(r => r.message).forEach(r => msgParts.push(`"${r.message}"`))
+    }
+    if (f.validation?.remoteCheck?.message) {
+      msgParts.push(`DB: "${f.validation.remoteCheck.message}"`)
+    }
+    const msgText = msgParts.length ? msgParts.join('<br>') : (f.validation?.required ? 'Thông báo mặc định của hệ thống' : 'N/A')
+
+    return [label, `\`${key}\``, type, isRequired, rulesText, msgText]
+  })
+
+  return renderTable(
+    ['Tên Trường (Label)', 'Mã Kỹ Thuật (Key)', 'Kiểu (Type)', 'Bắt Buộc?', 'Ràng Buộc & Quy Tắc Hợp Lệ (Rules)', 'Thông Báo Lỗi Inline (Messages)'],
+    rows
+  )
+}
+
+/**
+ * Bảng Ma Trận Trạng Thái Giao Diện & Phân Quyền (State & Permission Matrix Table)
+ */
+export function renderStateMatrixTable(stateMatrix) {
+  if (!stateMatrix || !Array.isArray(stateMatrix.behaviors) || !stateMatrix.behaviors.length) return ''
+
+  const rows = stateMatrix.behaviors.map(b => {
+    const status = `\`${b.status}\``
+    const fieldsState = b.fieldsState === 'readonly' ? '🔒 Chỉ đọc (Readonly)' : (b.fieldsState === 'editable' ? '✏️ Cho phép sửa (Editable)' : b.fieldsState || 'Mặc định')
+    const buttons = Array.isArray(b.visibleButtons) ? b.visibleButtons.map(btn => `\`${btn}\``).join(', ') : 'Không có'
+    
+    let rbacNotes = ''
+    if (b.rbacOverrides && typeof b.rbacOverrides === 'object') {
+      const overrides = Object.entries(b.rbacOverrides).map(([role, conf]) => {
+        const btns = Array.isArray(conf.visibleButtons) ? conf.visibleButtons.map(x => `\`${x}\``).join(', ') : ''
+        return `**${role}**: Nút khả dụng [${btns}]`
+      })
+      rbacNotes = overrides.join('<br>')
+    } else {
+      rbacNotes = 'Áp dụng cho mọi vai trò'
+    }
+
+    return [status, fieldsState, buttons, rbacNotes]
+  })
+
+  return renderTable(
+    ['Trạng Thái Bản Ghi (Record Status)', 'Trạng Thái Trường Form (Fields State)', 'Nút Hành Động Khả Dụng (Visible Buttons)', 'Ghi Chú Phân Quyền RBAC (Role Overrides)'],
+    rows
+  )
+}
+
+/**
+ * Đặc tả chi tiết Hành động theo chuẩn 6 Khối Kỹ Thuật & Bảng Outcomes 4 Tầng
+ */
+export function renderActionFlowsDetailed(actions = []) {
+  if (!Array.isArray(actions) || !actions.length) return ''
+
+  const parts = []
+  for (const act of actions) {
+    const title = act.label || act.name || act.id || 'Hành động'
+    const idBadge = act.id ? ` (\`${act.id}\`)` : ''
+    parts.push(`### ${title}${idBadge}`)
+    if (act.meaning) parts.push(`> **Ý nghĩa nghiệp vụ:** ${act.meaning}`)
+    if (act.purpose) parts.push(`- **Mục đích thao tác:** ${act.purpose}`)
+    if (act.position) parts.push(`- **Vị trí hiển thị:** \`${act.position}\` | **Trigger:** \`${act.trigger || 'click'}\` | **Variant:** \`${act.variant || 'default'}\``)
+
+    const preParts = []
+    if (act.preconditions) {
+      if (act.preconditions.uiState) preParts.push(`- Điều kiện Form UI: \`${act.preconditions.uiState}\``)
+      if (act.preconditions.recordState) preParts.push(`- Trạng thái bản ghi hợp lệ: \`${act.preconditions.recordState}\``)
+      if (act.preconditions.requiredPermissions?.length) preParts.push(`- Quyền hạn yêu cầu (RBAC): ${act.preconditions.requiredPermissions.map(p => `\`${p}\``).join(', ')}`)
+      if (act.preconditions.disabledReason) preParts.push(`- Lý do vô hiệu hóa (disabled tooltip): "${act.preconditions.disabledReason}"`)
+    }
+    if (act.interactionControl) {
+      if (act.interactionControl.preventDoubleSubmit) preParts.push(`- **Bảo vệ nhấn đúp (Double-submit):** BẬT (Khóa nút tức thì khi click, debounce: ${act.interactionControl.debounceMs || 0}ms)`)
+      if (act.interactionControl.loadingIndicator) preParts.push(`- Hiệu ứng loading: "${act.interactionControl.loadingIndicator}"`)
+      if (act.interactionControl.confirmDialog?.required) {
+        preParts.push(`- Cửa sổ xác nhận (Confirm Dialog): BẮT BUỘC (${act.interactionControl.confirmDialog.title || 'Xác nhận'} — "${act.interactionControl.confirmDialog.message || ''}")`)
+      }
+    }
+    if (preParts.length) {
+      parts.push('', '#### 1. Điều Kiện Tiên Quyết & Kiểm Soát Tương Tác (Pre-conditions & UI Lock)', ...preParts)
+    }
+
+    const execParts = []
+    if (act.payloadTransformation) {
+      const pt = act.payloadTransformation
+      execParts.push(`- Xử lý dữ liệu: Trim chuỗi: ${pt.trimStrings ? 'Có' : 'Không'} | Lọc XSS: ${pt.sanitizeHtml ? 'Có' : 'Không'}`)
+      if (pt.typeCasting && typeof pt.typeCasting === 'object') {
+        const casts = Object.entries(pt.typeCasting).map(([k, v]) => `\`${k}\` ➔ ${v}`).join(', ')
+        execParts.push(`- Ép kiểu dữ liệu (Type casting): ${casts}`)
+      }
+    }
+    if (act.executionContract) {
+      const ec = act.executionContract
+      execParts.push(`- Endpoint API: \`${ec.method || 'POST'} ${ec.apiRef || ''}\``)
+      if (ec.idempotencyKey) execParts.push(`- Khóa Idempotency: \`${ec.idempotencyKey}\``)
+      if (ec.timeoutMs) execParts.push(`- Thời gian Timeout SLA: ${ec.timeoutMs}ms`)
+      if (ec.concurrencyHandling) {
+        execParts.push(`- Xử lý đồng quy (Concurrency): Chiến lược \`${ec.concurrencyHandling.strategy || 'optimistic_locking'}\` (Status: ${ec.concurrencyHandling.onConflictStatus || 409}) ➔ ${ec.concurrencyHandling.conflictResolution || ''}`)
+      }
+    }
+    if (execParts.length) {
+      parts.push('', '#### 2. Xử Lý Dữ Liệu & Hợp Đồng Thực Thi API (Transformation & Concurrency)', ...execParts)
+    }
+
+    if (act.outcomes) {
+      parts.push('', '#### 3. Ma Trận Phản Hồi Kết Quả & Ngoại Lệ (Outcomes & Edge Cases Matrix)')
+      const outcomeRows = []
+
+      if (act.outcomes.onSuccess) {
+        const s = act.outcomes.onSuccess
+        const toast = s.toast ? `Toast ${s.toast.type || 'success'}: "${s.toast.message || ''}"` : 'Thành công'
+        const nav = s.navigation ? `Chuyển màn hình \`${s.navigation.target}\`` : 'Ở lại màn hình'
+        const bg = s.backgroundTrigger ? `Kích hoạt Event: \`${s.backgroundTrigger.event}\` (${s.backgroundTrigger.note || ''})` : ''
+        outcomeRows.push(['Thành công (200 / 201)', 'Dữ liệu hợp lệ, lưu DB thành công', [toast, nav, bg].filter(Boolean).join('<br>')])
+      }
+
+      if (Array.isArray(act.outcomes.onBusinessErrors)) {
+        act.outcomes.onBusinessErrors.forEach(be => {
+          outcomeRows.push([`Lỗi nghiệp vụ (${be.statusCode})`, be.type || 'Nghiệp vụ không thỏa', be.action || 'Báo lỗi trên UI'])
+        })
+      }
+
+      if (Array.isArray(act.outcomes.onSecurityErrors)) {
+        act.outcomes.onSecurityErrors.forEach(se => {
+          outcomeRows.push([`Lỗi phân quyền (${se.statusCode})`, se.type || 'Không đủ thẩm quyền', se.action || 'Điều hướng bảo mật'])
+        })
+      }
+
+      if (Array.isArray(act.outcomes.onSystemErrors)) {
+        act.outcomes.onSystemErrors.forEach(sy => {
+          outcomeRows.push([`Lỗi hệ thống (${sy.statusCode})`, sy.type || 'Sự cố máy chủ hoặc mạng', sy.action || 'Hiển thị banner khôi phục'])
+        })
+      }
+
+      if (outcomeRows.length) {
+        parts.push(renderTable(['Phân Loại Kết Quả (Outcome)', 'Nguyên Nhân Nghiệp Vụ / Kỹ Thuật', 'Hành Động Hệ Thống & Phản Hồi Người Dùng'], outcomeRows))
+      }
+    } else if (act.onSuccess || act.onCommonError || act.onSpecificError) {
+      parts.push('', '#### 3. Phản Hồi Kết Quả')
+      if (act.onSuccess) parts.push(`- Thành công: ${formatRecord(act.onSuccess)}`)
+      if (act.onCommonError) parts.push(`- Lỗi chung: ${formatRecord(act.onCommonError)}`)
+      if (act.onSpecificError) parts.push(`- Lỗi cụ thể: ${formatRecord(act.onSpecificError)}`)
+    }
+
+    if (act.navigation && !act.outcomes?.onSuccess?.navigation) {
+      parts.push(`- **Điều hướng:** Chuyển đến màn hình \`${act.navigation.target}\``)
+    }
+
+    parts.push('')
+  }
+  return parts.join('\n')
+}
+
+/**
+ * Trình bày chi tiết Khối Giao Diện Tùy Biến Ngoài Base Kit (Custom Novel Widgets)
+ */
+export function renderCustomWidgetSpecs(sections = []) {
+  const customSections = []
+  function findCustom(list) {
+    for (const s of list || []) {
+      if (s.kind === 'custom' || s.customWidgetType || s.dimensions || s.palette) {
+        customSections.push(s)
+      }
+      if (Array.isArray(s.sections)) findCustom(s.sections)
+    }
+  }
+  findCustom(sections)
+
+  if (!customSections.length) return ''
+
+  const parts = ['## Đặc Tả Khối Giao Diện Tùy Biến (Custom UI Blocks)', '']
+  for (const c of customSections) {
+    parts.push(`### ${c.name || c.id || 'Khối Tùy Biến'} (\`${c.customWidgetType || c.kind}\`)`)
+    if (c.meaning) parts.push(`> **Ý nghĩa nghiệp vụ:** ${c.meaning}`)
+    if (c.purpose) parts.push(`- **Mục đích thao tác:** ${c.purpose}`)
+    
+    if (c.dimensions) {
+      const d = c.dimensions
+      parts.push('', '**Kích thước & Hình học (Dimensions & Responsive):**')
+      parts.push(`- Chiều rộng: \`${d.width || '100%'}\` | Chiều cao: Min \`${d.minHeight || 'auto'}\` / Max \`${d.maxHeight || 'auto'}\``)
+      if (d.responsiveLayout) {
+        parts.push(`- Bố cục theo thiết bị: Desktop (\`${d.responsiveLayout.desktop}\`) · Mobile (\`${d.responsiveLayout.mobile}\`) · Breakpoint: \`${d.responsiveLayout.breakpoint || '768px'}\``)
+      }
+    }
+
+    if (c.palette) {
+      const p = c.palette
+      parts.push('', '**Bảng màu & Bề mặt (Palette Tokens):**')
+      const tokens = Object.entries(p).map(([k, v]) => `- \`${k}\`: \`${v}\``)
+      parts.push(...tokens)
+    }
+
+    if (c.typography) {
+      parts.push('', '**Kiểu chữ & Typography:**')
+      const typos = Object.entries(c.typography).map(([k, v]) => `- \`${k}\`: \`${v}\``)
+      parts.push(...typos)
+    }
+
+    if (c.interactions) {
+      parts.push('', '**Phản hồi vi tương tác & Trạng thái:**')
+      const ints = Object.entries(c.interactions).map(([k, v]) => `- \`${k}\`: ${formatRecord(v)}`)
+      parts.push(...ints)
+    }
+    parts.push('')
+  }
+  return parts.join('\n')
 }
 
 function renderItemBusiness(item, indent) {
@@ -84,7 +365,10 @@ function renderItemBusiness(item, indent) {
   const idStr = item.id ? ` \`${item.id}\`` : ''
   const lines = [`${pad}- **${title}**${idStr}${kind ? ` (\`${kind}\`)` : ''}`]
   
-  lines.push(`${pad}  - Việc làm / ý nghĩa: ${item.purpose || '#missing_info'}`)
+  if (item.meaning || item.businessMeaning) {
+    lines.push(`${pad}  - Ý nghĩa nghiệp vụ: ${item.meaning || item.businessMeaning}`)
+  }
+  lines.push(`${pad}  - Mục đích thao tác: ${item.purpose || '#missing_info'}`)
   
   const copyStr = formatCopy(item.copy, item)
   if (copyStr) lines.push(`${pad}  - Copy trên UI: ${copyStr}`)
@@ -179,7 +463,10 @@ function renderSectionBusiness(section, depth) {
   const pad = '  '.repeat(depth)
   const kind = section.kind || 'section'
   const lines = [`${pad}- **${section.name || section.label || section.value || section.id || 'section'}** (\`${kind}\`)`]
-  if (section.purpose) lines.push(`${pad}  - Việc làm / ý nghĩa: ${section.purpose}`)
+  if (section.meaning || section.businessMeaning) {
+    lines.push(`${pad}  - Ý nghĩa nghiệp vụ: ${section.meaning || section.businessMeaning}`)
+  }
+  if (section.purpose) lines.push(`${pad}  - Mục đích thao tác: ${section.purpose}`)
   if (section.position) {
     lines.push(`${pad}  - Vị trí: ${typeof section.position === 'string' ? section.position : formatRecord(section.position)}`)
   }
@@ -398,4 +685,11 @@ function formatApi(action) {
   if (action.api) return String(action.api)
   if (Array.isArray(action.apiRefs)) return action.apiRefs.join(', ')
   return ''
+}
+
+export {
+  renderValidationDictionaryTable,
+  renderStateMatrixTable,
+  renderActionFlowsDetailed,
+  renderCustomWidgetSpecs
 }

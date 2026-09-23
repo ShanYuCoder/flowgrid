@@ -52,12 +52,17 @@ Trước khi sinh code, bạn có thể yêu cầu AI kiểm tra lại bundle:
 Sau khi có file YAML, chạy lệnh để sinh tài liệu Markdown cho toàn team đọc:
 ```bash
 docskit split -- surfaces/<surface>/common/yaml/auth-middleware/auth-middleware.bundle.yaml
-docskit render
-```
+---
+
+## 2.1 Quy tắc Chuẩn hóa Chất lượng khi Tạo Common
+Khi định nghĩa các Common Function / Pattern, BẮT BUỘC phải tuân thủ các chuẩn mới của hệ thống:
+- **Tầng UI / UX Pattern:** Mọi element (trường nhập, nút bấm, cột bảng) trong bundle BẮT BUỘC khai báo cả `meaning` (**Ý nghĩa nghiệp vụ**) và `purpose` (**Mục đích thao tác**). Nếu pattern có điều hướng, phải ghi rõ `screenAccess` (Direct, Sidebar Menu hay Contextual Button Action).
+- **Tầng Middleware / Backend API:** Phải có `sla` (`rateLimit`, `timeoutMs`) và `meaning` / `purpose` trên từng tham số request/response payload.
+- **Tầng Integration / Webhook:** Phải có `resilience` (`retryPolicy`, `dlqTopic`) và bảng `dataMapping` ánh xạ dữ liệu đối tác sang platform.
 
 ---
 
-## 3. Cách tái sử dụng Common trong Feature Spec
+## 3. Quy trình thiết kế Common
 
 Khi bạn thiết kế một màn hình hoặc API cụ thể, bạn (hoặc AI) có thể tái sử dụng các Common đã định nghĩa:
 

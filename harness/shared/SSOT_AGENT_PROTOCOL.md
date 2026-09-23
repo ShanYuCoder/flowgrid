@@ -1,158 +1,167 @@
 # SSOT Agent Protocol — Physical Interlocks (Docskit)
 
 > [!CRITICAL]
-> Đây là **KHÓA VẬT LÝ**, không phải lời nhắc.
-> Vi phạm bất kỳ đạo luật nào → run **FAILED**. Chat-only "done" = **KHÔNG ĐƯỢC CHẤP NHẬN**.
+> These are **PHYSICAL INTERLOCKS**, not casual reminders.
+> Any violation of these laws → run **FAILED**. Chat-only "done" = **STRICTLY REJECTED**.
 >
-> Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (không có segment `modules/`).
+> Path SSOT: `surfaces/<surface>/CMP-*/<slug>/` (NO `modules/` segment).
 
 ---
 
-## ĐẠO LUẬT 1 — CRITICAL RULE FOR PRE-FLIGHT CHECK
+## LAW 1 — CRITICAL RULE FOR PRE-FLIGHT CHECK
 
-**Mục tiêu:** Trị bệnh lười đọc file gốc.
+**Objective:** Eliminate refusal to read original specification files.
 
-Dù Thread mới hay cũ, ngay khi User yêu cầu chạy một skill/tính năng, hành động **ĐẦU TIÊN BẮT BUỘC** là dùng tool `{{DOC_SKIT_READ_TOOL}}` (hoặc read-file tương đương) nhắm thẳng vào `SKILL.md` của skill đó để nạp lại quy chuẩn.
+In any thread (new or continuing), whenever a user requests to run a skill or feature, the **MANDATORY FIRST ACTION** is to invoke `{{DOC_SKIT_READ_TOOL}}` (or equivalent read tool) directly on the target `SKILL.md` to load the current standards.
 
-**TUYỆT ĐỐI KHÔNG** dựa vào trí nhớ mường tượng từ context/thread trước.
+**STRICTLY FORBIDDEN** to rely on speculative memory or context from prior turns.
 
-Chưa `{{DOC_SKIT_READ_TOOL}}` / read `SKILL.md` → **CẤM** tạo plan, hay bất kỳ file product nào.
-
----
-
-## ĐẠO LUẬT 2 — CRITICAL RULE FOR TASK TRACKING (Anti Flat-Check)
-
-**Mục tiêu:** Trị "viết 10 làm 7" / flat-check.
-
-Ngay sau Pre-flight, Agent **BẮT BUỘC** derive checklist từ **Workflow + Accelerators** của `SKILL.md`:
-
-- **Task nhỏ (≤5 items):** Liệt kê checklist (`- [ ]`) trực tiếp trong **chat thread**. Làm xong bước nào → đánh `[x]` + evidence.
-- **Task lớn (>5 items hoặc multi-phase):** Tạo `implementation_plan.md` trong **brain dir**. Mỗi Phase đi từng file một — **TUYỆT ĐỐI KHÔNG** dùng script Python/JS để chạy tắt hàng loạt.
-
-**Quy tắc Question (bắt buộc cả trong chat thread lẫn implementation_plan):**
-
-- Mọi question **BẮT BUỘC** đánh số rõ ràng (`Question 1`, `Question 2`...).
-- Mọi question **BẮT BUỘC** có **≥3 lựa chọn** bao gồm: (1) Option cụ thể + dán nhãn `(Recommended)`, (2) Option `Other` (nhập text tự do), và (3) Option `Log as Tech Debt (Pending)`. (Lưu ý: ask_question tool tự thêm Other, nhưng trong Markdown plan phải viết đủ).
-- **Task đơn (1 màn hình, nhiều gaps):** Hiển thị wizard form trong chat thread — từng question một, chờ Member trả lời xong mới chuyển question tiếp.
-- **Task lớn (multi-screen/module):** Gom questions vào `implementation_plan.md` đánh số đầy đủ.
-
-**QUAN TRỌNG — KHÔNG tạo file vật lý:**
-
-- **TUYỆT ĐỐI KHÔNG** tạo file `TODO.md` vật lý trong repo đích.
-- **TUYỆT ĐỐI KHÔNG** chỉ copy mục "Verification Checklist" ở cuối `SKILL.md`.
-- Mỗi bước Workflow = một dòng checklist. Mỗi nhánh Accelerator = một dòng `if available / else fallback`.
-- **TUYỆT ĐỐI KHÔNG** gộp bước. **TUYỆT ĐỐI KHÔNG** tick hàng loạt. **TUYỆT ĐỐI KHÔNG** in checklist tĩnh từ `AGENTS.md` thay cho Workflow bóc từ skill.
-
-Verification Checklist ở cuối skill chỉ dùng **sau** để map evidence lên các dòng checklist đã derive từ Workflow — không phải nguồn sinh checklist.
+Without first invoking `{{DOC_SKIT_READ_TOOL}}` on `SKILL.md` → **FORBIDDEN** to generate plans, YAML files, or any product artifacts.
 
 ---
 
-## ĐẠO LUẬT 3 — CRITICAL RULE FOR EXECUTION (Plan trước khi write)
+## LAW 2 — CRITICAL RULE FOR TASK TRACKING & SESSION TOKEN HORIZON (Anti Flat-Check & Compaction Protection)
 
-**Mục tiêu:** Không cho sinh YAML/code ngay trên RAM.
+**Objective:** Prevent incomplete delivery, superficial checking, and session max-length token overflow (auto-compaction/truncation).
 
-**TUYỆT ĐỐI KHÔNG** làm gộp. **TUYỆT ĐỐI KHÔNG** tạo thêm file plan rời (`*-plan.md`).
+Immediately after Pre-flight, the agent **MUST** evaluate the total workload (including gaps from audit scripts, user questions, and action items) against the **Session Max-Length Horizon**:
 
----
+### Workload & Token Safeguard Gate (The 5 / 10 Threshold Rule)
+1. **Small Scope (≤5 items, single screen/API):**
+   - Accumulates < 30k trajectory tokens — well within safe single-session limits.
+   - List dynamic checklist (`- [ ]`) directly in the **chat thread**.
+   - Check off items (`[x]`) with concrete file/diff evidence as each completes.
+   - Execute wizard questions one at a time directly in the chat thread.
+2. **Buffer Scope (6–9 items):**
+   - Permitted in chat ONLY if items are isolated, single-turn scalar string/label fills without deep file re-reading.
+   - If items involve structural changes or multi-file dependencies → MUST escalate to an implementation plan.
+3. **Large Scope (≥10 items, multi-screen/cross-repo, OR audit script outputs extensive gaps):**
+   - **MANDATORY HARD STOP IN CHAT:** Strictly forbidden from dumping all items into the active chat session, which guarantees single-turn truncation and session auto-compaction.
+   - **Environment Plan Gate:** Author a structured implementation plan using the host environment's plan mechanism:
+     - **Antigravity:** `implementation_plan.md` in `<appDataDir>/brain/<conversation-id>/`.
+     - **Cursor:** Plan Mode / Plan document / `plan.md`.
+     - **Claude Code / Windsurf / Others:** Structured plan artifact or scratchpad (`plan.md` / `implementation_plan.md`).
+     - **Repository Cleanliness:** Regardless of host agent, **NEVER** commit temporary plan scratchpads into the production codebase repo.
+   - **Phase Slicing:** Partition workload into discrete **Phases** (each phase capped at 3–5 items).
+   - **Phase Boundary & Context Offloading:** At the completion of each phase, immediately write persistent physical files to disk. For the next phase, load fresh state from disk instead of accumulating verbose conversation history, insulating the workflow against context loss.
 
-## ĐẠO LUẬT 4 — CRITICAL RULE — PHYSICAL OUTPUT IMMEDIATELY (No RAM Caching)
+**Question Protocol (mandatory in both chat thread and implementation plan):**
 
-**Mục tiêu:** Triệt thiếu hụt do tràn context.
+- Every question **MUST** be explicitly numbered (`Question 1`, `Question 2`, etc.).
+- Every question **MUST** provide **≥3 options**: (1) Concrete choice labeled `(Recommended)`, (2) `Other` (free text input), and (3) `Log as Tech Debt (Pending)`.
+- **Chat Wizards (Small Scope):** Render one question at a time, awaiting user response before proceeding.
+- **Implementation Plans (Large Scope):** Consolidate numbered questions within their respective phases in the plan document.
 
-Bất cứ khi nào Agent sinh ra một kết quả bền (plan, proposal, bundle, summary bước), Agent **KHÔNG ĐƯỢC PHÉP** giữ nó dưới dạng ngữ cảnh lơ lửng trong RAM/chat.
+**CRITICAL — Physical File Policy:**
 
-**BẮT BUỘC** dùng tool ghi thẳng thành file vật lý **NGAY LẬP TỨC**.
+- **STRICTLY FORBIDDEN** to create a physical `TODO.md` file inside the target repository.
+- **STRICTLY FORBIDDEN** to merely copy the static "Verification Checklist" from the end of `SKILL.md`.
+- Each Workflow step = one checklist item. Each Accelerator branch = one `if available / else fallback` entry.
+- **STRICTLY FORBIDDEN** to combine steps, batch check-off items, or output static generic checklists.
 
-Output vật lý của bước trước = Input vật lý của bước sau (đọc lại file, không nhớ).
-
-
-
----
-
-## ĐẠO LUẬT 5 — CRITICAL RULE FOR DATA ORIGIN (Zero Business Hallucination)
-
-**Mục tiêu:** Cấm bịa nghiệp vụ khi prompt thiếu.
-
-Agent **chỉ** được phép lấy dữ liệu để điền Spec từ đúng **2 nguồn**:
-
-1. Prompt của User
-2. Evidence từ ArtifactGraph Registry (khi MCP available)
-
-**TUYỆT ĐỐI KHÔNG** "tự suy nghĩ" hay tự bịa trường dữ liệu, validation, cột DB, flow, hoặc tag nghiệp vụ mới.
-
-Cái gì thiếu → **BẮT BUỘC** để trống hoặc gắn `#missing_info` và nhường `/grill`.
-
-**CẤM** thông minh đột xuất.
-
-(Ngoại lệ cấu trúc: pattern tags **rõ ràng** suy từ prompt như list+delete → `#pattern: CRUD` — vẫn **CẤM** bịa field/business rule.)
-
----
-
-## ĐẠO LUẬT 6 — CRITICAL RULE FOR GRILL PROCESS (Hard Confirmation Gate)
-
-**Mục tiêu:** Grill = trợ lý phân tích cục bộ, không tự sửa lan man.
-
-Khi rà `#missing_info` / lỗ hổng, Grill **BẮT BUỘC** 4 bước:
-
-1. **Check lại ArtifactGraph** (nếu available) — Member khác có thể vừa cập nhật.
-2. **Micro-scoping:** Chỉ suy luận đúng Block/Field thiếu. **TUYỆT ĐỐI** sửa lan man phần đã chốt.
-3. **Đề xuất:** Dạng **wizard form** trong **Chat Thread** — hiển thị **từng question một**, chờ Member trả lời xong mới chuyển question tiếp. Mỗi question **BẮT BUỘC** có **≥3 lựa chọn** (Recommended, Other, Tech Debt).
-4. **Hard Confirmation Gate:** Agent **BẮT BUỘC** chờ Member trả lời trên chat. Chỉ sau khi Member **chốt / Confirm**, Agent mới được phép cập nhật thẳng vào product SSOT (`.bundle.yaml`) và **Artifact Registry**.
+The verification checklist at the bottom of a skill serves only to audit evidence against derived steps — never as the checklist source itself.
 
 ---
 
-## ĐẠO LUẬT 7 — CRITICAL RULE FOR DSL REGISTRY (Human-Dictated)
+## LAW 3 — CRITICAL RULE FOR EXECUTION (Plan Before Write)
 
-**Mục tiêu:** Cấm ảo tưởng quyền lực với kho Common/DSL.
+**Objective:** Prevent raw unvalidated generation directly in RAM.
 
-Con người là thực thể **duy nhất** có quyền quyết định và cập nhật kho chuẩn mực DSL/Common.
-
-Agent **KHÔNG CÓ QUYỀN** tự động phân tích và tự quyết định cái gì là "Common".
-
-Agent chỉ là Thư ký — được đăng ký/cập nhật DSL/Common chỉ trong **3** trường hợp bị động:
-
-1. User chủ động gọi `/common` hoặc `/common-spec`.
-2. User chủ động gọi `/docs-mark` (ArtifactGraph) để đánh tag/rule cần nhớ.
-3. Sau đề xuất `/grill` và User **BẤM DUYỆT (Confirm)**.
-
-Ở `/spec` thông thường: nhiệm vụ duy nhất là **lôi DSL/common có sẵn ra dùng**.
-
-**TUYỆT ĐỐI KHÔNG** tự ý ghi đè hay sáng tác thêm common/DSL.
+**STRICTLY FORBIDDEN** to batch actions together without planning. **STRICTLY FORBIDDEN** to create redundant standalone plan files (`*-plan.md`).
 
 ---
 
+## LAW 4 — CRITICAL RULE — PHYSICAL OUTPUT IMMEDIATELY (No RAM Caching)
+
+**Objective:** Eliminate context truncation and loss of state.
+
+Whenever the agent generates a persistent result (plan, proposal, bundle, step summary), it **MUST NOT** retain it solely in RAM or chat context.
+
+**MANDATORY** to write physical files immediately using the appropriate tool.
+
+Physical output of step N = Physical input of step N+1 (read from disk, do not rely on memory).
+
 ---
 
-## ĐẠO LUẬT 8 — CRITICAL RULE FOR ARTIFACTGRAPH MCP & CROSS-REPO ROUTING
+## LAW 5 — CRITICAL RULE FOR DATA ORIGIN (Zero Business Hallucination)
+
+**Objective:** Forbid inventing business logic when prompt information is missing.
+
+The agent is permitted to populate specifications from strictly **2 sources**:
+
+1. User prompt
+2. Evidence from ArtifactGraph Registry (when MCP is available)
+
+**STRICTLY FORBIDDEN** to invent fields, validations, database columns, flows, or domain tags.
+
+Any missing detail **MUST** remain empty or be tagged `#missing_info` and deferred to `/grill`.
+
+---
+
+## LAW 6 — CRITICAL RULE FOR GRILL PROCESS (Hard Confirmation Gate)
+
+**Objective:** Restrict grilling to localized analysis; prevent unapproved scope creep.
+
+When inspecting `#missing_info` or gaps, Grill **MUST** follow 4 steps:
+
+1. **Re-check ArtifactGraph** (if available) — other members may have committed updates.
+2. **Micro-scoping:** Isolate strictly the missing block/field. Do not alter settled sections.
+3. **Proposal:** Present via **wizard form** in the **Chat Thread** — one question at a time with ≥3 options (Recommended, Other, Tech Debt).
+4. **Hard Confirmation Gate:** Wait for member confirmation in chat. Only after explicit confirmation is the agent permitted to update product SSOT (`.bundle.yaml`) and Artifact Registry.
+
+---
+
+## LAW 7 — CRITICAL RULE FOR DSL REGISTRY (Human-Dictated)
+
+**Objective:** Prevent unauthorized modifications to Common and DSL assets.
+
+Human leads are the **exclusive authority** for establishing and updating DSL/Common standards.
+
+The agent has **NO AUTHORITY** to unilaterally decide what constitutes "Common".
+
+The agent acts strictly as a clerk, permitted to register or update DSL/Common in only **3** passive cases:
+
+1. User explicitly invokes `/common` or `/common-spec`.
+2. User explicitly invokes `/docs-mark` to record rules or tags.
+3. User explicitly confirms a `/grill` proposal.
+
+In standard `/spec` runs, the sole duty is to **consume existing common definitions**.
+
+**STRICTLY FORBIDDEN** to invent or overwrite common/DSL definitions without authorization.
+
+---
+
+## LAW 8 — CRITICAL RULE FOR ARTIFACTGRAPH MCP & CROSS-REPO ROUTING
 
 **1. Boundaries & Ownership:**
-- ArtifactGraph chỉ quản lý `artifactgraph.json`, `registries/*.json`, `templates`, và `lexicon/` tại repo hiện tại.
-- Nó **KHÔNG** quản lý Architecture Markdown (thuộc Docskit), Code Generators (thuộc Codegenkit/Testkit), hay Symbol Indexes (thuộc CodeGraph).
+- ArtifactGraph manages solely `artifactgraph.json`, `registries/*.json`, `templates`, and `lexicon/` within the current repository.
+- It does **NOT** manage Architecture Markdown (owned by Docskit), Code Generators (owned by Codegenkit/Testkit), or Symbol Indexes (owned by CodeGraph).
 
-**2. Cross-repo Routing (Phân luồng truy xuất):**
-- **Tuyệt đối không** dùng ArtifactGraph để quét chéo (cross-repo) hay quét toàn bộ workspace. Khi cần dữ liệu ngoài repo hiện tại, phải phân luồng:
-  - Architecture ID / C4 path → Giao cho **Docskit** (`DOCSKIT_ROOT`).
-  - IR / registry / generation → Giao cho **Owning Kit** (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
-  - Tra cứu Symbol / Call-graph của repo X → Dùng **CodeGraph MCP** của riêng repo đó (`codegraph-<key>`).
+**2. Cross-Repo Routing:**
+- **STRICTLY FORBIDDEN** to use ArtifactGraph for broad cross-repo scanning or entire workspace graphs. Route by ownership:
+  - Architecture ID / C4 path → Delegate to **Docskit** (`DOCSKIT_ROOT`).
+  - IR / registry / generation → Delegate to **Owning Kit** (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
+  - Symbol / Call-graph lookups for repo X → Use **CodeGraph MCP** for repo X (`codegraph-<key>`).
 
-**3. Protocol Sử Dụng MCP:**
-- **Status & Rebuild:** Dùng `artifactgraph_status`. Nếu stale, gọi `artifactgraph_rebuild`.
-- **Analyze:** Ưu tiên `artifactgraph_analyze`, `artifactgraph_grill_check`, hoặc `artifactgraph_parity_check` thay vì đọc toàn bộ registry.
-- **Remember:** Chỉ dùng `artifactgraph_remember` SAU KHI member đã Confirm lựa chọn ở bước Grill.
-- **Handoff:** Dùng `artifactgraph_allowlist_check` + `artifactgraph_recommend_command` để lấy lệnh cho phép, sau đó bàn giao cho kit/script tương ứng chạy. Tuyệt đối không dùng `artifactgraph_gen`.
-- **Cloud Prompt:** Chỉ gửi `cloudPromptSlice` cho các unresolved work.
-- **Setup:** Nếu thiếu index, hướng dẫn member chạy `artifactgraph init` (với `--type=` phù hợp).
+**3. Protocol for MCP Usage:**
+- **Status & Rebuild:** Use `artifactgraph_status`. If stale, call `artifactgraph_rebuild`.
+- **Analyze:** Prioritize `artifactgraph_analyze`, `artifactgraph_grill_check`, or `artifactgraph_parity_check`.
+- **Remember:** Only use `artifactgraph_remember` AFTER member confirms options during Grill.
+- **Handoff:** Use `artifactgraph_allowlist_check` + `artifactgraph_recommend_command` to retrieve permitted commands; hand off to corresponding kit/script. Never run `artifactgraph_gen`.
+- **Cloud Prompt:** Send `cloudPromptSlice` only for unresolved work items.
+- **Setup:** If indices are missing, direct member to run `artifactgraph init` with the appropriate `--type=`.
 
 ---
 
-## Thứ tự khóa bắt buộc mỗi skill run
+## Mandatory Lock Sequence for Each Skill Run
 
 ```text
-1) {{DOC_SKIT_READ_TOOL}} SKILL.md          → Đạo luật 1
-4) mỗi kết quả bền → write file ngay (No RAM) → Đạo luật 4
-5) data chỉ từ User | ArtifactGraph; gap → #missing_info → Đạo luật 5
-6) grill → 4 bước + STOP chờ Confirm → Đạo luật 6
-7) common/DSL chỉ khi /common|/common-spec|/docs-mark|Confirm → Đạo luật 7
+1) {{DOC_SKIT_READ_TOOL}} SKILL.md                          → Law 1
+2) Derive dynamic checklist                                 → Law 2
+3) Write immediately upon producing durable results (No RAM) → Law 4
+4) Sourced exclusively from User | ArtifactGraph; tag gaps   → Law 5
+5) Grill: 4-step protocol + STOP for Confirmation           → Law 6
+6) Common/DSL: only via /common|/common-spec|/docs-mark|Confirm → Law 7
 ```
 
-Host overlay Antigravity: xem `AGENTS.md` (cùng 7 đạo luật).
+Host overlay Antigravity: see `AGENTS.md` (synchronized Laws 1–8).

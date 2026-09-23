@@ -6,17 +6,21 @@ alwaysApply: true
 # Agent Deep Compliance — Physical Interlocks
 
 > [!CRITICAL]
-> Đây là **KHÓA VẬT LÝ**, không phải checklist nhắc nhở.
-> Đồng bộ với `AGENTS.md` + `SSOT_AGENT_PROTOCOL.md`.
-> **CẤM** dùng danh sách dưới đây như Verification Checklist cố định thay cho TODO bóc từ `SKILL.md` Workflow + Accelerators.
+> These are **PHYSICAL INTERLOCKS**, not reminders or optional suggestions.
+> Synchronized with `AGENTS.md` + `SSOT_AGENT_PROTOCOL.md`.
+> **[STRICTLY FORBIDDEN]** Do NOT use this rule list as a static Verification Checklist in place of dynamic TODOs derived from each `SKILL.md` Workflow + Accelerators.
 
-Khi chạy bất kỳ skill (`/spec`, `/grill`, `/grill-bqa`, …):
+When executing any skill (`/spec`, `/grill`, `/grill-bqa`, etc.):
 
-1. **PRE-FLIGHT:** Hành động ĐẦU TIÊN **BẮT BUỘC** tool `{{DOC_SKIT_READ_TOOL}}` lên `SKILL.md` dưới `{{DOC_SKIT_AGENT_DIR}}/skills/`. **TUYỆT ĐỐI KHÔNG** dựa trí nhớ.
-4. **NO RAM CACHING:** Mọi kết quả bền **BẮT BUỘC** `{{DOC_SKIT_WRITE_TOOL}}` ngay. **KHÔNG ĐƯỢC PHÉP** giữ trên chat/RAM. Grill proposal chưa Confirm → thảo luận trực tiếp trên chat, **TUYỆT ĐỐI KHÔNG** tạo file `*-proposal.md`, **TUYỆT ĐỐI KHÔNG** ghi đè product SSOT trước khi chốt.
-5. **ZERO BUSINESS HALLUCINATION:** Data chỉ từ (1) User prompt (2) ArtifactGraph registry. **TUYỆT ĐỐI KHÔNG** bịa field/validation/DB/flow. Thiếu → trống hoặc `#missing_info`. **CẤM** thông minh đột xuất.
-6. **GRILL HARD GATE:** ArtifactGraph re-check → micro-scope → đề xuất (Recommended) → **STOP hỏi Member**. **TUYỆT ĐỐI KHÔNG** tự ghi SSOT trước Confirm.
-7. **DSL / COMMON:** Người quyết định. Agent chỉ `/common`, `/common-spec`, `/docs-mark`, hoặc Confirm sau grill. `/spec` chỉ consume. **TUYỆT ĐỐI KHÔNG** sáng tác/ghi đè common.
-8. **ISOLATION:** Chỉ skill được gọi. **TUYỆT ĐỐI KHÔNG** merge sibling. **TUYỆT ĐỐI KHÔNG** fake Markdown reports khi skill yêu cầu YAML.
+1. **PRE-FLIGHT:** FIRST action is **[MANDATORY]**: invoke tool `{{DOC_SKIT_READ_TOOL}}` on the target `SKILL.md` under `{{DOC_SKIT_AGENT_DIR}}/skills/`. **[STRICTLY FORBIDDEN]** to rely on memory or previous context.
+2. **SESSION MAX-LENGTH & WORKLOAD GATE (5 / 10 RULE):** Immediately evaluate task workload/audit gaps against session token limits.
+   - **Small Scope (≤5 items):** Inline chat thread checklist & single-question wizard.
+   - **Buffer Scope (6–9 items):** Permitted in chat ONLY if single-turn scalar string/label fills.
+   - **Large Scope (≥10 items, multi-screen/cross-repo, OR audit script with ≥10 gaps):** **[MANDATORY HARD STOP IN CHAT]**. Author host plan artifact (Antigravity `implementation_plan.md` in brain dir, Cursor Plan Mode / `plan.md`, Claude/Windsurf plan scratchpad). Partition into Phases (3–5 items/phase). Offload completed state to disk immediately at phase boundaries and reload fresh state in subsequent phases.
+3. **NO RAM CACHING:** All persistent changes **[MANDATORY]** immediately written via `{{DOC_SKIT_WRITE_TOOL}}`. Never hold uncommitted state in chat/RAM. When a grill proposal is not yet confirmed → discuss directly in chat thread. **[STRICTLY FORBIDDEN]** to create temporary `*-proposal.md` files or overwrite product SSOT prior to explicit confirmation.
+4. **ZERO BUSINESS HALLUCINATION:** Ground data strictly from (1) User prompt and (2) ArtifactGraph registry. **[STRICTLY FORBIDDEN]** to invent fields, validations, database structures, or flows. Missing information must remain empty or be tagged `#missing_info`. No unprompted guessing.
+5. **GRILL HARD GATE:** ArtifactGraph re-check → micro-scope → provide structured recommendation (`(Recommended)`) → **STOP and prompt Member**. **[STRICTLY FORBIDDEN]** to write to SSOT before explicit user confirmation.
+6. **DSL / COMMON:** Human lead decides common promotions. The agent only executes `/common`, `/common-spec`, `/docs-mark`, or confirmation post-grill. `/spec` strictly consumes common definitions. **[STRICTLY FORBIDDEN]** to invent or overwrite common libraries spontaneously.
+7. **ISOLATION:** Execute strictly within the invoked skill scope. **[STRICTLY FORBIDDEN]** to merge sibling features or output fake Markdown reports when YAML contracts are required.
 
-**Path:** `surfaces/<surface>/CMP-*/<slug>/` (không `modules/`).
+**Path SSOT:** `surfaces/<surface>/CMP-*/<slug>/` (NO `modules/` segment).

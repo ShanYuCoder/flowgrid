@@ -4,34 +4,32 @@
 <div class="intro-card intro-card--main">
 <h3>Forgekit là gì</h3>
 <ul>
-<li><strong>Forgekit</strong> là giải pháp hợp nhất toàn bộ các toolkits MCP/CLI độc lập trước đây (Docskit, Codegenkit, Testkit, ArtifactGraph...) vào một bộ CLI và bộ kỹ năng duy nhất.</li>
-<li>Một <strong>repo</strong> là nơi team thao tác và chia sẻ artifact: có thể là Document Hub (Docs), API/Frontend (Code), hoặc kịch bản kiểm thử (Test).</li>
-<li>Lệnh <code>forgekit init</code> sẽ tự động chọn và cài đặt các <em>skill</em>, <em>rule</em>, <em>config</em> tương ứng với đúng vai trò (Project Type) của Repo đó.</li>
+<li><strong>Forgekit</strong> là nền tảng Tooling & MCP điều phối toàn diện quy trình phát triển: từ kiến trúc, đặc tả SSOT, sinh mã nguồn đến kiểm thử tự động.</li>
+<li>Một <strong>repo</strong> là nơi team thao tác và chia sẻ artifact: Document Hub (Docs SSOT), API/Frontend (Source Code), hoặc kịch bản kiểm thử (Test Hub).</li>
+<li>Lệnh <code>forgekit init</code> tự động cấu hình bộ công cụ, MCP server, và các kỹ năng (Skills) tương ứng với vai trò của Repo.</li>
 </ul>
 </div>
 <div class="intro-card intro-card--side">
-<h3>Nguyên tắc</h3>
+<h3>Nguyên tắc vận hành</h3>
 <ol>
-<li>Cài đặt 1 lần duy nhất qua <code>forgekit</code>, hệ thống tự lo phần rẽ nhánh logic (Docs/FE/BE/Tests).</li>
-<li>Các file config được tập trung tại <code>.forgekit/config.json</code> ở gốc dự án.</li>
-<li>Dữ liệu cross-repo (như truy xuất docs từ FE/BE) đi qua các biến môi trường <strong>machine-local</strong> (như <code>DOCSKIT_ROOT</code>), không suy đoán tự động để đảm bảo an toàn.</li>
+<li>Cài đặt và quản lý tập trung qua CLI <code>forgekit</code> và máy chủ MCP <code>forgekit</code>.</li>
+<li>Cấu hình dự án lưu tại <code>.forgekit/config.json</code> ở thư mục gốc.</li>
+<li>Dữ liệu liên repo kết nối qua biến môi trường cục bộ (như <code>DOCSKIT_ROOT</code>), đảm bảo an toàn và bảo mật tuyệt đối.</li>
 </ol>
 </div>
 </div>
-
-<div class="base-note"><span class="base-note-mark">(*)</span><em>Tài liệu này gộp toàn bộ nội dung của kiến trúc phân tán trước đây thành kiến trúc Forgekit hợp nhất.</em></div>
 
 ---
 
 ## 1. Bảng phân loại "Bộ Công Cụ" (Kits) trong Forgekit
 
-Thay vì cài từng toolkit riêng lẻ, `forgekit init` sẽ cung cấp cho bạn lựa chọn "Project Type". Dựa trên đó, các "Bộ" tương ứng sẽ được cài vào `~/.agents/` hoặc `~/.gemini/`:
+Khi khởi tạo dự án với `forgekit init`, hệ thống cấu hình các bộ kỹ năng tương ứng với Project Type của bạn:
 
 | Bộ Công Cụ | Hỗ trợ (capability) | Skill cung cấp (`harness/`) | Lane (Project Type) |
 |------------|---------------------|-----------------------------|---------------------|
-| **Bộ Docs** | SSOT architecture + spec. Split IR, render, publish catalog, API 01. | `docs/`: `/2-lifecycle/overview.md`, `/1-guide/toolkits.md` | Document Hub |
-| **Bộ Code** | Sinh code FE/BE từ IR. Quản lý UI Components, Data Models, API Routes. | `fe/`: `/prototype`, `/unit`, `/grill-unit` <br> `be/`: `/api`, `/grill-api` | Frontend, Backend, Fullstack |
-| **Bộ Test** | Lên kế hoạch kiểm thử + sinh Playwright E2E Testcase. | `tests/`: `/testcase`, `/grill-testcase` | Test, Frontend, Fullstack |
+| **Bộ Docs** | SSOT Architecture + Specs (Arc42, Data Dictionary, State Matrix, Action Flows). Split IR, render Markdown không rác YAML, publish catalog, API 01. | `docs/`: `/architecture`, `/spec`, `/grill-bqa`, `/grill-dev`, `/api-spec`, `/update-spec`... | Document Hub |
+| **Bộ Code** | Sinh code FE/BE từ IR (`ir/design.yaml`, `api/01`). Quản lý UI Components, Data Models, Adapters (Next.js, FastAPI, Laravel, DotNet), API Routes, Unit Test. | `fe/`: `/prototype`, `/unit`, `/grill-unit` <br> `be/`: `/api`, `/grill-api` | Frontend, Backend, Fullstack |
+| **Bộ Test** | Lên kế hoạch kiểm thử theo chuẩn IEEE 29119 Boundary Test Matrix + Gherkin BDD + sinh Playwright E2E Testcase. | `tests/`: `/scenario`, `/testcase`, `/grill-testcase` | Test, Frontend, Fullstack |
 | **Common** | Gợi ý tag / gap / parity thông qua hệ thống ArtifactGraph cục bộ. | `common/`: `/artifactgraph` | Tất cả (Common) |
 
 <br>
@@ -39,23 +37,23 @@ Thay vì cài từng toolkit riêng lẻ, `forgekit init` sẽ cung cấp cho b�
 <div class="intro-grid">
   <div class="intro-card">
     <img src="./assets/forgekit-docs.jpg" alt="Bộ Docs" style="border-radius: 8px; margin-bottom: 12px;" />
-    <h4>Bộ Docs</h4>
-    <p>Quản lý Document Hub, Architecture, Bundle IR và Specifications.</p>
+    <h4>Bộ Docs (Docskit SSOT)</h4>
+    <p>Quản lý Document Hub, Architecture Arc42, 5-Tier Validation, State & Action Flow Matrix, Bundle IR và Specs chuẩn mực.</p>
   </div>
   <div class="intro-card">
     <img src="./assets/forgekit-code.jpg" alt="Bộ Code" style="border-radius: 8px; margin-bottom: 12px;" />
-    <h4>Bộ Code</h4>
-    <p>Sinh mã nguồn FE/BE tự động, quản lý UI Components và API Routes.</p>
+    <h4>Bộ Code (Codegenkit)</h4>
+    <p>Sinh mã nguồn FE/BE tự động theo Adapters, kiểm soát contract parity và sinh Unit Test.</p>
   </div>
   <div class="intro-card">
     <img src="./assets/forgekit-test.jpg" alt="Bộ Test" style="border-radius: 8px; margin-bottom: 12px;" />
-    <h4>Bộ Test</h4>
-    <p>Lên kế hoạch kiểm thử, sinh kịch bản Playwright E2E tự động.</p>
+    <h4>Bộ Test (Testkit)</h4>
+    <p>Kế hoạch kiểm thử phân hoạch tương đương & phân tích giá trị biên (IEEE 29119), sinh kịch bản Playwright E2E tự động.</p>
   </div>
   <div class="intro-card">
     <img src="./assets/forgekit-common.jpg" alt="Common" style="border-radius: 8px; margin-bottom: 12px;" />
     <h4>Common (ArtifactGraph)</h4>
-    <p>Graph database local, hỗ trợ gap analysis, code tagging và metadata.</p>
+    <p>Graph database local, hỗ trợ gap analysis, code tagging và metadata liên repo.</p>
   </div>
 </div>
 
@@ -119,7 +117,21 @@ Mọi thao tác đều thông qua lệnh `forgekit`.
 
 ---
 
-## 5. Ownership & quy tắc độc lập
+## 5. Kiến Trúc MCP Server Hợp Nhất (`forgekit`)
+
+**Forgekit** cung cấp **một tiến trình MCP Server duy nhất** (`bin/forgekit-mcp.mjs`), tự động cấu hình vào `.agents/mcp_config.json` hoặc `.cursor/mcp.json` sau khi chạy `forgekit init`.
+
+| Nhóm công cụ MCP | Tiền tố Tool | Trách nhiệm chính |
+|---|---|---|
+| **Docs Hub** | `docskit_*` | Quản lý cây kiến trúc arc42, routing ID, split `*.bundle.yaml` sang IR, render `spec.md` chuẩn bảng biểu (Data Dictionary & State Matrix), publish `CATALOG.md`. |
+| **Code Generation (FE)** | `codegen_*`, `common_*`, `unit_*` | Sinh mã nguồn Component UI theo adapter (Next.js, Nuxt), sinh molecule chung từ surface/module common, sinh Vitest/Jest Unit Test. |
+| **Code Generation (BE)** | `api_*` | Sinh API routes, controller, DTO, validation schemas từ `01-backend-spec.yaml`, sinh Backend Unit Test. |
+| **Test Engineering** | `cases_*`, `testcase_*` | Kiểm tra cú pháp testplan, rà soát coverage gaps, sinh mã Playwright E2E tự động từ kịch bản IEEE 29119. |
+| **Artifact Graph** | `artifactgraph_*` | Truy vấn SQLite local để phân tích gap, gợi ý tag `#needs-component`, `#needs-endpoint`, kiểm tra parity contract. |
+
+---
+
+## 6. Ownership & Quy Tắc Độc Lập
 
 1. Một `SKILL.md` (như `/architecture`) chỉ nằm trong đúng một thư mục gốc của `harness/` (ví dụ `harness/docs/skills/architecture/`).
 2. Các script thực thi (engine) nằm tập trung ở `engines/` và được Forgekit gọi tự động dựa trên alias truyền vào (ví dụ `forgekit split_all`).
@@ -127,4 +139,4 @@ Mọi thao tác đều thông qua lệnh `forgekit`.
 
 ---
 
-Đọc tiếp: [Start now](./getting-started.md) · [System doc structure](./system-doc-structure.md) · [Toolchain index](/2-lifecycle/overview.md).
+Đọc tiếp: [Start now](./getting-started.md) · [System doc structure](./system-doc-structure.md) · [Toolchain index](../2-lifecycle/overview.md) · [CLI & MCP Reference](../6-reference/cli-and-commands.md).

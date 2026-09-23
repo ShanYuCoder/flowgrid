@@ -23,23 +23,153 @@
 <%= spec.summary %>
 <% } %>
 
+<% if (spec.userStories) { %>
+## User Stories & Screen Journey
+
+<% if (typeof spec.userStories === 'string') { %>
+<%= spec.userStories %>
+<% } else if (Array.isArray(spec.userStories)) { %>
+<% spec.userStories.forEach(story => { %>
+### <%= story.title || story.name || 'User Story' %>
+<% if (story.asA || story.role) { %>
+> **Là một** <%= story.asA || story.role %>,  
+> **Tôi muốn** <%= story.iWant || story.action %>,  
+> **Để** <%= story.soThat || story.benefit %>.
+<% } else if (story.story) { %>
+> <%= story.story %>
+<% } %>
+
+<% if (story.preConditions && story.preConditions.length) { %>
+**Điều kiện tiên quyết (Pre-conditions):**
+<% (Array.isArray(story.preConditions) ? story.preConditions : [story.preConditions]).forEach(p => { %>
+- <%= p %>
+<% }); %>
+<% } %>
+
+<% if (story.scenarios && story.scenarios.length) { %>
+**Kịch bản chi tiết trên màn hình (Scenarios):**
+<% story.scenarios.forEach(sc => { %>
+- **<%= sc.name || sc.title %>:** <%= sc.description || sc.steps || sc %>
+<% }); %>
+<% } %>
+
+<% if (story.acceptanceCriteria && story.acceptanceCriteria.length) { %>
+**Tiêu chí nghiệm thu (Acceptance Criteria):**
+<% (Array.isArray(story.acceptanceCriteria) ? story.acceptanceCriteria : [story.acceptanceCriteria]).forEach(ac => { %>
+- [ ] <%= ac %>
+<% }); %>
+<% } %>
+
+<% }); %>
+<% } else if (typeof spec.userStories === 'object') { %>
+<% if (spec.userStories.primary) { %>
+### User Story Chính
+> **Là một** <%= spec.userStories.primary.asA || spec.userStories.primary.role %>,  
+> **Tôi muốn** <%= spec.userStories.primary.iWant || spec.userStories.primary.action %>,  
+> **Để** <%= spec.userStories.primary.soThat || spec.userStories.primary.benefit %>.
+<% } %>
+
+<% if (spec.userStories.contextAndHandoff) { %>
+### Cách thức Truy cập & Chuyển giao Màn hình (Screen Access & Handoff)
+<% if (spec.userStories.contextAndHandoff.screenAccess) { %>
+<% const sa = spec.userStories.contextAndHandoff.screenAccess; %>
+- **Loại truy cập (Access Type):** `<%= sa.accessType || 'N/A' %>`
+<% if (sa.accessType === 'directRoute' && sa.directRoute) { %>
+  - **Đường dẫn URL (Path Router):** `<%= sa.directRoute.routePath || '' %>` <%= sa.directRoute.isPublic ? '(Công khai / Public)' : '(Cần đăng nhập / Authenticated)' %>
+<% } else if (sa.accessType === 'sidebarMenu' && sa.sidebarMenu) { %>
+  - **Menu Sidebar:** <%= sa.sidebarMenu.menuHierarchy ? sa.sidebarMenu.menuHierarchy.join(' > ') : '' %> > **<%= sa.sidebarMenu.menuLabel || '' %>**
+<% } else if (sa.accessType === 'contextualAction' && sa.contextualAction) { %>
+  - **Kích hoạt từ (Triggered By):** <%= sa.contextualAction.triggerControl || '' %> từ màn hình `<%= sa.contextualAction.sourceScreen || '' %>` (Loại: `<%= sa.contextualAction.navigationType || 'pageRedirect' %>`)
+<% } %>
+<% } %>
+- **Màn hình nguồn (Source Screen):** `<%= spec.userStories.contextAndHandoff.sourceScreen || 'Direct' %>`
+<% if (spec.userStories.contextAndHandoff.inputsReceived && spec.userStories.contextAndHandoff.inputsReceived.length) { %>
+- **Dữ liệu tiếp nhận (Inputs):** <%= Array.isArray(spec.userStories.contextAndHandoff.inputsReceived) ? spec.userStories.contextAndHandoff.inputsReceived.join(' · ') : spec.userStories.contextAndHandoff.inputsReceived %>
+<% } %>
+- **Điều hướng tiếp theo (Next Screen):** `<%= spec.userStories.contextAndHandoff.nextScreenOnSuccess || 'None' %>`
+<% } %>
+
+<% if (spec.userStories.scenarios && spec.userStories.scenarios.length) { %>
+### Kịch bản Chi tiết trên Màn hình (Scenarios)
+<% spec.userStories.scenarios.forEach(sc => { %>
+#### <%= sc.name || sc.title %>
+<% if (sc.steps && sc.steps.length) { %>
+<% (Array.isArray(sc.steps) ? sc.steps : [sc.steps]).forEach(step => { %>
+- <%= step %>
+<% }); %>
+<% } else if (sc.description) { %>
+<%= sc.description %>
+<% } %>
+<% }); %>
+<% } %>
+
+<% if (spec.userStories.acceptanceCriteria && spec.userStories.acceptanceCriteria.length) { %>
+### Tiêu chí Nghiệm thu (Acceptance Criteria)
+<% spec.userStories.acceptanceCriteria.forEach(ac => { %>
+- [ ] <%= ac %>
+<% }); %>
+<% } %>
+
+<% } %>
+<% } %>
+
 <%
+  // 1. Executive Summary & Screen Journey
+  const pageSections = spec.sections || spec.design?.sections || [];
+  const pageActions = spec.actions || spec.design?.actions || [];
+  const pageStateMatrix = spec.stateMatrix || spec.design?.stateMatrix;
+
   const page = {
-    nav: spec.nav,
-    sections: spec.sections,
-    zones: spec.zones,
-    behavior: spec.behavior,
-    actions: spec.actions
+    nav: spec.nav || spec.design?.nav,
+    sections: pageSections,
+    zones: spec.zones || spec.design?.zones,
+    behavior: spec.behavior || spec.design?.behavior,
+    actions: pageActions
   }
-  const pageMd = context.renderPageComposition(page, { businessOnly: true })
 %>
-<%- pageMd %>
+
+<% if (pageStateMatrix) { %>
+## Ma Trận Trạng Thái Giao Diện & Phân Quyền (State & Permission Matrix)
+
+<%- context.renderStateMatrixTable(pageStateMatrix) %>
+
+<% } %>
+
+<% 
+  const validationTableMd = context.renderValidationDictionaryTable(pageSections);
+  if (validationTableMd) {
+%>
+## Danh Mục Trường Nhập Liệu & Quy Tắc Kiểm Tra Hợp Lệ (Data Dictionary & Validation)
+
+<%- validationTableMd %>
+
+<% } %>
+
+<% 
+  const customWidgetMd = context.renderCustomWidgetSpecs(pageSections);
+  if (customWidgetMd) {
+%>
+<%- customWidgetMd %>
+
+<% } %>
+
+<% 
+  const actionFlowsMd = context.renderActionFlowsDetailed(pageActions);
+  if (actionFlowsMd) {
+%>
+## Đặc Tả Quy Trình Hành Động (Action Flows)
+
+<%- actionFlowsMd %>
+
+<% } else { %>
+<%- context.renderPageComposition(page, { businessOnly: true }) %>
+<% } %>
 
 <% 
   const skipKeys = new Set([
-    'id', 'page-id', 'title', 'summary', 'acceptance', 'ui', 'design', 'legacy', 'review', 'template',
-    'nav', 'sections', 'zones', 'behavior', 'actions', 'grillStatus', 'specOrigin',
-    'status', 'owner', 'schema', 'qa', 'Q&A', 'pendingTechDebt'
+    'id', 'page-id', 'title', 'summary', 'userStories', 'acceptance', 'ui', 'design', 'legacy', 'review', 'template',
+    'nav', 'sections', 'zones', 'behavior', 'actions', 'stateMatrix', 'grillStatus', 'specOrigin',
+    'status', 'owner', 'schema', 'qa', 'Q&A', 'pendingTechDebt', 'i18n', 'gen', '_meta'
   ]);
   Object.entries(spec).forEach(([key, value]) => {
     if (skipKeys.has(key) || value == null) return;

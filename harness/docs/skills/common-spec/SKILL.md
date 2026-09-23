@@ -5,43 +5,51 @@ description: EXCLUSIVE /common-spec — Use this to define common technical bund
 disable-model-invocation: true
 ---
 
-> [!CRITICAL] MANDATORY AGENT INSTRUCTION BEFORE EXECUTION
-> - Pre-flight: re-read this entire `SKILL.md` via a file-read tool (do not rely on memory).
-> - This skill is an **allowed** human-invoked path to create/update common YAML SSOT. Do not run it as a side-effect of `/spec`.
-> - You MUST read and strictly comply with ALL workflow steps, rules, and load policies below.
+> [!CRITICAL] MANDATORY PRE-FLIGHT
+> **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
+> **[MANDATORY]** Read `.cursor/extracts/common-scope.md` first to resolve the LCA path.
 
-# /common-spec
+# /common-spec — Common Technical Bundle (YAML)
 
-**Target Path:** `<LCA>/common/yaml/<slug>/<slug>.bundle.yaml` — LCA from `.cursor/extracts/common-scope.md`.
+**Target Path:** `<LCA>/common/yaml/<slug>/<slug>.bundle.yaml` (LCA from `common-scope.md`).
 
-## Purpose
+**Gate:** Only use when user explicitly invokes `/common-spec` or confirmed a grill proposal to promote common.
 
-The `/common-spec` skill is exclusively for creating **YAML Bundles** (`portal-feature-bundle/v1`) that define the technical implementation of common components (e.g., Confirm Dialogs, Shared Layouts, Middlewares, Step Flows) so they can be processed by CodeGen.
+---
 
-**DSL / common gate:** Only use when the user explicitly invoked `/common-spec` (or confirmed a grill proposal to promote common).
+## Rule: Platform-Agnostic Generation
 
-## Platform-Agnostic Generation (MANDATORY)
+- **[MANDATORY]** Use `design.shell.tag` to match target surface type:
+  - Web Portal → `#shell: DataListPage`
+  - WinForms Kiosk → `#shell: KioskCheckIn`
+  - Gateway → `#shell: OtAdapter`
+- **[MANDATORY]** Populate `spec.clients` if applicable.
+- **[RECOMMENDED]** For known Web patterns (e.g. `confirm-dialog`): ask if user wants to inherit from seed template in `templates/project-skeleton/surfaces/common/yaml/`.
+- **[MANDATORY]** For non-Web surfaces → generate new bundle tailored to that requirement. Do NOT force Web template inheritance.
 
-Docskit supports multiple surface types (Web, WinForms, Mobile, Gateway). You MUST adapt the generated bundle to the target surface. 
-- Use the `design.shell.tag` to denote surface type (e.g., `#shell: DataListPage`, `#shell: KioskCheckIn`, `#shell: OtAdapter`).
-- Populate `spec.clients` if applicable.
+---
 
-**Templates are optional seeds:** There are 16 bundle templates in `templates/project-skeleton/surfaces/common/yaml/` (mostly for Web Portal CRUD).
-- If the user asks for a known Web pattern (e.g., `confirm-dialog`), you can ask if they want to inherit from the seed.
-- If the user specifies a non-Web surface (e.g., `line-client-hmi`), you MUST generate a new bundle tailored to that requirement. Do not force them to inherit from Web templates.
+## Rule: Output
+
+- **[MANDATORY]** Output MUST be `.bundle.yaml`. Do NOT write `.md` directly.
+- **[MANDATORY]** All strings containing `:` must be double-quoted.
+- **[MANDATORY]** After writing: instruct user to run `docskit split -- <path>` (must emit `ir/design.yaml`), then `docskit render`. Run `docskit split --check` to verify.
+- **[STRICTLY FORBIDDEN]** Do NOT send BE `/api` a common FE bundle. Codegenkit → FE `/gen-common` only.
+
+---
 
 ## Workflow
 
-1. **Read** `.cursor/extracts/common-scope.md`. List consumers → one LCA `common/yaml/<slug>/`. Example module-local: `surfaces/admin/CMP-ADM-002/common/yaml/confirm-dialog/confirm-dialog.bundle.yaml`. Example cluster: `…/CMP-ADM-002/02/common/yaml/…`. Surface/global only when consumers span modules/surfaces.
-2. Generate the `.bundle.yaml` using the `portal-feature-bundle/v1` schema.
-3. Instruct the user to run `docskit split -- <path>` (or `pnpm docs:split`) followed by `docskit render` (or `pnpm docs:render`). Split **must** emit `ir/design.yaml` (thin is OK). `docskit split --check` fails if that file is missing. Codegenkit `/gen-common` does not invent YAML.
+1. Read `common-scope.md`. Identify consumers → one LCA `common/yaml/<slug>/`.
+   - Example module-local: `surfaces/admin/CMP-ADM-002/common/yaml/confirm-dialog/confirm-dialog.bundle.yaml`
+2. Generate `.bundle.yaml` using `portal-feature-bundle/v1` schema.
+3. Instruct user: `docskit split -- <path>` → `docskit render`.
 
-## Rules
+---
 
-- Output MUST be a `.bundle.yaml` file. Do NOT generate Markdown (`.md`) files directly.
-- Ensure strict YAML escaping for strings containing colons or brackets.
+## Verification Checklist
 
-## Verification Checklist (Evidence Required)
-- [ ] **Surface & Slug Resolved:** Path correctly resolved.
-- [ ] **Platform Checked:** Adapted the bundle schema usage to the target platform type via `design.shell.tag` or `spec.clients`.
-- [ ] **YAML Output:** Generated `.bundle.yaml` file.
+- [ ] LCA resolved from `common-scope.md`; path correctly scoped.
+- [ ] `design.shell.tag` matches target surface type.
+- [ ] `.bundle.yaml` output only (no `.md`). YAML strings with `:` are double-quoted.
+- [ ] `docskit split --check` passes (emits `ir/design.yaml`).
