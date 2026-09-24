@@ -30,7 +30,7 @@ features:
     details: Quy ước TestIDs và kiểm thử ngữ nghĩa (Semantic Assertions) dùng cho Playwright E2E.
     link: /5-testing/e2e-testids
   - title: 6. Tra Cứu Nhanh (Reference)
-    details: Sổ tay tra cứu lệnh Forgekit CLI, hệ thống Prompt Templates, và Repo Split Map.
+    details: Sổ tay tra cứu lệnh FlowGrid CLI, hệ thống Prompt Templates, và Repo Split Map.
     link: /6-reference/cli-and-commands
   - title: 7. Kiến Trúc Technical
     details: Kiến trúc kỹ thuật sâu bên dưới của Portal (Nuxt 4) và vòng đời của một Page.

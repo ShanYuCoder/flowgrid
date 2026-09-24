@@ -15,7 +15,7 @@ export async function runBuildTemplateCode(args = []) {
   }
 
   // Load config if exists
-  const configPath = path.join(projectRoot, '.forgekit', 'config.json');
+  const configPath = path.join(projectRoot, '.flowgrid', 'config.json');
   let config = {};
   if (fs.existsSync(configPath)) {
     try {
@@ -26,7 +26,7 @@ export async function runBuildTemplateCode(args = []) {
     } catch {}
   }
 
-  console.log(pc.cyan(`\n=== Forgekit Custom Template & DSL Builder ===`));
+  console.log(pc.cyan(`\n=== FlowGrid Custom Template & DSL Builder ===`));
   console.log(`- Project Root: ${projectRoot}`);
   console.log(`- Base Profile: ${config.baseProfile || 'custom'}`);
 
@@ -52,7 +52,7 @@ export async function runBuildTemplateCode(args = []) {
   }
 
   if (!samplePath || !fs.existsSync(path.join(projectRoot, samplePath))) {
-    console.log(pc.yellow(`\n[WARN] No Golden Sample found. Please provide one via: forgekit build-template-code --sample=<path/to/Sample.vue>`));
+    console.log(pc.yellow(`\n[WARN] No Golden Sample found. Please provide one via: flowgrid build-template-code --sample=<path/to/Sample.vue>`));
     return { code: 0 };
   }
 
@@ -65,7 +65,7 @@ export async function runBuildTemplateCode(args = []) {
   console.log(`  * Widgets: ${dna.widgets.length} components extracted`);
 
   // 4. Target output directory
-  const outputDir = path.join(projectRoot, '.forgekit', 'adapters', 'custom');
+  const outputDir = path.join(projectRoot, '.flowgrid', 'adapters', 'custom');
   if (isDry) {
     console.log(pc.magenta(`\n[DRY RUN] Would generate:`));
     console.log(`  - ${path.join(outputDir, 'registries', 'design.registry.json')}`);

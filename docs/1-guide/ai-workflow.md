@@ -78,7 +78,7 @@ Mục tiêu lớn nhất là **có giao diện chạy được sớm nhất có 
 
 1. **Khởi tạo Đặc tả (`/spec`)**:
    - Nhận input thô và dựng file `*.bundle.yaml` (chứa User Stories, Screen Access, Elements, Data Dictionary, Validation Rules, 6-Block Action Flows, State & Permission Matrix).
-   - Tự động chạy `forgekit split` và `forgekit render` để sinh tài liệu đọc được tại `ir/generated/spec.md`.
+   - Tự động chạy `flowgrid split` và `flowgrid render` để sinh tài liệu đọc được tại `ir/generated/spec.md`.
 2. **Phản biện & Rà soát Khoảng trống (`/grill-bqa`, `/grill-dev`, `/grill-docs`)**:
    - Soi xét tính đầy đủ của dữ liệu: 5 tầng validation, concurrency/optimistic locking, ma trận mã lỗi HTTP (409, 422, 403 IDOR), khả năng tái sử dụng API (`#reuse-api`).
    - Đóng các câu hỏi phân vân vào `qa/open/*.yaml` để giải quyết dứt điểm qua `/qa-resolve`.
@@ -100,7 +100,7 @@ Mục tiêu lớn nhất là **có giao diện chạy được sớm nhất có 
 2. **Backend API (`/api` & `/grill-api`)**:
    - Thiết kế hợp đồng API tại `01-backend-spec.yaml` (Schema, DTO, Validation rules, Response format).
    - Sinh mã nguồn Controller, Service, DTO cho backend tương ứng (Nest.js, FastAPI, Laravel...).
-   - Chạy `forgekit openapi_gen` và `forgekit openapi_render` để kiểm tra tính hợp lệ của OpenAPI specification.
+   - Chạy `flowgrid openapi_gen` và `flowgrid openapi_render` để kiểm tra tính hợp lệ của OpenAPI specification.
 3. **Frontend Integration (`/wire`)**:
    - Thay thế API Mock bằng API thật thông qua các service/composable chuyên trách.
    - Giữ nguyên cấu trúc Component UI, đảm bảo toàn bộ bộ test E2E Playwright tiếp tục Pass (Green).
@@ -139,18 +139,18 @@ Hệ thống cung cấp các lệnh CLI tích hợp để biên dịch và hiể
 
 ```bash
 # 1. Khởi tạo môi trường và scripts trong dự án
-forgekit init
+flowgrid init
 
 # 2. Phân tách bundle và kết xuất tài liệu Markdown
-forgekit split <path/to/feature.bundle.yaml>
-forgekit render
+flowgrid split <path/to/feature.bundle.yaml>
+flowgrid render
 
 # 3. Phân tách toàn bộ hệ thống
-forgekit split_all
+flowgrid split_all
 
 # 4. Xuất bản danh mục Hub và mở giao diện đọc tài liệu trực quan
-forgekit publish
-pnpm forge:dev
+flowgrid publish
+pnpm flowgrid:dev
 ```
 
 Cấu trúc thư mục chuẩn tại mỗi chức năng:

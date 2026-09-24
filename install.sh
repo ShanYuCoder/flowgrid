@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
-# forgekit installer (Linux / WSL) — git clone + npm/pnpm build (needs Node ≥ 22).
+# flowgrid installer (Linux / WSL) — git clone + npm/pnpm build (needs Node ≥ 22).
 #
-#   curl -fsSL https://raw.githubusercontent.com/ShanYuCoder/forgekit/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/ShanYuCoder/flowgrid/main/install.sh | bash
 #
 # Upgrade: re-run the same command.
 # Uninstall: bash install.sh --uninstall
 #
 # Env:
-#   FORGEKIT_REPO          default: ShanYuCoder/forgekit
-#   FORGEKIT_INSTALL_DIR   default: ~/.forgekit-cli
-#   FORGEKIT_BIN_DIR       default: ~/.local/bin
-#   FORGEKIT_REF           git ref (default: main)
+#   FLOWGRID_REPO          default: ShanYuCoder/flowgrid
+#   FLOWGRID_INSTALL_DIR   default: ~/.flowgrid-cli
+#   FLOWGRID_BIN_DIR       default: ~/.local/bin
+#   FLOWGRID_REF           git ref (default: main)
 set -euo pipefail
 
-REPO="${FORGEKIT_REPO:-ShanYuCoder/forgekit}"
-INSTALL_DIR="${FORGEKIT_INSTALL_DIR:-$HOME/.forgekit-cli}"
-BIN_DIR="${FORGEKIT_BIN_DIR:-$HOME/.local/bin}"
+REPO="${FLOWGRID_REPO:-${FORGEKIT_REPO:-ShanYuCoder/flowgrid}}"
+INSTALL_DIR="${FLOWGRID_INSTALL_DIR:-${FORGEKIT_INSTALL_DIR:-$HOME/.flowgrid-cli}}"
+BIN_DIR="${FLOWGRID_BIN_DIR:-${FORGEKIT_BIN_DIR:-$HOME/.local/bin}}"
 
-if [ -z "${FORGEKIT_REF:-}" ]; then
+if [ -z "${FLOWGRID_REF:-${FORGEKIT_REF:-}}" ]; then
   LATEST_TAG=$(git ls-remote --tags --sort="v:refname" "https://github.com/$REPO.git" | grep -v "\^{}" | tail -n1 | awk -F/ '{print $3}')
   if [ -n "$LATEST_TAG" ]; then
     REF="$LATEST_TAG"
@@ -25,37 +25,37 @@ if [ -z "${FORGEKIT_REF:-}" ]; then
     REF="main"
   fi
 else
-  REF="$FORGEKIT_REF"
+  REF="${FLOWGRID_REF:-${FORGEKIT_REF}}"
 fi
 
 if [ "${1:-}" = "--uninstall" ]; then
-  rm -f "$BIN_DIR/forgekit" "$BIN_DIR/forgekit-mcp"
+  rm -f "$BIN_DIR/flowgrid" "$BIN_DIR/flowgrid-mcp" "$BIN_DIR/forgekit" "$BIN_DIR/forgekit-mcp"
   rm -rf "$INSTALL_DIR"
   
   # Remove path from shell configs
   for rc in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile"; do
-    if [ -f "$rc" ] && grep -q "# --- forgekit start ---" "$rc"; then
-      # Delete lines from start to end marker
+    if [ -f "$rc" ] && (grep -q "# --- flowgrid start ---" "$rc" || grep -q "# --- forgekit start ---" "$rc"); then
+      sed -i.bak '/# --- flowgrid start ---/,/# --- flowgrid end ---/d' "$rc"
       sed -i.bak '/# --- forgekit start ---/,/# --- forgekit end ---/d' "$rc"
       rm -f "${rc}.bak"
-      echo "Removed forgekit PATH from $rc"
+      echo "Removed flowgrid PATH from $rc"
     fi
   done
   
-  echo "forgekit uninstalled ($INSTALL_DIR)."
+  echo "flowgrid uninstalled ($INSTALL_DIR)."
   exit 0
 fi
 
 if ! command -v node >/dev/null 2>&1; then
-  echo "forgekit: Node.js ≥ 22 required (node not found)." >&2
+  echo "flowgrid: Node.js ≥ 22 required (node not found)." >&2
   exit 1
 fi
 if ! command -v git >/dev/null 2>&1; then
-  echo "forgekit: git required." >&2
+  echo "flowgrid: git required." >&2
   exit 1
 fi
 
-echo "Installing forgekit from github.com/$REPO @$REF → $INSTALL_DIR"
+echo "Installing flowgrid from github.com/$REPO @$REF → $INSTALL_DIR"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
@@ -74,16 +74,18 @@ elif command -v npm >/dev/null 2>&1; then
   npm install
   npm run build
 else
-  echo "forgekit: pnpm or npm required." >&2
+  echo "flowgrid: pnpm or npm required." >&2
   exit 1
 fi
 
 mkdir -p "$BIN_DIR"
-ln -sf "$INSTALL_DIR/bin/forgekit.mjs" "$BIN_DIR/forgekit"
-ln -sf "$INSTALL_DIR/bin/forgekit-mcp.mjs" "$BIN_DIR/forgekit-mcp"
+ln -sf "$INSTALL_DIR/bin/flowgrid.mjs" "$BIN_DIR/flowgrid"
+ln -sf "$INSTALL_DIR/bin/flowgrid-mcp.mjs" "$BIN_DIR/flowgrid-mcp"
+ln -sf "$INSTALL_DIR/bin/flowgrid.mjs" "$BIN_DIR/forgekit"
+ln -sf "$INSTALL_DIR/bin/flowgrid-mcp.mjs" "$BIN_DIR/forgekit-mcp"
 chmod +x "$INSTALL_DIR/bin/"*.mjs
 
-echo "Linked $BIN_DIR/forgekit"
+echo "Linked $BIN_DIR/flowgrid"
 
 case ":$PATH:" in
   *":$BIN_DIR:"*) ;;
@@ -95,9 +97,9 @@ case ":$PATH:" in
       if [ -f "$rc" ]; then
         if ! grep -q "$BIN_DIR" "$rc"; then
           echo "" >> "$rc"
-          echo "# --- forgekit start ---" >> "$rc"
+          echo "# --- flowgrid start ---" >> "$rc"
           echo "export PATH=\"$BIN_DIR:\$PATH\"" >> "$rc"
-          echo "# --- forgekit end ---" >> "$rc"
+          echo "# --- flowgrid end ---" >> "$rc"
           echo "  -> Added to $rc"
           ADDED=1
         fi
@@ -115,4 +117,4 @@ esac
 
 echo ""
 echo "Done. Next:"
-echo "  forgekit"
+echo "  flowgrid"

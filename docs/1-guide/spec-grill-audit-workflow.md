@@ -6,7 +6,7 @@
 
 ## 1. Triết Lý Phân Công Trách Nhiệm (Script vs AI Agent)
 
-Để đảm bảo tài liệu đặc tả vừa **đủ về Lượng** vừa **chuẩn về Chất**, ForgeKit áp dụng sự phân công trách nhiệm rạch ròi:
+Để đảm bảo tài liệu đặc tả vừa **đủ về Lượng** vừa **chuẩn về Chất**, FlowGrid áp dụng sự phân công trách nhiệm rạch ròi:
 
 ```
         ┌─────────────────────────────────────────────────────────────┐
@@ -41,7 +41,7 @@ Sơ đồ Mermaid dưới đây mô tả luồng làm việc xuyên suốt từ 
 sequenceDiagram
     autonumber
     actor Member as Member (Dev / BA / Lead)
-    participant Agent as AI Agent (ForgeKit)
+    participant Agent as AI Agent (FlowGrid)
     participant Script as Audit Script (audit-bundle-gaps.mjs)
     participant Bundle as Feature Bundle (*.bundle.yaml)
     participant Wizard as AskQuestion Wizard

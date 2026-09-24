@@ -27,8 +27,8 @@
 
 ### 🏛️ Thuật Ngữ Cốt Lõi: Core (System Core Architecture)
 
-Trong hệ thống ForgeKit, thuật ngữ **`Core`** được sử dụng nhất quán để chỉ **Kiến Trúc Hệ Thống Cốt Lõi (System Core Architecture)** của phần mềm:
-- **Lý do chuẩn hóa**: Thuật ngữ `Core` được lựa chọn thay thế cho các tên gọi mơ hồ hoặc dễ gây xung đột trước đây như `platform` (dễ nhầm với Cloud/OS Infrastructure), `system` (dễ trùng với OS/System call), hay `app` (dễ nhầm với Mobile App đơn lẻ).
+Trong hệ thống FlowGrid, thuật ngữ **`Core`** được sử dụng làm tên đại diện quy chuẩn cho **Kiến Trúc Hệ Thống Cốt Lõi (System Core Architecture)** của phần mềm:
+- **Phạm vi đại diện**: `Core` bao hàm và tương đương với tất cả các định nghĩa cấp hệ thống như `Platform`, `System`, `System Software`, `Web System`, `Application (App)`, hay `Enterprise Technology System`.
 - **Các khái niệm liên quan**:
   - `core-dna`: Bộ mã nhận diện kiến trúc cốt lõi của dự án.
   - `core-repos.local.json`: Danh mục các repository thuộc hệ thống kiến trúc mới (tương thích ngược với `platform-repos.local.json`).
@@ -42,7 +42,7 @@ Pilot tham khảo: [FLOW-login](#). Màn hình sống dưới `surfaces/<surface
 
 <div class="intro-hero">
 
-![Các tầng tài liệu Forgekit](./assets/start-here-layers.png)
+![Các tầng tài liệu FlowGrid](./assets/start-here-layers.png)
 
 </div>
 
@@ -257,7 +257,7 @@ flowchart LR
 
 - **Dự án mới (Standard Base):** dùng `/architecture` để route, sau đó `/overview`, `/business-process`, `/module`; bổ sung `/deployment`, `/decision` hoặc `/cross-cutting` khi có nội dung tương ứng.
 - **Dự án legacy (cùng Base):** dùng modifier **`/legacy`** kèm skill tương ứng (ví dụ `/legacy /spec`). Phần kiến trúc mục tiêu vẫn đi qua `/architecture`.
-- **Dự án Maintain / Khác Base:** chạy `forgekit init` → chọn **Custom / Existing Base** → cung cấp Golden Sample → `forgekit build-template-code`. Xem chi tiết: [Custom Base Workflow](./custom-base-workflow.md).
+- **Dự án Maintain / Khác Base:** chạy `flowgrid init` → chọn **Custom / Existing Base** → cung cấp Golden Sample → `flowgrid build-template-code`. Xem chi tiết: [Custom Base Workflow](./custom-base-workflow.md).
 
 <div class="phase-pills">
 <span>business-process · scope · actor</span>
@@ -293,14 +293,14 @@ Member nhận Module và business-process đã được thống nhất, sau đó
 <span>Acceptance criteria</span>
 </div>
 
-- Function mới dùng `/spec`; Function từ hệ thống cũ dùng `/legacy /spec` (qua Forgekit).
+- Function mới dùng `/spec`; Function từ hệ thống cũ dùng `/legacy /spec` (qua FlowGrid).
 - Bắt buộc hoàn thiện:
   - **Dynamic 5-Tier Validator**: Prototype presets, boundaries [min, max], format regex, conditional dependencies và unique DB async checks.
   - **Ma Trận Trạng Thái Giao Diện & Phân Quyền (State & Permission Matrix)**: Khóa trường và nút bấm theo trạng thái bản ghi và RBAC roles.
   - **Action Flows 6 Khối Kỹ Thuật**: Khóa nhấn đúp (double-submit lock), payload transformation, concurrency optimistic locking, và ma trận phản hồi 4 tầng rõ ràng.
 - BA xác nhận business qua `/grill-bqa`; Engineer qua `/grill-dev` + `/api-spec`.
 - Output: leaf `CMP-*/NN…/` (`ir/` + `api/<seq>/`). Kết xuất tài liệu `spec.md` hoàn toàn bằng bảng biểu **Data Dictionary Table**, không còn dump raw YAML thô. Câu treo: `qa/open/QA-…` rồi `/qa-resolve`.
-- Đọc trên GitHub: `pnpm forge:render` rồi **`pnpm forge:publish`** (README → `CATALOG.md`).
+- Đọc trên GitHub: `pnpm flowgrid:render` rồi **`pnpm flowgrid:publish`** (README → `CATALOG.md`).
 
 **Kết quả:** Function Detail đủ rõ với Data Dictionary & State Matrix để Tester thiết kế testcase và Developer triển khai mà không phải suy đoán lại requirement.
 
@@ -402,17 +402,17 @@ Dev, QA, PM/Leader và stakeholder hợp nhất các đầu ra thành một lu�
 
 ## 5. Trợ lý và công cụ
 
-![Kiến trúc Unified Engine và Hệ sinh thái Forgekit MCP](./assets/start-here-helpers.png)
+![Kiến trúc Unified Engine và Hệ sinh thái FlowGrid MCP](./assets/start-here-helpers.png)
 
 | Công cụ | Trách nhiệm |
 |---------|-------------|
 | **Skill `/…`** | Workflow theo đúng tầng và vai trò |
-| **Forgekit (Bộ Docs)** | Phân tích Bundle YAML, render VitePress, sinh Markdown |
-| **Forgekit (Bộ Code/Test)** | Sinh code UI/API và kịch bản Playwright E2E |
-| **ArtifactGraph** | (Tích hợp trong Forgekit) Gap analysis, parity, tag và codegen allowlist |
+| **FlowGrid (Bộ Docs)** | Phân tích Bundle YAML, render VitePress, sinh Markdown |
+| **FlowGrid (Bộ Code/Test)** | Sinh code UI/API và kịch bản Playwright E2E |
+| **ArtifactGraph** | (Tích hợp trong FlowGrid) Gap analysis, parity, tag và codegen allowlist |
 | **VitePress + Mermaid** | Trình bày docs và diagrams |
 
-Setup: [Kits (MCP)](./toolkits.md) — Sử dụng `forgekit init`.
+Setup: [Kits (MCP)](./toolkits.md) — Sử dụng `flowgrid init`.
 
 ---
 

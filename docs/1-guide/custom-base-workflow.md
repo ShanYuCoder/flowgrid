@@ -1,6 +1,6 @@
 # Custom Base & Maintain Workflow (Dự Án Khác Base)
 
-> Hướng dẫn thiết lập và vận hành Forgekit cho các dự án **Bảo trì hệ thống cũ (Maintain)** hoặc **Phát triển mới nhưng sử dụng Base code / Thư viện UI riêng** (Vue 3 + Element Plus, React + Ant Design, Vuetify, Bootstrap, NestJS Active-Record, Laravel Livewire...).
+> Hướng dẫn thiết lập và vận hành FlowGrid cho các dự án **Bảo trì hệ thống cũ (Maintain)** hoặc **Phát triển mới nhưng sử dụng Base code / Thư viện UI riêng** (Vue 3 + Element Plus, React + Ant Design, Vuetify, Bootstrap, NestJS Active-Record, Laravel Livewire...).
 
 ---
 
@@ -16,24 +16,24 @@ Khi làm việc với một dự án có sẵn hoặc không dùng bộ Base m�
 
 ## 2. Mô Hình "Tam Giác Đồng Bộ" (Tri-Sync)
 
-Để giải quyết bài toán trên, Forgekit kích hoạt cơ chế đồng bộ 3 mắt xích khép kín thông qua **Golden Sample (Màn hình hình mẫu)**:
+Để giải quyết bài toán trên, FlowGrid kích hoạt cơ chế đồng bộ 3 mắt xích khép kín thông qua **Golden Sample (Màn hình hình mẫu)**:
 
 ```text
                DỰ ÁN KHÁC BASE (Custom / Maintain)
                                │
-               forgekit init (Chọn Custom Base)
+               flowgrid init (Chọn Custom Base)
                                │
              Khai báo 1 file "Golden Sample"
             (Ví dụ: src/pages/users/UserList.vue)
                                │
-            forgekit build-template-code
+            flowgrid build-template-code
                                │
        ┌───────────────────────┼───────────────────────┐
        ▼                       ▼                       ▼
 1. CODE TEMPLATES       2. DSL REGISTRY         3. ARTIFACTGRAPH
   (Sinh code khớp)       (Từ điển SSOT)          (Lập chỉ mục)
        │                       │                       │
-.forgekit/adapters/     .forgekit/adapters/     .forgekit/adapters/
+.flowgrid/adapters/    .flowgrid/adapters/    .flowgrid/adapters/
   custom/templates/       custom/registries/      custom/lexicon/
   - list.vue.hbs          - design.registry.json  - registry-tags.en.txt
 (Thay entity, fields)   (Ghi nhận ElTable,      (Nạp vào SQLite Graph,
@@ -44,12 +44,12 @@ Khi làm việc với một dự án có sẵn hoặc không dùng bộ Base m�
 
 ## 3. Quy Trình Vận Hành 3 Bước
 
-### Bước 1: Khởi tạo với Custom Profile (`forgekit init`)
+### Bước 1: Khởi tạo với Custom Profile (`flowgrid init`)
 
 Khi chạy wizard khởi tạo trong repository dự án:
 
 ```bash
-forgekit init
+flowgrid init
 ```
 
 1. Tại bước **Select Base Architecture Profile**, chọn:  
@@ -58,7 +58,7 @@ forgekit init
    ```text
    Enter path to Golden Sample file: src/pages/users/UserList.vue
    ```
-3. Cấu hình được lưu vào `.forgekit/config.json`:
+3. Cấu hình được lưu vào `.flowgrid/config.json`:
    ```json
    {
      "baseProfile": "custom",
@@ -69,16 +69,16 @@ forgekit init
 
 ---
 
-### Bước 2: Bóc tách DNA Dự Án (`forgekit build-template-code`)
+### Bước 2: Bóc tách DNA Dự Án (`flowgrid build-template-code`)
 
 Chạy lệnh trích xuất DNA để tự động học phong cách code và danh mục linh kiện có sẵn:
 
 ```bash
 # Xem trước các tệp sẽ được tạo (Dry-run)
-forgekit build-template-code --dry-run
+flowgrid build-template-code --dry-run
 
 # Thực hiện trích xuất và sinh Adapter Custom
-forgekit build-template-code
+flowgrid build-template-code
 ```
 
 **Những gì hệ thống tự động xử lý ngầm:**
@@ -104,10 +104,10 @@ Sau khi bộ Custom Adapter đã được thiết lập, quy trình phát triể
    - Khi mô tả màn hình mới, AI sẽ sử dụng đúng các thẻ `#shell:` và `#widget:` của dự án đó (ví dụ: `#shell: ElAdminLayout`, `#widget: ElDatePicker`).
    - File kết xuất `spec.md` vẫn giữ nguyên chuẩn mực **Data Dictionary Table & 5-Tier Validator**, nhưng tên linh kiện và cấu trúc hiển thị phản ánh 100% linh kiện thực tế của dự án.
 2. **Kiểm định (`/grill-dev`, `/grill-with-docs`)**:
-   - ArtifactGraph SQLite đọc Lexicon tùy biến từ `.forgekit/adapters/custom/lexicon/`, nhận diện các widget cũ là **đã có sẵn (implemented)**.
+   - ArtifactGraph SQLite đọc Lexicon tùy biến từ `.flowgrid/adapters/custom/lexicon/`, nhận diện các widget cũ là **đã có sẵn (implemented)**.
    - **Tuyệt đối không báo đỏ ảo** đòi tạo lại component từ đầu.
 3. **Sinh mã (`/prototype` hoặc `/codegen`)**:
-   - Engine đọc template từ `.forgekit/adapters/custom/templates/`, sinh code chuẩn theo phong cách của dự án cũ mà không bị rác code.
+   - Engine đọc template từ `.flowgrid/adapters/custom/templates/`, sinh code chuẩn theo phong cách của dự án cũ mà không bị rác code.
 
 ---
 
@@ -119,8 +119,8 @@ Sau khi bộ Custom Adapter đã được thiết lập, quy trình phát triể
 | **Profile khi init** | `Standard Base` | `Custom / Existing Base` |
 | **Thư viện UI** | Nuxt 4 + Shadcn-ui / Next.js Tailwind | Element Plus, Ant Design, Vuetify, Custom... |
 | **Nguồn Template** | `adapters/nuxt4/` hoặc `adapters/nextjs/` | Sinh từ Golden Sample qua `build-template-code` |
-| **DSL Registry** | `registries/design.registry.json` chuẩn | Tự động sinh vào `.forgekit/adapters/custom/` |
-| **Lexicon Graph** | Packaged built-in lexicon | Nạp từ `.forgekit/adapters/custom/lexicon/` |
+| **DSL Registry** | `registries/design.registry.json` chuẩn | Tự động sinh vào `.flowgrid/adapters/custom/` |
+| **Lexicon Graph** | Packaged built-in lexicon | Nạp từ `.flowgrid/adapters/custom/lexicon/` |
 | **Kết quả Docs SSOT** | Data Dictionary + Shadcn tags | Data Dictionary + Thẻ component thực tế của dự án |
 
 ---
@@ -133,6 +133,6 @@ Hãy chọn **1 màn hình CRUD phổ biến nhất** (có thanh tìm kiếm, b�
 ### Nếu sau này dự án bổ sung component mới thì cập nhật thế nào?
 Bạn chỉ cần thêm component vào dự án, sau đó chạy lại:
 ```bash
-forgekit build-template-code --sample=<path/to/NewComponent.vue> --force
+flowgrid build-template-code --sample=<path/to/NewComponent.vue> --force
 ```
 Hệ thống sẽ cập nhật lại `design.registry.json` và đồng bộ vào ArtifactGraph ngay lập tức.

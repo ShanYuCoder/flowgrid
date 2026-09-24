@@ -69,7 +69,7 @@ async function main() {
   
   if (codegenCommands.includes(command)) {
     try {
-      const configPath = path.join(process.cwd(), '.forgekit', 'config.json');
+      const configPath = path.join(process.cwd(), '.flowgrid', 'config.json');
       let config = {};
       if (fs.existsSync(configPath)) {
         config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -138,7 +138,7 @@ async function main() {
 
   if (command === 'dev' || command === 'serve') {
     const { spawn, spawnSync } = await import('node:child_process');
-    const configPath = path.join(process.cwd(), '.forgekit', 'config.json');
+    const configPath = path.join(process.cwd(), '.flowgrid', 'config.json');
     let docsRoot, testsRoot, feAdapter;
     if (fs.existsSync(configPath)) {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -194,7 +194,7 @@ async function main() {
 
   if (command === 'build') {
     const { spawnSync } = await import('node:child_process');
-    const configPath = path.join(process.cwd(), '.forgekit', 'config.json');
+    const configPath = path.join(process.cwd(), '.flowgrid', 'config.json');
     let docsRoot, testsRoot;
     if (fs.existsSync(configPath)) {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -230,7 +230,7 @@ async function main() {
     if (isCancel(confirm) || !confirm) { cancel('Cancelled.'); process.exit(0); }
 
     const keepRegistry = await confirmPrompt({
-      message: 'Giữ lại cấu hình và DSL Registry (.forgekit/config.json)? (Khuyến nghị CÓ để giữ cấu hình)',
+      message: 'Giữ lại cấu hình và DSL Registry (.flowgrid/config.json)? (Khuyến nghị CÓ để giữ cấu hình)',
       initialValue: true
     });
 
@@ -240,7 +240,7 @@ async function main() {
     });
 
     console.log(pc.blue('\n[INFO] Đang tiến hành gỡ bỏ...'));
-    const targetDir = path.join(process.cwd(), '.forgekit');
+    const targetDir = path.join(process.cwd(), '.flowgrid');
     if (fs.existsSync(targetDir)) {
       if (keepRegistry && fs.existsSync(path.join(targetDir, 'config.json'))) {
         const items = fs.readdirSync(targetDir);
@@ -249,10 +249,10 @@ async function main() {
             fs.rmSync(path.join(targetDir, item), { recursive: true, force: true });
           }
         }
-        console.log('  - Đã dọn dẹp .forgekit/ nhưng giữ lại config.json');
+        console.log('  - Đã dọn dẹp .flowgrid/ nhưng giữ lại config.json');
       } else {
         fs.rmSync(targetDir, { recursive: true, force: true });
-        console.log('  - Đã xóa hoàn toàn thư mục .forgekit/');
+        console.log('  - Đã xóa hoàn toàn thư mục .flowgrid/');
       }
     }
 
@@ -309,7 +309,7 @@ async function main() {
     if (fs.existsSync(gitignorePath)) {
       let gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
       const ignoresToRemove = [];
-      if (!keepAgents) ignoresToRemove.push('.forgekit', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo');
+      if (!keepAgents) ignoresToRemove.push('.flowgrid', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo');
       
       let modifiedIgnore = false;
       for (const ignore of ignoresToRemove) {
@@ -497,7 +497,7 @@ async function main() {
     }
   }
   console.log(`- Setup Agents: ${selectedAgents.length > 0 ? selectedAgents.join(', ') : 'No'}`);
-  console.log(`- Destination folder: .forgekit/`);
+  console.log(`- Destination folder: .flowgrid/`);
 
   const confirm = await confirmPrompt({
     message: 'Proceed with initialization?',
@@ -508,8 +508,8 @@ async function main() {
     process.exit(0);
   }
 
-  console.log(pc.blue("\n[INFO] Initializing .forgekit folder..."));
-  const targetDir = path.join(process.cwd(), '.forgekit');
+  console.log(pc.blue("\n[INFO] Initializing .flowgrid folder..."));
+  const targetDir = path.join(process.cwd(), '.flowgrid');
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
   }
@@ -540,7 +540,7 @@ async function main() {
     if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
     const items = fs.readdirSync(srcDir, { withFileTypes: true });
     for (const item of items) {
-      if (['node_modules', '.git', 'dist', '.agents', '.gemini', '.cursor', '.forgekit'].includes(item.name)) continue;
+      if (['node_modules', '.git', 'dist', '.agents', '.gemini', '.cursor', '.flowgrid'].includes(item.name)) continue;
       if (item.name.endsWith('.db')) continue;
 
       const srcPath = path.join(srcDir, item.name);
@@ -849,7 +849,7 @@ async function main() {
       indexLexicons(store, root, cfg);
     });
     store.close();
-    console.log('  + Đã build SQLite cache thành công tại .forgekit/index.db');
+    console.log('  + Đã build SQLite cache thành công tại .flowgrid/index.db');
   } catch (e) {
     console.log(pc.yellow('  ! Không thể khởi tạo SQLite cache (chưa có specs/registry): ' + e.message));
   }
@@ -900,7 +900,7 @@ async function main() {
 
   // Cập nhật .gitignore
   const gitignorePath = path.join(process.cwd(), '.gitignore');
-  const ignores = ['.forgekit', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo'];
+  const ignores = ['.flowgrid', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo'];
   let gitignoreContent = '';
   if (fs.existsSync(gitignorePath)) {
     gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');

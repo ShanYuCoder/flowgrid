@@ -32,7 +32,7 @@ Cây chuẩn (khớp [Start now](./getting-started.md)):
 
 ## 0.1 Write rules (SSOT lock)
 
-Đây là contract bắt buộc cho toàn bộ các công cụ của **Forgekit** (Bộ Docs, Bộ Code, Bộ Test, Common).
+Đây là contract bắt buộc cho toàn bộ các công cụ của **FlowGrid** (Bộ Docs, Bộ Code, Bộ Test, Common).
 
 ### business-process · `FLOW-*`
 
@@ -257,7 +257,7 @@ Prefer `flowchart` / `sequenceDiagram`.
 | Cross-service | Common theo scope | `/cross-service` |
 | Deployment | `architecture/07-deployment/` | `/deployment` |
 
-Nav uses business labels; `forgekit init` generates physical children under `<function-slug>/`.
+Nav uses business labels; `flowgrid init` generates physical children under `<function-slug>/`.
 
 ---
 
@@ -303,4 +303,4 @@ deployment               → DEP-* (chỉ khi placement matters)
 ## 8. Related
 
 - [Start now](./getting-started.md) — onboarding and responsibility matrix
-- Skills được cài đặt tự động vào `.agents/` thông qua hệ thống `forgekit init` dựa trên Project Type — xem [Kits (MCP)](./toolkits.md).
+- Skills được cài đặt tự động vào `.agents/` thông qua hệ thống `flowgrid init` dựa trên Project Type — xem [Kits (MCP)](./toolkits.md).

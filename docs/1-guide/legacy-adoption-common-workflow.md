@@ -20,7 +20,7 @@ Nếu tiếp tục mang tư duy copy-paste này sang hệ thống mới:
 
 ## 2. Mô Hình Rà Soát Legacy 2 Cấp Độ (2-Tier Legacy Audit Framework)
 
-Để tránh việc AI sa đà hoặc báo nhầm lỗ hổng, ForgeKit phân định rạch ròi 2 cấp độ rà soát trong luồng khảo cổ:
+Để tránh việc AI sa đà hoặc báo nhầm lỗ hổng, FlowGrid phân định rạch ròi 2 cấp độ rà soát trong luồng khảo cổ:
 
 | Cấp độ | Lệnh kích hoạt | Scope Rà soát | Chi tiết Nội dung Kiểm tra |
 |---|---|---|---|
@@ -31,17 +31,17 @@ Nếu tiếp tục mang tư duy copy-paste này sang hệ thống mới:
 
 ## 3. Sơ Đồ Tuần Tự Luồng Vận Hành (Sequence Diagram)
 
-Sơ đồ Mermaid dưới đây mô tả chi tiết sự tương tác giữa Member, AI Agent, Legacy Repositories, và ForgeKit Engine từ lúc quét chỉ mục cho đến khi sinh Code Common cho dự án mới:
+Sơ đồ Mermaid dưới đây mô tả chi tiết sự tương tác giữa Member, AI Agent, Legacy Repositories, và FlowGrid Engine từ lúc quét chỉ mục cho đến khi sinh Code Common cho dự án mới:
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Member as Member (Dev / Lead)
-    participant Agent as AI Agent (ForgeKit)
+    participant Agent as AI Agent (FlowGrid)
     participant LegacyRepo as Legacy Codebase (legacy-repos.local.json)
     participant Inventory as adoption-inventory.md (Workspace Root)
     participant Plan as common-refactor-plan.md
-    participant Registry as ForgeKit DSL Registry
+    participant Registry as FlowGrid DSL Registry
 
     %% STEP 1: PRE-SCAN & MODE SELECTION
     Member->>Agent: Bấm lệnh `/adopt` (hoặc `/adopt "Scope"`)
@@ -75,7 +75,7 @@ sequenceDiagram
     loop Cho từng CMN-* candidate trong Phase
         Agent->>Agent: 1. `common-spec` -> Gen spec file `common/specs/CMN-*.yaml`
         Agent->>Agent: 2. `codegen common` -> Gen code triển khai tại `shared/common/` của repo mới
-        Agent->>Registry: 3. DSL Registration -> Đăng ký mã CMN-* vào ForgeKit DSL Registry
+        Agent->>Registry: 3. DSL Registration -> Đăng ký mã CMN-* vào FlowGrid DSL Registry
     end
     Agent-->>Member: Hoàn thành Phase! Bộ thư viện Common đã sẵn sàng trong repo mới.
 

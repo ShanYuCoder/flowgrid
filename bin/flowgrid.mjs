@@ -69,7 +69,7 @@ async function main() {
   
   if (codegenCommands.includes(command)) {
     try {
-      const configPath = path.join(process.cwd(), '.forgekit', 'config.json');
+      const configPath = path.join(process.cwd(), '.flowgrid', 'config.json');
       let config = {};
       if (fs.existsSync(configPath)) {
         config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -138,7 +138,7 @@ async function main() {
 
   if (command === 'dev' || command === 'serve') {
     const { spawn, spawnSync } = await import('node:child_process');
-    const configPath = path.join(process.cwd(), '.forgekit', 'config.json');
+    const configPath = path.join(process.cwd(), '.flowgrid', 'config.json');
     let docsRoot, testsRoot, feAdapter;
     if (fs.existsSync(configPath)) {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -194,7 +194,7 @@ async function main() {
 
   if (command === 'build') {
     const { spawnSync } = await import('node:child_process');
-    const configPath = path.join(process.cwd(), '.forgekit', 'config.json');
+    const configPath = path.join(process.cwd(), '.flowgrid', 'config.json');
     let docsRoot, testsRoot;
     if (fs.existsSync(configPath)) {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -230,7 +230,7 @@ async function main() {
     if (isCancel(confirm) || !confirm) { cancel('Cancelled.'); process.exit(0); }
 
     const keepRegistry = await confirmPrompt({
-      message: 'Giữ lại cấu hình và DSL Registry (.forgekit/config.json)? (Khuyến nghị CÓ để giữ cấu hình)',
+      message: 'Giữ lại cấu hình và DSL Registry (.flowgrid/config.json)? (Khuyến nghị CÓ để giữ cấu hình)',
       initialValue: true
     });
 
@@ -240,7 +240,7 @@ async function main() {
     });
 
     console.log(pc.blue('\n[INFO] Đang tiến hành gỡ bỏ...'));
-    const targetDir = path.join(process.cwd(), '.forgekit');
+    const targetDir = path.join(process.cwd(), '.flowgrid');
     if (fs.existsSync(targetDir)) {
       if (keepRegistry && fs.existsSync(path.join(targetDir, 'config.json'))) {
         const items = fs.readdirSync(targetDir);
@@ -249,10 +249,10 @@ async function main() {
             fs.rmSync(path.join(targetDir, item), { recursive: true, force: true });
           }
         }
-        console.log('  - Đã dọn dẹp .forgekit/ nhưng giữ lại config.json');
+        console.log('  - Đã dọn dẹp .flowgrid/ nhưng giữ lại config.json');
       } else {
         fs.rmSync(targetDir, { recursive: true, force: true });
-        console.log('  - Đã xóa hoàn toàn thư mục .forgekit/');
+        console.log('  - Đã xóa hoàn toàn thư mục .flowgrid/');
       }
     }
 
@@ -307,7 +307,7 @@ async function main() {
     if (fs.existsSync(gitignorePath)) {
       let gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
       const ignoresToRemove = [];
-      if (!keepAgents) ignoresToRemove.push('.forgekit', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo');
+      if (!keepAgents) ignoresToRemove.push('.flowgrid', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo');
       
       let modifiedIgnore = false;
       for (const ignore of ignoresToRemove) {
@@ -497,7 +497,7 @@ async function main() {
     }
   }
   console.log(`- Setup Agents: ${selectedAgents.length > 0 ? selectedAgents.join(', ') : 'No'}`);
-  console.log(`- Destination folder: .forgekit/`);
+  console.log(`- Destination folder: .flowgrid/`);
 
   const confirm = await confirmPrompt({
     message: 'Proceed with initialization?',
@@ -508,8 +508,8 @@ async function main() {
     process.exit(0);
   }
 
-  console.log(pc.blue("\n[INFO] Initializing .forgekit folder..."));
-  const targetDir = path.join(process.cwd(), '.forgekit');
+  console.log(pc.blue("\n[INFO] Initializing .flowgrid folder..."));
+  const targetDir = path.join(process.cwd(), '.flowgrid');
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
   }
@@ -540,7 +540,7 @@ async function main() {
     if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
     const items = fs.readdirSync(srcDir, { withFileTypes: true });
     for (const item of items) {
-      if (['node_modules', '.git', 'dist', '.agents', '.gemini', '.cursor', '.forgekit'].includes(item.name)) continue;
+      if (['node_modules', '.git', 'dist', '.agents', '.gemini', '.cursor', '.flowgrid'].includes(item.name)) continue;
       if (item.name.endsWith('.db')) continue;
 
       const srcPath = path.join(srcDir, item.name);
@@ -783,42 +783,45 @@ async function main() {
       }
 
       if (selectedType === 'Document') {
-        pkg.scripts['forge:split'] = 'flowgrid split';
-        pkg.scripts['forge:split_all'] = 'flowgrid split_all';
-        pkg.scripts['forge:render'] = 'flowgrid render';
-        pkg.scripts['forge:openapi'] = 'flowgrid openapi_render';
-        pkg.scripts['forge:openapi-ui'] = 'flowgrid openapi_build_ui';
-        pkg.scripts['forge:dev'] = 'flowgrid dev';
-        pkg.scripts['forge:build'] = 'flowgrid build';
-        pkg.scripts['forge:publish'] = 'flowgrid publish';
+        pkg.scripts['flowgrid:split'] = 'flowgrid split';
+        pkg.scripts['flowgrid:split_all'] = 'flowgrid split_all';
+        pkg.scripts['flowgrid:render'] = 'flowgrid render';
+        pkg.scripts['flowgrid:openapi'] = 'flowgrid openapi_render';
+        pkg.scripts['flowgrid:openapi-ui'] = 'flowgrid openapi_build_ui';
+        pkg.scripts['flowgrid:dev'] = 'flowgrid dev';
+        pkg.scripts['flowgrid:build'] = 'flowgrid build';
+        pkg.scripts['flowgrid:publish'] = 'flowgrid publish';
+        pkg.scripts['flow:dev'] = 'flowgrid dev';
+        pkg.scripts['flow:render'] = 'flowgrid render';
+        pkg.scripts['flow:publish'] = 'flowgrid publish';
       }
 
       if (selectedType === 'Frontend' || selectedType === 'Fullstack') {
-        pkg.scripts['forge:gen'] = 'flowgrid gen';
-        pkg.scripts['forge:unit'] = 'flowgrid unit-gen';
-        pkg.scripts['forge:css'] = 'flowgrid gen-css';
+        pkg.scripts['flowgrid:gen'] = 'flowgrid gen';
+        pkg.scripts['flowgrid:unit'] = 'flowgrid unit-gen';
+        pkg.scripts['flowgrid:css'] = 'flowgrid gen-css';
       }
 
       if (selectedType === 'Backend' || selectedType === 'Fullstack') {
-        pkg.scripts['forge:api-gen'] = 'flowgrid api-gen';
-        pkg.scripts['forge:api-unit'] = 'flowgrid api-unit-gen';
-        pkg.scripts['forge:openapi'] = 'flowgrid openapi_render';
+        pkg.scripts['flowgrid:api-gen'] = 'flowgrid api-gen';
+        pkg.scripts['flowgrid:api-unit'] = 'flowgrid api-unit-gen';
+        pkg.scripts['flowgrid:openapi'] = 'flowgrid openapi_render';
       }
 
       if (selectedType === 'Frontend' || selectedType === 'Backend' || selectedType === 'Fullstack') {
-        pkg.scripts['forge:contract'] = 'flowgrid contract-gen';
+        pkg.scripts['flowgrid:contract'] = 'flowgrid contract-gen';
       }
 
       if (selectedType === 'Test') {
-        pkg.scripts['forge:cases'] = 'flowgrid cases:render';
-        pkg.scripts['forge:cases-check'] = 'flowgrid cases:check';
-        pkg.scripts['forge:cases-cov'] = 'flowgrid cases:coverage';
-        pkg.scripts['forge:e2e-gen'] = 'flowgrid testcase:gen';
-        pkg.scripts['forge:e2e-reg'] = 'flowgrid e2e-registry';
+        pkg.scripts['flowgrid:cases'] = 'flowgrid cases:render';
+        pkg.scripts['flowgrid:cases-check'] = 'flowgrid cases:check';
+        pkg.scripts['flowgrid:cases-cov'] = 'flowgrid cases:coverage';
+        pkg.scripts['flowgrid:e2e-gen'] = 'flowgrid testcase:gen';
+        pkg.scripts['flowgrid:e2e-reg'] = 'flowgrid e2e-registry';
       }
       
       fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-      console.log(pc.blue('  + Injected forge:* scripts into package.json'));
+      console.log(pc.blue('  + Injected flowgrid:* & flow:* scripts into package.json'));
     } catch (e) {
       console.log(pc.yellow('  ! Could not inject scripts into package.json'));
     }
@@ -840,7 +843,7 @@ async function main() {
       indexLexicons(store, root, cfg);
     });
     store.close();
-    console.log('  + Đã build SQLite cache thành công tại .forgekit/index.db');
+    console.log('  + Đã build SQLite cache thành công tại .flowgrid/index.db');
   } catch (e) {
     console.log(pc.yellow('  ! Không thể khởi tạo SQLite cache (chưa có specs/registry): ' + e.message));
   }
@@ -888,7 +891,7 @@ async function main() {
   }
 
   const gitignorePath = path.join(process.cwd(), '.gitignore');
-  const ignores = ['.forgekit', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo'];
+  const ignores = ['.flowgrid', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo'];
   let gitignoreContent = '';
   if (fs.existsSync(gitignorePath)) {
     gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');

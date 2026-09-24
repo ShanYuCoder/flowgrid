@@ -1,52 +1,52 @@
 # 🛠 Danh sách Lệnh CLI & Agent Skills (Usage)
 
-Tài liệu này liệt kê toàn bộ các lệnh thực thi (Commands) và bộ Kỹ năng (Skills) của Forgekit.
+Tài liệu này liệt kê toàn bộ các lệnh thực thi (Commands) và bộ Kỹ năng (Skills) của FlowGrid.
 
-## ⚙️ Các Lệnh Xử Lý Cốt Lõi (Forgekit CLI)
+## ⚙️ Các Lệnh Xử Lý Cốt Lõi (FlowGrid CLI)
 
-Forgekit chia hệ thống ra làm 3 bộ máy chính: **Bộ Docs**, **Bộ Code**, và **Bộ Test**. Dưới đây là các lệnh thao tác cho từng bộ:
+FlowGrid chia hệ thống ra làm 3 bộ máy chính: **Bộ Docs**, **Bộ Code**, và **Bộ Test**. Dưới đây là các lệnh thao tác cho từng bộ:
 
 ### Bộ Docs (Quản lý Tài liệu & Specs)
 Các lệnh thao tác với tài liệu, chia tách Spec và kết xuất giao diện Markdown/OpenAPI.
 
-| Lệnh Forgekit | Chức năng |
+| Lệnh FlowGrid | Chức năng |
 |---------------|-----------|
-| `forgekit split` | Cắt nhỏ `.bundle.yaml` ra Markdown & IR files (`ir/design.yaml`, `ir/spec.yaml`, `ir/generated/<slug>.md`). |
-| `forgekit split_all` | Quét và cắt nhỏ toàn bộ Bundle YAML trong repo. |
-| `forgekit render` | Render lại UI Design Specs từ YAML sang MD (Data Dictionary & State Matrix). |
-| `forgekit dev` | Chạy Live Server của VitePress (`npx vitepress dev`). |
-| `forgekit build` | Đóng gói Document Hub tĩnh (`npx vitepress build`). |
-| `forgekit publish` | Publish tài liệu lên server hoặc CDN tĩnh, sinh `CATALOG.md`. |
-| `forgekit openapi_render` | Gộp các OpenAPI YAML nhỏ thành `docs/openapi/api.yaml`. |
-| `forgekit openapi_build_ui` | Build giao diện Swagger UI tĩnh cho Docs Hub. |
+| `flowgrid split` | Cắt nhỏ `.bundle.yaml` ra Markdown & IR files (`ir/design.yaml`, `ir/spec.yaml`, `ir/generated/<slug>.md`). |
+| `flowgrid split_all` | Quét và cắt nhỏ toàn bộ Bundle YAML trong repo. |
+| `flowgrid render` | Render lại UI Design Specs từ YAML sang MD (Data Dictionary & State Matrix). |
+| `flowgrid dev` | Chạy Live Server của VitePress (`npx vitepress dev`). |
+| `flowgrid build` | Đóng gói Document Hub tĩnh (`npx vitepress build`). |
+| `flowgrid publish` | Publish tài liệu lên server hoặc CDN tĩnh, sinh `CATALOG.md`. |
+| `flowgrid openapi_render` | Gộp các OpenAPI YAML nhỏ thành `docs/openapi/api.yaml`. |
+| `flowgrid openapi_build_ui` | Build giao diện Swagger UI tĩnh cho Docs Hub. |
 
-*(Ví dụ chạy: `forgekit split_all`)*
+*(Ví dụ chạy: `flowgrid split_all`)*
 
 ### Bộ Test (Kiểm thử & Testcase)
-Forgekit chịu trách nhiệm phân tích kịch bản kiểm thử định dạng YAML để kết xuất ra Markdown hoặc soi chiếu Coverage.
+FlowGrid chịu trách nhiệm phân tích kịch bản kiểm thử định dạng YAML để kết xuất ra Markdown hoặc soi chiếu Coverage.
 
-| Lệnh Forgekit | Chức năng |
+| Lệnh FlowGrid | Chức năng |
 |---------------|-----------|
-| `forgekit cases:render` | Dịch toàn bộ Testplan YAML sang Markdown để đọc trên Docs Hub. |
-| `forgekit cases:check` | Kiểm tra cú pháp YAML của Testplan. |
-| `forgekit cases:coverage` | Quét Coverage để phát hiện các specs chưa có Testplan. |
-| `forgekit testcase:gen` | Tự động sinh mã nguồn Playwright E2E từ YAML. |
-| `forgekit e2e-registry` | Kiểm tra/Xác thực registry của Playwright Test. |
+| `flowgrid cases:render` | Dịch toàn bộ Testplan YAML sang Markdown để đọc trên Docs Hub. |
+| `flowgrid cases:check` | Kiểm tra cú pháp YAML của Testplan. |
+| `flowgrid cases:coverage` | Quét Coverage để phát hiện các specs chưa có Testplan. |
+| `flowgrid testcase:gen` | Tự động sinh mã nguồn Playwright E2E từ YAML. |
+| `flowgrid e2e-registry` | Kiểm tra/Xác thực registry của Playwright Test. |
 
 ### Bộ Code (Sinh Mã Nguồn & Unit Test)
-Forgekit kế thừa trọn vẹn sức mạnh sinh mã nguồn và Unit Test đa ngôn ngữ (NodeJS, Python, PHP, C#, v.v.).
+FlowGrid kế thừa trọn vẹn sức mạnh sinh mã nguồn và Unit Test đa ngôn ngữ (NodeJS, Python, PHP, C#, v.v.).
 
-| Lệnh Forgekit | Chức năng |
+| Lệnh FlowGrid | Chức năng |
 |---------------|-----------|
-| `forgekit gen` | Sinh mã nguồn UI Component (Frontend). |
-| `forgekit unit-gen` | Sinh mã nguồn Unit Test cho Frontend (Jest/Vitest). |
-| `forgekit api-gen` | Sinh mã nguồn API Route/Controller (Backend). |
-| `forgekit api-unit-gen` | Sinh mã nguồn Unit Test cho API (Backend). |
-| `forgekit contract-gen` | Sinh mã nguồn Type/DTO dùng chung cho Fullstack. |
-| `forgekit gen-css` | Cập nhật CSS Variables từ Design Tokens. |
-| `forgekit build-template-code` | Trích xuất DNA từ Golden Sample và tạo bộ Template + DSL Registry cho dự án khác Base. |
+| `flowgrid gen` | Sinh mã nguồn UI Component (Frontend). |
+| `flowgrid unit-gen` | Sinh mã nguồn Unit Test cho Frontend (Jest/Vitest). |
+| `flowgrid api-gen` | Sinh mã nguồn API Route/Controller (Backend). |
+| `flowgrid api-unit-gen` | Sinh mã nguồn Unit Test cho API (Backend). |
+| `flowgrid contract-gen` | Sinh mã nguồn Type/DTO dùng chung cho Fullstack. |
+| `flowgrid gen-css` | Cập nhật CSS Variables từ Design Tokens. |
+| `flowgrid build-template-code` | Trích xuất DNA từ Golden Sample và tạo bộ Template + DSL Registry cho dự án khác Base. |
 
-*(Tất cả lệnh trên đều có thể truyền thêm `:dry` để xem trước thay vì ghi file, ví dụ: `forgekit api-unit-gen:dry`)*
+*(Tất cả lệnh trên đều có thể truyền thêm `:dry` để xem trước thay vì ghi file, ví dụ: `flowgrid api-unit-gen:dry`)*
 
 ---
 

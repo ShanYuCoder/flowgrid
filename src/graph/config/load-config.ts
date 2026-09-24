@@ -12,8 +12,8 @@ import { z } from 'zod'
 import { packageRoot } from './platform-repos.js'
 import type { ArtifactgraphConfig } from '../types.js'
 
-export const CONFIG_NAME = '.forgekit/config.json'
-export const INDEX_DIR = '.forgekit'
+export const CONFIG_NAME = '.flowgrid/config.json'
+export const INDEX_DIR = '.flowgrid'
 
 const artifactgraphConfigSchema = z.object({
   version: z.number().int().positive().optional(),
