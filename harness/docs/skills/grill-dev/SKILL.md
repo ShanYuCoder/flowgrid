@@ -28,6 +28,25 @@ disable-model-invocation: true
 
 ---
 
+## Rule: Audit Interlock with Page Type
+
+- **[MANDATORY]** Before grilling, run: `node engines/spec/lib/audit-bundle-gaps.mjs <bundle> --type <profile>`.
+  - `<profile>` lấy từ `gen.codegen.profile` đã xác nhận (list | create | detail | admin-crud | auth | ...).
+  - Nếu profile chưa set → hỏi member xác định profile trước, KHÔNG chạy audit với `--type unknown`.
+  - Script output `gaps[]` (thiếu field bắt buộc) + `confirms[]` (optional cần hỏi member).
+  - Agent xử lý `gaps[]` → bổ sung trực tiếp; `confirms[]` → hỏi qua wizard.
+
+---
+
+## Rule: Zone-Based Grill (chống Lost-in-Middle)
+
+- **[MANDATORY]** Grill theo zone, KHÔNG grill toàn bộ bundle 1 lần.
+- **[MANDATORY]** Chia bundle thành zones linh động theo nội dung thực:
+  - Mỗi turn grill 1 zone: đọc zone data → phân tích chất (logic, consistency, cross-field gaps) → bổ sung/sửa.
+  - Nếu zone quá lớn → chia nhỏ tiếp.
+- **[MANDATORY]** Script check **lượng** (field có/không). Agent check **chất** (nội dung chuẩn, hợp logic, gaps giữa fields).
+- **[STRICTLY FORBIDDEN]** Gửi all-in-one rồi bỏ sót giữa.
+
 ## Rule: Missing Information / Hard Gate & Workload Threshold (Law 2)
 
 - **[MANDATORY]** If `gen.codegen.profile` is missing, OR `entity`/`module` is empty for list/create/admin-crud/auth/change-password, OR sibling `01` endpoints lack `action` + path suffix:
@@ -136,7 +155,7 @@ disable-model-invocation: true
 - FE Codegenkit dry pass → `/prototype`
 - BQA↔Dev conflict → `/grill-docs`
 - Legacy fact gap → `/update-spec-legacy`
-- Confirmed common promote → `/platform-mark` (same session or before `/prototype`)
+- Confirmed common promote → `/docs-mark` (same session or before `/prototype`)
 
 ---
 

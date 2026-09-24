@@ -63,7 +63,8 @@ async function main() {
   const codegenCommands = [
     'api-gen', 'api-gen:dry', 'api-registry', 'api-unit-gen', 'api-unit-gen:dry', 'api-unit-registry',
     'gen', 'gen:dry', 'registry', 'unit-gen', 'unit-gen:dry', 'unit-registry',
-    'gen-common', 'gen-common:dry', 'gen-css', 'gen-css:dry', 'contract-gen', 'contract-gen:dry', 'contract-registry'
+    'gen-common', 'gen-common:dry', 'gen-css', 'gen-css:dry', 'contract-gen', 'contract-gen:dry', 'contract-registry',
+    'build-template-code'
   ];
   
   if (codegenCommands.includes(command)) {
@@ -104,6 +105,10 @@ async function main() {
         if (res.stdout) console.log(res.stdout);
         if (res.stderr) console.error(pc.red(res.stderr));
         process.exit(res.status || 0);
+      } else if (command === 'build-template-code') {
+        const { runBuildTemplateCode } = await import('../engines/template-builder/runner.mjs');
+        const res = await runBuildTemplateCode(argv);
+        process.exit(res.code || 0);
       } else if (command.startsWith('gen-css')) {
         const { runCssGen } = await import('../dist/codegen/adapters/run.js');
         const res = runCssGen({ adapter: feAdapter, projectRoot: root, docsRoot, argv, dryRun: isDry });
@@ -375,14 +380,38 @@ async function main() {
   let beAdapter = '';
   let feDocRoot = '';
   let feTestRoot = '';
+  let baseProfile = 'standard';
+  let goldenSample = '';
 
   if (selectedType !== 'Document') {
+    // Base Architecture Profile Selection
+    const baseProfileAns = await select({
+      message: 'Select Base Architecture Profile:',
+      options: [
+        { value: 'standard', label: 'Standard Base (Khuyến nghị cho dự án mới: Nuxt4, NextJS, NestJS, FastAPI)' },
+        { value: 'custom', label: 'Custom / Existing Base (Dành cho dự án Maintain hoặc Tech Stack khác Base)' }
+      ],
+      initialValue: 'standard'
+    });
+    if (isCancel(baseProfileAns)) { cancel('Cancelled.'); process.exit(0); }
+    baseProfile = baseProfileAns;
+
+    if (baseProfile === 'custom') {
+      const sampleAns = await text({
+        message: 'Enter path to Golden Sample file (màn hình/file mẫu đẹp nhất để bóc tách DNA, tùy chọn):',
+        placeholder: 'src/pages/users/UserList.vue'
+      });
+      if (isCancel(sampleAns)) { cancel('Cancelled.'); process.exit(0); }
+      goldenSample = sampleAns ? sampleAns.trim() : '';
+    }
+
     if (selectedType === 'Fullstack') {
       const feAns = await select({
         message: 'Select Frontend technology:',
         options: [
           { value: 'nuxt4', label: 'nuxt4' },
-          { value: 'nextjs', label: 'nextjs' }
+          { value: 'nextjs', label: 'nextjs' },
+          { value: 'custom', label: 'custom (Other Vue/React/Angular)' }
         ]
       });
       if (isCancel(feAns)) { cancel('Cancelled.'); process.exit(0); }
@@ -391,18 +420,18 @@ async function main() {
       console.log(pc.cyan(`=> Selected Fullstack: Frontend (${feAdapter}) + Backend (${beAdapter})`));
     } else if (selectedType === 'Frontend') {
       const feAns = await text({
-        message: 'Enter Frontend technology (e.g. nuxt4, nextjs):',
-        placeholder: 'nuxt4'
+        message: 'Enter Frontend technology (e.g. nuxt4, nextjs, or custom):',
+        placeholder: baseProfile === 'custom' ? 'custom' : 'nuxt4'
       });
       if (isCancel(feAns)) { cancel('Cancelled.'); process.exit(0); }
-      feAdapter = feAns || 'nuxt4';
+      feAdapter = feAns || (baseProfile === 'custom' ? 'custom' : 'nuxt4');
     } else if (selectedType === 'Backend') {
       const beAns = await text({
-        message: 'Enter Backend technology (e.g. nestjs, fastapi, laravel, dotnet):',
-        placeholder: 'nestjs'
+        message: 'Enter Backend technology (e.g. nestjs, fastapi, laravel, dotnet, or custom):',
+        placeholder: baseProfile === 'custom' ? 'custom' : 'nestjs'
       });
       if (isCancel(beAns)) { cancel('Cancelled.'); process.exit(0); }
-      beAdapter = beAns || 'nestjs';
+      beAdapter = beAns || (baseProfile === 'custom' ? 'custom' : 'nestjs');
     }
 
     // Document Root
@@ -456,6 +485,7 @@ async function main() {
   console.log(pc.magenta("\n=== Installation Plan ==="));
   console.log(`- Project Type: ${selectedType}`);
   if (selectedType !== 'Document') {
+    console.log(`- Base Profile: ${baseProfile}${goldenSample ? ` (Sample: ${goldenSample})` : ''}`);
     if (feAdapter) {
       console.log(`- Frontend Adapter: ${feAdapter}`);
       console.log(`  * Docs Root: ${feDocRoot}`);
@@ -486,6 +516,8 @@ async function main() {
 
   const projectConfig = {
     type: selectedType,
+    baseProfile,
+    goldenSample: goldenSample || undefined,
     languages: supportedLanguages,
     defaultLanguage,
     frontend: feAdapter ? {

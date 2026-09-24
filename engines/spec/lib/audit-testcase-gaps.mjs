@@ -28,52 +28,96 @@ function auditTestcaseContent(rawText, filePath) {
       'TC_MISSING_CASES_LIST',
       'critical',
       'testcases',
-      'Chưa khai báo danh sách testcases trong file plan.',
-      'Khai báo mảng testcases[] với id, title, scenarioRef, steps, và expectedResult.'
+      'Missing testcases array in plan file.',
+      'Declare testcases[] array with id, title, scenarioRef, steps, and expectedResult.'
     );
   }
 
   // 2. Check initial load testcase
-  if (!rawText.includes('Initial Load') && !rawText.includes('tải dữ liệu') && !rawText.includes('init')) {
+  if (!rawText.includes('Initial Load') && !rawText.includes('init') && !rawText.includes('initial')) {
     addGap(
       'TC_MISSING_INITIAL_LOAD',
       'warning',
       'testcases.initial_load',
-      'Thiếu testcase cho kịch bản Khởi tạo & Tải dữ liệu ban đầu (Initial Load).',
-      'Thêm testcase kiểm tra tải dữ liệu ban đầu, phân quyền role, skeleton/empty state.'
+      'Missing testcase for Initial Load & Data Hydration scenario.',
+      'Add testcase verifying initial page fetch, role permission check, skeleton/empty states.'
     );
   }
 
   // 3. Check validation error testcase
-  if (!rawText.includes('Validation') && !rawText.includes('nhập sai') && !rawText.includes('invalid')) {
+  if (!rawText.includes('Validation') && !rawText.includes('invalid') && !rawText.includes('validation')) {
     addGap(
       'TC_MISSING_VALIDATION_CASE',
       'warning',
       'testcases.validation',
-      'Thiếu testcase cho kịch bản Thẩm định dữ liệu (Input & Inline Validation).',
-      'Thêm testcase kiểm tra nộp form sai định dạng hoặc bỏ trống trường bắt buộc.'
+      'Missing testcase for Input & Inline Validation scenarios.',
+      'Add testcase verifying invalid field formats, required field omissions, and boundary errors.'
     );
   }
 
   // 4. Check happy path submit testcase
-  if (!rawText.includes('Happy Path') && !rawText.includes('thành công') && !rawText.includes('success')) {
+  if (!rawText.includes('Happy Path') && !rawText.includes('success') && !rawText.includes('successful')) {
     addGap(
       'TC_MISSING_HAPPY_PATH',
       'warning',
       'testcases.happy_path',
-      'Thiếu testcase cho kịch bản Nộp thành công (Happy Path Submit).',
-      'Thêm testcase kiểm tra nộp form hợp lệ, khóa nút chống double-click, và chuyển trang handoff.'
+      'Missing testcase for Successful Submission (Happy Path).',
+      'Add testcase verifying valid form submission, button locking against double-submit, and redirect.'
     );
   }
 
   // 5. Check exception / error testcase
-  if (!rawText.includes('409') && !rawText.includes('500') && !rawText.includes('lỗi') && !rawText.includes('exception')) {
+  if (!rawText.includes('409') && !rawText.includes('500') && !rawText.includes('exception') && !rawText.includes('error')) {
     addGap(
       'TC_MISSING_EXCEPTION_CASE',
       'warning',
       'testcases.exceptions',
-      'Thiếu testcase cho kịch bản Xử lý Ngoại lệ (409 Conflict, 5xx Network error, Session timeout).',
-      'Thêm testcase kiểm tra xử lý lỗi mạng, hết hạn phiên làm việc và bảo lưu dữ liệu form.'
+      'Missing testcase for Exception Handling (409 Conflict, 5xx Server Error, Timeout).',
+      'Add testcase verifying network failure handling, session expiration, and form state draft preservation.'
+    );
+  }
+
+  // 6. Check boundary test matrix
+  if (!rawText.includes('boundary') && !rawText.includes('Boundary') && !rawText.includes('min') && !rawText.includes('max')) {
+    addGap(
+      'TC_MISSING_BOUNDARY_MATRIX',
+      'warning',
+      'testcases.boundary',
+      'Missing Boundary Value Analysis test matrix (min-1, min, normal, max, max+1).',
+      'Add testcase checking boundary limits for numeric/text input fields.'
+    );
+  }
+
+  // 7. Check double-submit / concurrency testcase
+  if (!rawText.includes('double') && !rawText.includes('concurrency') && !rawText.includes('lock')) {
+    addGap(
+      'TC_MISSING_DOUBLE_SUBMIT',
+      'warning',
+      'testcases.concurrency',
+      'Missing testcase for Double Submit prevention and Concurrency control.',
+      'Add testcase checking submit button disabling upon click and optimistic locking conflict handling.'
+    );
+  }
+
+  // 8. Check RBAC / permission testcase
+  if (!rawText.includes('RBAC') && !rawText.includes('permission') && !rawText.includes('role')) {
+    addGap(
+      'TC_MISSING_RBAC_CASE',
+      'warning',
+      'testcases.rbac',
+      'Missing testcase for Access Control & Role-Based Access (RBAC).',
+      'Add testcase verifying role-specific UI visibility and unauthorized action blocking.'
+    );
+  }
+
+  // 9. Check empty state testcase
+  if (!rawText.includes('empty') && !rawText.includes('Empty') && !rawText.includes('no data')) {
+    addGap(
+      'TC_MISSING_EMPTY_STATE',
+      'info',
+      'testcases.empty_state',
+      'Missing testcase for Empty State handling (empty data table, empty list).',
+      'Add testcase verifying UI rendering when no records are returned.'
     );
   }
 

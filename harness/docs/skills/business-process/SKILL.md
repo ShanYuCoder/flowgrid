@@ -1,6 +1,6 @@
 ---
 name: business-process
-description: /business-process — Models business action flows (actor + surface + action + outcome) as FLOW-*.
+description: /business-process (or /flow) — Models business action flows (actor + surface + action + outcome) as FLOW-*.
 disable-model-invocation: true
 extractBundle: architecture-core
 ---
@@ -8,7 +8,7 @@ extractBundle: architecture-core
 > [!CRITICAL] MANDATORY PRE-FLIGHT
 > **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
 
-# /business-process
+# /business-process (Alias: /flow)
 
 **Mindset:** Model the process by **business actions on surfaces**, not by repository or service topology.
 
@@ -91,6 +91,10 @@ extractBundle: architecture-core
 
 - **[MANDATORY]** If `adoption-inventory.md` does NOT exist at workspace root → STOP: *"Run `@docskit /adopt` first."*
 - **[MANDATORY]** If file exists: look up `FLOW-*` candidates and map legacy module/screens. Write with `legacy-` prefix (e.g. `legacy-FLOW-checkout.md`).
+- **[MANDATORY - CROSS-FLOW LEGACY AUDIT]**: When analyzing legacy business processes (`/legacy /business-process`), Agent **MUST PROACTIVELY AUDIT END-TO-END FLOW GAPS**:
+  - Compare Data Output at Step $N$ (e.g., Screen 1 / API 1) with Input expectations at Step $N+1$ (e.g., Screen 2 / API 2) to identify schema or status misalignments.
+  - Flag orphan steps/APIs (not attached to any valid flow step) or processes lacking Confirmation / Rollback / Idempotency handling on failure.
+  - Tag issues with `[LEGACY_FLOW_GAP]` and generate Open Questions for member resolution.
 - **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield commands.
 
 ---

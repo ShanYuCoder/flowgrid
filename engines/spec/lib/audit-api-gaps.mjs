@@ -28,8 +28,8 @@ function auditApiContent(rawText, filePath) {
       'API_MISSING_ENDPOINTS',
       'critical',
       'endpoints',
-      'Chưa khai báo danh sách API endpoints.',
-      'Khai báo các endpoints với path, method, meaning, purpose, requestPayload, responsePayload.'
+      'Missing API endpoints list.',
+      'Declare endpoints array with path, method, meaning, purpose, requestPayload, and responsePayload.'
     );
   }
 
@@ -39,8 +39,8 @@ function auditApiContent(rawText, filePath) {
       'API_MISSING_MEANING_PURPOSE',
       'warning',
       'endpoints.payload',
-      'Có endpoint hoặc trường payload thiếu phân tách meaning (ý nghĩa nghiệp vụ) hoặc purpose (mục đích kỹ thuật).',
-      'Khai báo riêng biệt meaning và purpose cho từng endpoint và từng field payload.'
+      'Endpoints or payload fields missing explicit separation of business meaning vs technical purpose.',
+      'Declare distinct meaning and purpose fields for each endpoint and payload field.'
     );
   }
 
@@ -52,8 +52,8 @@ function auditApiContent(rawText, filePath) {
       'API_MISSING_ASYNC_EVENTS',
       'warning',
       'endpoints.asyncEvents',
-      'API có đề cập đến xử lý sự kiện ngầm nhưng chưa khai báo mảng asyncEvents.',
-      'Khai báo asyncEvents[] chứa tên event, eventType, topic, và payload schema.'
+      'API mentions background event processing but lacks asyncEvents array declaration.',
+      'Declare asyncEvents[] containing name, eventType, topic, and payload schema.'
     );
   }
 
@@ -63,8 +63,8 @@ function auditApiContent(rawText, filePath) {
       'API_MISSING_SLA',
       'info',
       'endpoints.sla',
-      'API chưa khai báo chỉ số SLA (rateLimit, timeoutMs).',
-      'Khai báo sla.rateLimit (ví dụ: "100req/min") và sla.timeoutMs (ví dụ: 3000).'
+      'API missing SLA parameters (rateLimit, timeoutMs).',
+      'Declare sla.rateLimit (e.g., "100req/min") and sla.timeoutMs (e.g., 3000).'
     );
   }
 
@@ -75,8 +75,8 @@ function auditApiContent(rawText, filePath) {
         'INTEGRATION_MISSING_RESILIENCE',
         'critical',
         'resilience.retryPolicy',
-        'API Integration Adapter chưa khai báo chính sách chịu lỗi (resilience.retryPolicy).',
-        'Khai báo retryPolicy với maxAttempts, backoffMs, và dlqTopic (Dead Letter Queue).'
+        'API Integration Adapter missing fault tolerance policy (resilience.retryPolicy).',
+        'Declare retryPolicy with maxAttempts, backoffMs, and dlqTopic (Dead Letter Queue).'
       );
     }
     if (!rawText.includes('dataMapping:')) {
@@ -84,20 +84,89 @@ function auditApiContent(rawText, filePath) {
         'INTEGRATION_MISSING_DATA_MAPPING',
         'warning',
         'dataMapping',
-        'API Integration Adapter chưa khai báo bảng ánh xạ trường dữ liệu (dataMapping).',
-        'Bổ sung dataMapping ánh xạ 1-1 giữa externalField đối tác và internalField platform.'
+        'API Integration Adapter missing data mapping table (dataMapping).',
+        'Add dataMapping explicit 1-to-1 field mapping between partner externalField and platform internalField.'
       );
     }
   }
 
   // 6. Check Error Storming Matrix
-  if (!rawText.includes('#err:') && !rawText.includes('errorResponses:') && !rawText.includes('onSpecificError:')) {
+  if (!rawText.includes('#err:') && !rawText.includes('errorResponses:') && !rawText.includes('errorStorming:')) {
     addGap(
       'API_MISSING_ERROR_MATRIX',
       'warning',
       'endpoints.errors',
-      'Chưa khai báo ma trận phản hồi lỗi (Error Storming Matrix #err:*).',
-      'Bổ sung ma trận lỗi #err:validation (422), #err:not-found (404), #err:idor-violation (403), #err:conflict (409).'
+      'Missing Error Storming Matrix for error responses.',
+      'Add errorStorming or #err: tags for 422, 404, 403, and 409 status codes.'
+    );
+  } else {
+    // Sub-checks for specific error codes
+    if (!rawText.includes('422') && !rawText.includes('validation')) {
+      addGap('API_MISSING_ERR_422', 'warning', 'endpoints.errors.422',
+        'Missing 422 Validation Failure error handler.', 'Add #err:validation tag or errorStorming 422 block.');
+    }
+    if (!rawText.includes('409') && !rawText.includes('conflict') && !rawText.includes('duplicate')) {
+      addGap('API_MISSING_ERR_409', 'info', 'endpoints.errors.409',
+        'Missing 409 Conflict/Duplicate error handler.', 'Add #err:conflict tag or errorStorming 409 block.');
+    }
+    if (!rawText.includes('403') && !rawText.includes('idor') && !rawText.includes('forbidden')) {
+      addGap('API_MISSING_ERR_403', 'warning', 'endpoints.errors.403',
+        'Missing 403 Forbidden/IDOR error handler.', 'Add #err:idor-violation tag or errorStorming 403 block.');
+    }
+  }
+
+  // 7. Check method per endpoint
+  if (rawText.includes('endpoints:') && !rawText.includes('method:')) {
+    addGap(
+      'API_MISSING_METHOD',
+      'critical',
+      'endpoints[].method',
+      'Endpoints missing HTTP method declaration (GET/POST/PUT/DELETE).',
+      'Declare HTTP method for each endpoint.'
+    );
+  }
+
+  // 8. Check path per endpoint
+  if (rawText.includes('endpoints:') && !rawText.includes('path:')) {
+    addGap(
+      'API_MISSING_PATH',
+      'critical',
+      'endpoints[].path',
+      'Endpoints missing API path URI.',
+      'Declare path URI for each endpoint (e.g., /api/v1/records/{id}).'
+    );
+  }
+
+  // 9. Check request/response DTO
+  if (rawText.includes('endpoints:')) {
+    if (!rawText.includes('request:') && !rawText.includes('requestPayload:') && !rawText.includes('requestBody:')) {
+      addGap(
+        'API_MISSING_REQUEST_DTO',
+        'warning',
+        'endpoints[].request',
+        'Endpoints missing DTO/schema declaration for request payload.',
+        'Declare request DTO with schema name (e.g., CreateRecordRequest).'
+      );
+    }
+    if (!rawText.includes('response:') && !rawText.includes('responsePayload:') && !rawText.includes('responseBody:')) {
+      addGap(
+        'API_MISSING_RESPONSE_DTO',
+        'warning',
+        'endpoints[].response',
+        'Endpoints missing DTO/schema declaration for response payload.',
+        'Declare response DTO with schema name (e.g., RecordResponse).'
+      );
+    }
+  }
+
+  // 10. Check concurrency control
+  if (rawText.includes('endpoints:') && !rawText.includes('concurrencyControl:') && !rawText.includes('optimistic_locking')) {
+    addGap(
+      'API_MISSING_CONCURRENCY',
+      'info',
+      'endpoints[].dataIntegrity.concurrencyControl',
+      'Missing concurrency control strategy (concurrencyControl).',
+      'Declare concurrencyControl: strategy (optimistic_locking/pessimistic_locking), versionField, onConflictStatus.'
     );
   }
 

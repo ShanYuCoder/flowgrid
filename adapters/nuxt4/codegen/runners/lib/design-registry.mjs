@@ -27,7 +27,16 @@ export function folderToPascalCase(kebab) {
  * @returns {Promise<Record<string, unknown>>}
  */
 export async function loadDesignRegistry(root) {
-  const registryPath = path.join(root, REGISTRY_REL)
+  let registryPath = path.join(root, REGISTRY_REL)
+  const customPath = path.join(root, '.forgekit/adapters/custom/registries/design.registry.json')
+  
+  // Check if custom registry exists
+  try {
+    const rawCustom = JSON.parse(await readFile(customPath, 'utf8'))
+    const components = await discoverShadcnComponents(root, rawCustom)
+    return { ...rawCustom, components, registryPath: customPath }
+  } catch {}
+
   const raw = JSON.parse(await readFile(registryPath, 'utf8'))
   const components = await discoverShadcnComponents(root, raw)
   return { ...raw, components, registryPath }

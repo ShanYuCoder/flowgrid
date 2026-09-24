@@ -114,6 +114,7 @@ Mọi thao tác đều thông qua lệnh `forgekit`.
 | `forgekit split` / `split_all` | Phân tách Bundle YAML ra Markdown và JSON IR. |
 | `forgekit publish` | Triển khai (Deploy) Document Hub. |
 | `forgekit openapi_*` | Render và Build Swagger/OpenAPI UI. |
+| `forgekit build-template-code` | Trích xuất DNA từ Golden Sample và tạo bộ Template + DSL Registry cho dự án khác Base. |
 
 ---
 

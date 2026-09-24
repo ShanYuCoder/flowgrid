@@ -14,13 +14,13 @@ Member wants to automatically generate or update frontend/backend codegen templa
 ### Action
 ```bash
 # Dry-run inspection
-codegenkit build-template-code --dry-run
+forgekit build-template-code --dry-run
 
-# Scaffolding templates and registry entries
-codegenkit build-template-code
+# Scaffolding templates and registry entries from Golden Sample
+forgekit build-template-code --sample=src/pages/users/UserList.vue
 
 # Force overwrite existing custom templates
-codegenkit build-template-code --force
+forgekit build-template-code --force
 ```
 
 #### CLI Parameters

@@ -44,6 +44,7 @@ Forgekit kế thừa trọn vẹn sức mạnh sinh mã nguồn và Unit Test đ
 | `forgekit api-unit-gen` | Sinh mã nguồn Unit Test cho API (Backend). |
 | `forgekit contract-gen` | Sinh mã nguồn Type/DTO dùng chung cho Fullstack. |
 | `forgekit gen-css` | Cập nhật CSS Variables từ Design Tokens. |
+| `forgekit build-template-code` | Trích xuất DNA từ Golden Sample và tạo bộ Template + DSL Registry cho dự án khác Base. |
 
 *(Tất cả lệnh trên đều có thể truyền thêm `:dry` để xem trước thay vì ghi file, ví dụ: `forgekit api-unit-gen:dry`)*
 

@@ -27,8 +27,8 @@ function auditLegacyInventory(inventoryPath, targetId) {
       'MISSING_ADOPTION_INVENTORY',
       'critical',
       'adoption-inventory.md',
-      'File index khảo cổ legacy `adoption-inventory.md` chưa tồn tại tại root workspace.',
-      'Vui lòng chạy `@docskit /adopt` để quét chỉ mục legacy trước khi thực hiện khảo cổ.'
+      'Legacy adoption index file `adoption-inventory.md` does not exist at workspace root.',
+      'Run `@docskit /adopt` to scan and index legacy repositories before archaeology.'
     );
     return {
       file: inventoryPath,
@@ -48,8 +48,8 @@ function auditLegacyInventory(inventoryPath, targetId) {
         'UNMAPPED_LEGACY_ID',
         'critical',
         `adoption-inventory.md#${targetId}`,
-        `Mã ID khảo cổ "${targetId}" chưa được liệt kê trong adoption-inventory.md.`,
-        `Chạy lại @docskit /adopt hoặc cập nhật thủ công dòng map: "- ID: ${targetId} -> Path: path/to/legacy/file".`
+        `Archaeology target ID "${targetId}" is not listed in adoption-inventory.md.`,
+        `Re-run @docskit /adopt or manually add mapping line: "- ID: ${targetId} -> Path: path/to/legacy/file".`
       );
     }
   }

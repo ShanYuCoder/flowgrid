@@ -23,6 +23,19 @@
 
 <div class="base-note"><span class="base-note-mark">(*)</span><em>Hệ thống cung cấp đầy đủ các tầng và artifact tham chiếu, nhưng team không bắt buộc phải triển khai toàn bộ cùng lúc. PM/Leader lựa chọn phạm vi phù hợp với quy mô team, giai đoạn và mức độ ưu tiên của dự án; nội dung có thể được hoàn thiện cuốn chiếu theo nhu cầu thực tế.</em></div>
 
+---
+
+### 🏛️ Thuật Ngữ Cốt Lõi: Core (System Core Architecture)
+
+Trong hệ thống ForgeKit, thuật ngữ **`Core`** được sử dụng nhất quán để chỉ **Kiến Trúc Hệ Thống Cốt Lõi (System Core Architecture)** của phần mềm:
+- **Lý do chuẩn hóa**: Thuật ngữ `Core` được lựa chọn thay thế cho các tên gọi mơ hồ hoặc dễ gây xung đột trước đây như `platform` (dễ nhầm với Cloud/OS Infrastructure), `system` (dễ trùng với OS/System call), hay `app` (dễ nhầm với Mobile App đơn lẻ).
+- **Các khái niệm liên quan**:
+  - `core-dna`: Bộ mã nhận diện kiến trúc cốt lõi của dự án.
+  - `core-repos.local.json`: Danh mục các repository thuộc hệ thống kiến trúc mới (tương thích ngược với `platform-repos.local.json`).
+  - `Core Adoption Inventory`: Bản đồ chỉ mục khảo cổ dự án cũ chuyển giao sang hệ thống mới.
+
+---
+
 Chi tiết quy ước: [System doc structure](./system-doc-structure.md).
 
 Pilot tham khảo: [FLOW-login](#). Màn hình sống dưới `surfaces/<surface>/CMP-*/<NN…>/` (bundle + `ir/` + `api/<seq>/`).
@@ -242,8 +255,9 @@ flowchart LR
 
 **Đầu vào:** yêu cầu dự án mới hoặc yêu cầu trên hệ thống legacy như maintain, refactor, migration và mở rộng chức năng.
 
-- **Dự án mới:** dùng `/architecture` để route, sau đó `/overview`, `/business-process`, `/module`; bổ sung `/deployment`, `/decision` hoặc `/cross-cutting` khi có nội dung tương ứng.
-- **Dự án legacy:** dùng modifier **`/legacy`** kèm skill tương ứng (ví dụ `/legacy /spec`). Phần kiến trúc mục tiêu vẫn đi qua `/architecture`.
+- **Dự án mới (Standard Base):** dùng `/architecture` để route, sau đó `/overview`, `/business-process`, `/module`; bổ sung `/deployment`, `/decision` hoặc `/cross-cutting` khi có nội dung tương ứng.
+- **Dự án legacy (cùng Base):** dùng modifier **`/legacy`** kèm skill tương ứng (ví dụ `/legacy /spec`). Phần kiến trúc mục tiêu vẫn đi qua `/architecture`.
+- **Dự án Maintain / Khác Base:** chạy `forgekit init` → chọn **Custom / Existing Base** → cung cấp Golden Sample → `forgekit build-template-code`. Xem chi tiết: [Custom Base Workflow](./custom-base-workflow.md).
 
 <div class="phase-pills">
 <span>business-process · scope · actor</span>
@@ -415,4 +429,4 @@ Setup: [Kits (MCP)](./toolkits.md) — Sử dụng `forgekit init`.
 | API contract | — | `/api-spec` | `…/api/<seq>/01-backend-spec.yaml` |
 | Deployment | `DEP-*` | `/deployment` | `architecture/07-deployment/` |
 
-Đọc tiếp: [System doc structure](./system-doc-structure.md) · [AI Workflow](./ai-workflow.md) · [Toolkits](./toolkits.md).
+Đọc tiếp: [System doc structure](./system-doc-structure.md) · [AI Workflow](./ai-workflow.md) · [Custom Base Workflow](./custom-base-workflow.md) · [Toolkits](./toolkits.md).

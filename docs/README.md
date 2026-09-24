@@ -14,6 +14,9 @@ Dưới đây là danh mục toàn bộ tài liệu kiến trúc (Platform) và 
 - 🧰 [Toolkits Overview](./1-guide/toolkits.md)
 - 🏗️ [Cấu trúc Hệ thống Docs](./1-guide/system-doc-structure.md)
 - 🤖 [AI Workflow](./1-guide/ai-workflow.md)
+- 🏛️ [Custom Base Workflow](./1-guide/custom-base-workflow.md)
+- 🏺 [Legacy Adoption & Common Discovery](./1-guide/legacy-adoption-common-workflow.md)
+- 📋 [Greenfield Spec, Audit Script & Grill Workflow](./1-guide/spec-grill-audit-workflow.md)
 
 ### 2. Lifecycle (Vòng Đời)
 - 🛤️ [Tổng Quan Pipeline](./2-lifecycle/overview.md)

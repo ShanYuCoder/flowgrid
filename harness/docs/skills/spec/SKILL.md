@@ -30,12 +30,39 @@ disable-model-invocation: true
 
 ---
 
+## Rule: Page Type Detection
+
+- **[MANDATORY]** Before running audit or bundle generation, the Agent **MUST** detect the page type:
+  - Read `gen.codegen.profile` inside existing bundle (if present).
+  - OR infer from prompt keywords:
+    - "list", "table", "danh sách" → `list`
+    - "form", "create", "new", "tạo mới" → `create`
+    - "detail", "view", "chi tiết" → `detail`
+    - "login", "auth", "đăng nhập" → `auth`
+    - "CRUD", "management", "quản lý" → `admin-crud`
+  - The detected page type is passed to: `--type` audit script parameter + zone-based analysis partitioning.
+
+---
+
 ## Rule: Audit Interlock
 
-- **[MANDATORY]** If bundle file already exists: run `node engines/spec/lib/audit-bundle-gaps.mjs <path-to-bundle.yaml>` first.
-  - ✅ Consume JSON gap report to fill missing fields.
-  - **Threshold Interlock (Law 2):** If audit script outputs ≥10 missing items, HALT chat wizard immediately → create an implementation plan / Plan Mode document partitioned into sequential phases.
+- **[MANDATORY]** If bundle file already exists: run `node engines/spec/lib/audit-bundle-gaps.mjs <path-to-bundle.yaml> --type <pageType>` first.
+  - `<pageType>` = page type đã xác định ở bước trên (list | create | detail | admin-crud | auth | ...).
+  - Script output 2 loại:
+    - `gaps[]` → required fields bị thiếu → Agent bổ sung trực tiếp.
+    - `confirms[]` → optional fields cần hỏi member → Agent dùng AskQuestion wizard.
+  - **Threshold Interlock (Law 2):** If audit script outputs ≥10 gaps + confirms, HALT chat wizard immediately → create an implementation plan / Plan Mode document partitioned into sequential phases.
   - ❌ Do not skip audit and proceed to authoring directly.
+  - ❌ Do not run audit without `--type` parameter.
+
+---
+
+## Rule: Common Catalog Reuse (Anti-Copy-Paste Guard)
+
+- **[MANDATORY]** When authoring or updating specs (`/spec`, `/legacy /spec`), Agent **MUST inspect Section 5 (Common Catalog Candidates)** inside `adoption-inventory.md` (if present).
+- **[ANTI-COPY-PASTE ENFORCEMENT]**: 
+  - If the new feature or screen uses UI Controls, API Handlers, or DTOs already defined in the Common Catalog (`CMN-UI-*`, `CMN-API-*`, `CMN-DTO-*`), the Agent **MUST reference and inherit these Common codes/specs**.
+  - **STRICTLY FORBIDDEN to copy-paste legacy code/specs into isolated new classes/files** in the new project.
 
 ---
 
@@ -60,13 +87,35 @@ disable-model-invocation: true
 ## Workflow
 
 1. Confirm `CMP-*` exists and `CTR-*` is identified — otherwise stop for lead/owner.
-2. Run audit: `node engines/spec/lib/audit-bundle-gaps.mjs <bundle>` (if bundle exists).
-3. Fill gaps using rules below; unknowns → AskQuestion wizard.
-4. Write/update `*.bundle.yaml` with `specOrigin: requirement`.
-5. Apply **existing** common/DSL extracts (consume only — promote via `/common-spec`).
-6. Run `pnpm docs:split -- <bundle>` → `pnpm docs:render` (design MD only).
-7. Update `.harness/progress.md`.
-8. Handoff → `/testcase` from acceptance criteria.
+2. Detect page type from prompt or existing bundle's `codegen.profile`.
+3. Run audit: `node engines/spec/lib/audit-bundle-gaps.mjs <bundle> --type <pageType>` (if bundle exists).
+4. Process audit output: fill `gaps[]` directly; ask member about `confirms[]` via wizard.
+5. **Zone-based multi-turn authoring** (see rule below): chia page thành zones, phân tích từng zone trong turn riêng.
+6. Write/update `*.bundle.yaml` with `specOrigin: requirement`.
+7. Apply **existing** common/DSL extracts (consume only — promote via `/common-spec`).
+8. Run `pnpm docs:split -- <bundle>` → `pnpm docs:render` (design MD only).
+9. Update `.harness/progress.md`.
+10. Handoff → `/testcase` from acceptance criteria.
+
+---
+
+## Rule: Zone-Based Multi-Turn Analysis (chống Lost-in-Middle)
+
+- **[MANDATORY]** KHÔNG phân tích và ghi toàn bộ page trong 1 turn duy nhất.
+- **[MANDATORY]** Chia page thành **zones linh động theo nội dung thực** của spec/bundle repo đích, KHÔNG theo template cố định. Ví dụ gợi ý:
+  - **Zone HEADER**: title, page-id, breadcrumb, summary, userStories.primary
+  - **Zone CONTENT part 1, 2, ...**: tùy thuộc vào page thực tế — search/toolbar, data table, form fields group, direct attributes, relationships...
+  - **Zone FOOTER/ACTIONS**: pagination, stateMatrix, action outcomes
+- **[MANDATORY]** Nếu 1 zone quá lớn (>5 fields, >3 sections, >2 relationships) → chia nhỏ tiếp thành sub-zones.
+- **[MANDATORY]** Mỗi turn:
+  1. Agent nêu rõ: "Đang phân tích Zone X: [tên zone]"
+  2. **Check chất**: mô tả chuẩn, hợp logic, gaps giữa các field (Script chỉ check lượng — Agent check chất)
+  3. Brainstorm đề xuất, phát hiện gaps logic, đề xuất options
+  4. Hỏi member nếu có open question hoặc confirm từ audit output
+  5. Ghi output vào bundle YAML cho zone đó
+  6. Chuyển sang zone tiếp theo
+- **[STRICTLY FORBIDDEN]** Gửi all-in-one rồi bỏ sót giữa (lost-in-middle).
+- **Lưu ý:** Cách chia zone phụ thuộc vào spec thực tế — page list khác page detail khác page form. Agent tự xác định zones phù hợp.
 
 ---
 
