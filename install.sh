@@ -93,9 +93,12 @@ case ":$PATH:" in
     echo ""
     echo "$BIN_DIR is not on PATH. Attempting to add to shell config..."
     ADDED=0
+    ALREADY_EXISTS=0
     for rc in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile"; do
       if [ -f "$rc" ]; then
-        if ! grep -q "$BIN_DIR" "$rc"; then
+        if grep -q "$BIN_DIR" "$rc"; then
+          ALREADY_EXISTS=1
+        else
           echo "" >> "$rc"
           echo "# --- flowgrid start ---" >> "$rc"
           echo "export PATH=\"$BIN_DIR:\$PATH\"" >> "$rc"
@@ -107,11 +110,21 @@ case ":$PATH:" in
     done
     
     if [ "$ADDED" -eq 1 ]; then
-      echo "  Please restart your terminal or run 'source ~/.zshrc' (or your respective shell config) to apply."
-    else
-      echo "  Could not automatically add to shell config. Please add manually:"
-      echo "  export PATH=\"$BIN_DIR:\$PATH\""
+      echo "  Added $BIN_DIR to shell configuration."
+    elif [ "$ALREADY_EXISTS" -eq 1 ]; then
+      echo "  $BIN_DIR is already configured in shell config file(s)."
     fi
+
+    echo ""
+    echo "To update your current terminal session immediately, run:"
+    if [ "${SHELL##*/}" = "zsh" ] || [ -f "$HOME/.zshrc" ]; then
+      echo "  source ~/.zshrc"
+    else
+      echo "  source ~/.bashrc"
+    fi
+    echo ""
+    echo "Or manually add this line to your shell config (~/.zshrc or ~/.bashrc):"
+    echo "  export PATH=\"$BIN_DIR:\$PATH\""
     ;;
 esac
 

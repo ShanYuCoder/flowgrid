@@ -15,7 +15,7 @@ _Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sử
   - 2-lifecycle
     - [Team AI Backend Workflow](docs/2-lifecycle/backend-workflow.md)
     - [Backend / API phase (Nest in-repo)](docs/2-lifecycle/development-flows.md)
-    - [🏛 Sổ Tay Kiến Trúc & Vòng Đời Của FlowGrid](docs/2-lifecycle/overview.md)
+    - [🏛 Sổ Tay Kiến Trúc & Vòng Đời Của Forgekit](docs/2-lifecycle/overview.md)
     - [Test phase — E2E lane (Playwright)](docs/2-lifecycle/quality-maintenance.md)
   - 3-artifacts
     - [Bundle ↔ IR split](docs/3-artifacts/bundle-and-ir.md)
@@ -84,7 +84,7 @@ _Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sử
   - 7-architecture
     - [Page lifecycle registry](docs/7-architecture/page-lifecycle.md)
     - [Kiến trúc 4 tầng — Portal (Nuxt 4)](docs/7-architecture/portal-architecture.md)
-  - [📚 Mục Lục Tài Liệu Forgekit (Platform Docs)](docs/README.md)
+  - [📚 Mục Lục Tài Liệu FlowGrid (Platform Docs)](docs/README.md)
 
 - QA
   - [Danh sách QA](qa/index.md)

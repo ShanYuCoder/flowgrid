@@ -9,8 +9,8 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
 import { packageRoot } from './platform-repos.js';
-export const CONFIG_NAME = '.forgekit/config.json';
-export const INDEX_DIR = '.forgekit';
+export const CONFIG_NAME = '.flowgrid/config.json';
+export const INDEX_DIR = '.flowgrid';
 const artifactgraphConfigSchema = z.object({
     version: z.number().int().positive().optional(),
     stack: z.string().optional(),

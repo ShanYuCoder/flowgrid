@@ -80,7 +80,7 @@ async function runWithMocks(responses) {
   testableCode = testableCode.replaceAll("'@clack/prompts'", "'" + "file://" + mockPromptsPath + "'");
   testableCode = testableCode.replaceAll("'node:child_process'", "'" + "file://" + mockCpPath + "'");
   
-  const tmpCliPath = path.join(__dirname, 'forgekit-test-cli-' + Date.now() + '.mjs');
+  const tmpCliPath = path.join(__dirname, '.forgekit-test-cli-' + Date.now() + '.mjs');
   fs.writeFileSync(tmpCliPath, testableCode);
 
   try {
@@ -95,6 +95,9 @@ async function runWithMocks(responses) {
   } finally {
     process.cwd = originalCwd;
     process.exit = originalExit;
+    if (fs.existsSync(tmpCliPath)) {
+      try { fs.unlinkSync(tmpCliPath); } catch {}
+    }
   }
 }
 
@@ -110,7 +113,7 @@ test('forgekit init - Document project type with language configuration', async 
   try {
     assert.ok(state.textPromptCalls.some(msg => msg.includes('language codes')), 'Should prompt for language codes');
     
-    const configPath = path.join(tmpDir, '.forgekit', 'config.json');
+    const configPath = path.join(tmpDir, '.flowgrid', 'config.json');
     assert.ok(fs.existsSync(configPath), 'config.json should be created');
     
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -138,7 +141,7 @@ test('forgekit init - Frontend project type skips language configuration', async
   try {
     assert.ok(!state.textPromptCalls.some(msg => msg.includes('language codes')), 'Should NOT prompt for language codes if not Document type');
     
-    const configPath = path.join(tmpDir, '.forgekit', 'config.json');
+    const configPath = path.join(tmpDir, '.flowgrid', 'config.json');
     assert.ok(fs.existsSync(configPath), 'config.json should be created');
     
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
