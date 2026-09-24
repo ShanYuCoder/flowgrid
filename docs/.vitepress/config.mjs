@@ -3,8 +3,8 @@ import { withMermaid } from 'vitepress-plugin-mermaid';
 
 export default withMermaid(
   defineConfig({
-    title: "Forgekit Docs",
-    description: "Unified Local MCP Toolkit (Graph, DNA, Docs, Test, Codegen)",
+    title: "FlowGrid Docs",
+    description: "Enterprise Disciplined AI Engineering Platform (Graph, DNA, Docs, Test, Codegen)",
     themeConfig: {
       nav: [
         { text: 'Home', link: '/' },

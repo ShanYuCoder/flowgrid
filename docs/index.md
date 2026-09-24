@@ -2,16 +2,16 @@
 layout: home
 
 hero:
-  name: "Forgekit Docs"
-  text: "Hệ thống Tài liệu & Toolchain"
-  tagline: "Unified Local MCP Toolkit (Graph, DNA, Docs, Test, Codegen)"
+  name: "FlowGrid Docs"
+  text: "Hệ thống Tài liệu & AI Engineering Platform"
+  tagline: "Enterprise Disciplined AI Engineering Platform (Graph, DNA, Docs, Test, Codegen)"
   actions:
     - theme: brand
       text: Bắt đầu (Mục lục)
       link: /README
     - theme: alt
       text: Xem trên GitHub
-      link: https://github.com/ShanYuCoder/forgekit
+      link: https://github.com/ShanYuCoder/flowgrid
 
 features:
   - title: 1. Guide & Khái niệm

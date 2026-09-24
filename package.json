@@ -1,16 +1,18 @@
 {
-  "name": "@platform/forgekit",
+  "name": "@platform/flowgrid",
   "version": "0.1.0",
   "description": "Unified Local MCP Toolkit (Graph, DNA, Docs, Test, Codegen)",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
-    "forgekit": "./bin/forgekit.mjs",
-    "forgekit-mcp": "./bin/forgekit-mcp.mjs"
+    "flowgrid": "./bin/flowgrid.mjs",
+    "flowgrid-mcp": "./bin/flowgrid-mcp.mjs",
+    "forgekit": "./bin/flowgrid.mjs",
+    "forgekit-mcp": "./bin/flowgrid-mcp.mjs"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShanYuCoder/forgekit.git"
+    "url": "git+https://github.com/ShanYuCoder/flowgrid.git"
   },
   "files": [
     "bin",
@@ -19,11 +21,12 @@
     "README.md"
   ],
   "scripts": {
+    "dev": "pnpm docs:dev",
     "build": "tsc",
     "prepare": "pnpm run build",
     "test": "pnpm run build && node --test test/*.test.mjs",
-    "mcp": "node bin/forgekit-mcp.mjs",
-    "cli": "node bin/forgekit.mjs",
+    "mcp": "node bin/flowgrid-mcp.mjs",
+    "cli": "node bin/flowgrid.mjs",
     "audit:spec": "node engines/spec/lib/audit-bundle-gaps.mjs",
     "audit:flow": "node engines/spec/lib/audit-flow-gaps.mjs",
     "audit:api": "node engines/spec/lib/audit-api-gaps.mjs",

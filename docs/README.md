@@ -1,6 +1,6 @@
-# 📚 Mục Lục Tài Liệu Forgekit (Platform Docs)
+# 📚 Mục Lục Tài Liệu FlowGrid (Platform Docs)
 
-Dưới đây là danh mục toàn bộ tài liệu kiến trúc (Platform) và sổ tay công cụ (Toolchain) của hệ sinh thái Forgekit. Bạn có thể bấm vào từng link để đọc chi tiết ngay trên GitHub/GitLab mà không cần phải mò mẫm cấu trúc thư mục.
+Dưới đây là danh mục toàn bộ tài liệu kiến trúc (Platform) và sổ tay công cụ (Toolchain) của hệ sinh thái FlowGrid. Bạn có thể bấm vào từng link để đọc chi tiết ngay trên GitHub/GitLab mà không cần phải mò mẫm cấu trúc thư mục.
 
 > [!IMPORTANT]
 > **Tài liệu tại Hub này đóng vai trò là SINGLE SOURCE OF TRUTH (SSOT) cho toàn hệ thống.**

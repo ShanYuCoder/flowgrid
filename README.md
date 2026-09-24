@@ -2,42 +2,28 @@
 **[Danh mục tài liệu](CATALOG.md)**
 <!-- /docskit-catalog -->
 
-# Forgekit — Enterprise AI Engineering Toolkit
+# FlowGrid — Enterprise Disciplined AI Engineering Platform
 
 ---
 
 ## 💡 Giới Thiệu & Triết Lý Cốt Lõi
 
-**Forgekit** là bệ phóng AI Engineering cho đội ngũ phát triển phần mềm doanh nghiệp, được xây dựng dựa trên kiến trúc tiên phong: **Hybrid LLM + Deterministic Script Interlock**.
+**FlowGrid** là bệ phóng AI Engineering cho đội ngũ phát triển phần mềm doanh nghiệp, được xây dựng dựa trên kiến trúc tiên phong: **Hybrid LLM + Deterministic Script Interlock**.
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│  HỆ THỐNG FORGEKIT (HYBRID LLM + DETERMINISTIC SCRIPT INTERLOCK)                      │
-├────────────────────────────────────────────────────────────────────────────────────────┤
-│  1. PHÂN CÔNG TRÁCH NHIỆM RẠCH RÒI:                                                   │
-│     • Deterministic Audit Script ➔ Kiểm tra LƯỢNG (Kiểm định sự tồn tại của các trường)│
-│     • AI Agent Reasoning (LLM)  ➔ Kiểm tra CHẤT (Phân tích logic, nghiệp vụ & User Story)│
-│                                                                                        │
-│  2. BỘ BẢO VỆ BẢN QUYỀN & CHỐNG RÁC LEGACY:                                            │
-│     • 2-Tier Legacy Audit ➔ Phân định Rà soát Màn hình (Page-local) & Quy trình (Cross-flow)│
-│     • Common Catalog Discovery ➔ Tự động phát hiện & gom nhóm linh kiện/hàm lặp (CMN-*) │
-│     • Anti-Copy-Paste Guard ➔ Bắt buộc tái sử dụng Common Code, cấm nhân bản rác cũ     │
-│                                                                                        │
-│  3. KỶ LUẬT VẬN HÀNH SCRUM AGILE (LAWS 1-7):                                           │
-│     • Law 2 Threshold Interlock ➔ Tự động ngắt chat khi quá 10 items, lập Plan chia Phase│
-│     • Zone-Based Multi-Turn ➔ Chia nhỏ màn hình theo Zone nội dung, chống Lost-in-middle │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
+### 🎯 3 Trụ Cột Triết Lý Cốt Lõi:
 
----
+* **1. Phân Công Trách Nhiệm Rạch Ròi (Hybrid Reasoning & Interlock)**:
+  * **Deterministic Audit Script (Kiểm tra LƯỢNG)**: Bộ script chạy tĩnh `0-dependency` kiểm định tính đầy đủ cấu trúc, schema và sự tồn tại của các trường bắt buộc (`required[]`, `fields`, `testids`), lập tức báo lỗi chính xác nếu thiếu thông tin mà không phụ thuộc vào suy đoán ngẫu nhiên.
+  * **AI Agent Reasoning (Kiểm tra CHẤT)**: Dành riêng năng lực tư duy của LLM cho việc phân tích ngữ nghĩa nghiệp vụ, thiết kế kịch bản User Story 4-tier, phát hiện lỗ hổng logic nghiệp vụ và tối ưu trải nghiệm người dùng.
 
-## ⚡ Cài Đặt Nhanh (One-Liner)
+* **2. Bộ Bảo Vệ Bản Quyền & Chống Rác Legacy (Legacy Guard & Anti-Copy-Paste)**:
+  * **2-Tier Legacy Audit**: Phân định rạch ròi giữa kiểm tra cục bộ trên từng màn hình (*Page-local Tier 1*) và kiểm tra đứt đoạn quy trình liên màn hình (*Cross-flow Tier 2*).
+  * **Common Catalog Discovery**: Tự động quét khảo cổ codebase cũ để phát hiện và gom nhóm các hàm, linh kiện, DTO lặp lại thành danh mục linh kiện dùng chung (`CMN-UI-*`, `CMN-API-*`, `CMN-DTO-*`).
+  * **Anti-Copy-Paste Guard**: Bắt buộc Agent và Developer phải tái sử dụng mã dùng chung trong Common Catalog, ngăn chặn triệt để hành vi nhân bản code rác legacy sang dự án mới.
 
-Dành cho Linux / WSL. Yêu cầu hệ thống: `Node.js >= 22` và `git`.
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/ShanYuCoder/forgekit/main/install.sh | bash
-```
+* **3. Kỷ Luật Vận Hành Scrum Agile (Agile Interlock & Law Execution)**:
+  * **Law 2 Threshold Interlock**: Tự động phát hiện khi số lượng câu hỏi/yêu cầu vượt quá ngưỡng 10 items, ngắt luồng chat ngẫu nhiên để ép chuyển sang cơ chế lập kế hoạch `common-plan.md` chia Phase review minh bạch.
+  * **Zone-Based Multi-Turn Analysis**: Chia màn hình lớn thành các Zone độc lập (Header, Filter Toolbar, Table/Form, Footer Actions) để phân tích sâu theo từng lượt tương tác, loại bỏ hiện tượng trôi context (Lost-in-the-middle).
 
 ---
 
@@ -48,12 +34,36 @@ curl -fsSL https://raw.githubusercontent.com/ShanYuCoder/forgekit/main/install.s
 3. [Mô Hình Nhân Sự T-Shaped Agile & Tương Tác Cross-Role](#-3-mô-hình-nhân-sự-t-shaped-agile--tương-tác-cross-role)
 4. [Định Hướng Phát Triển Tương Lai (Future Roadmap)](#-4-định-hướng-phát-triển-tương-lai-future-roadmap)
 5. [Tài Liệu Chi Tiết & Hướng Dẫn Vận Hành](#-5-tài-liệu-chi-tiết--hướng-dẫn-vận-hành)
+6. [Cài Đặt Nhanh (One-Liner)](#-⚡-cài-đặt-nhanh-one-liner)
 
 ---
 
 ## 🏆 1. TỔNG QUAN ĐÁNH GIÁ VẬN HÀNH
 
-Hệ thống Forgekit được thiết kế nhằm chuẩn hóa toàn bộ vòng đời phát triển phần mềm trong doanh nghiệp, đảm bảo tính kỷ luật và sự nhất quán tuyệt đối giữa Tài liệu đặc tả (SSOT) và Mã nguồn thực tế:
+Hệ thống FlowGrid được thiết kế nhằm chuẩn hóa toàn bộ vòng đời phát triển phần mềm trong doanh nghiệp, đảm bảo tính kỷ luật và sự nhất quán tuyệt đối giữa Tài liệu đặc tả (SSOT) và Mã nguồn thực tế.
+
+### 🛡️ 1.1. Ngăn Chặn Tự Suy Đoán (Hallucination Guard)
+
+* **Cơ chế hoạt động**: Thay vì tin tưởng hoàn toàn vào kết quả sinh code/doc trực tiếp từ LLM, FlowGrid ép buộc mọi Agent làm việc qua quy trình kiểm định 2 lớp nghiêm ngặt kết hợp giữa **Deterministic Audit Scripts** và **Skill Workflow Pipeline**:
+  * **Audit Tĩnh 0-Dependency**: Các script như `audit-bundle-gaps.mjs`, `audit-api-gaps.mjs`, `audit-testcase-gaps.mjs` chạy trực tiếp bằng Node.js thuần, kiểm tra 100% tính hợp lệ của cấu trúc file, schema trường dữ liệu, tham chiếu API và coverage testcase. Nếu thiếu bất kỳ trường bắt buộc nào, script sẽ lập tức chặn workflow và sinh danh sách `gaps[]` chính xác từng dòng mà không đoán mò.
+  * **Chuẩn hóa DSL Artifact**: Tất cả tài liệu đặc tả được lưu trữ dưới dạng DSL Markdown/YAML chuẩn hóa (Artifact IR). AI Agent chỉ tương tác qua các skill quy chuẩn (`/spec`, `/grill`, `/legacy`, `/update-spec`, `/api-spec`, `/testcase:gen`). Agent không bao giờ được phép tự tiện suy đoán điền bừa các thông tin thiếu, mà bắt buộc phải qua bước Grill hoặc dùng Modal tương tác để chốt phương án với BA/Dev.
+* **Tài liệu tham khảo chi tiết**:
+  * 📖 [Quy trình Spec, Audit Script & Grill Workflow](./docs/1-guide/spec-grill-audit-workflow.md)
+  * 📖 [Quy trình Khảo cổ Legacy & Common Discovery](./docs/1-guide/legacy-adoption-common-workflow.md)
+  * 🧩 [Cấu trúc Bundle, Artifact IR & Manifest](./docs/3-artifacts/bundle-and-ir.md)
+
+### 📌 1.2. Nền Tảng Single Source of Truth (SSOT)
+
+* **Tại sao FlowGrid là SSOT tuyệt đối?**:
+  * Mọi tri thức của dự án (từ Luồng nghiệp vụ, UI Wireframe, Contract API, Field Registry đến kịch bản Testcase E2E) đều hội tụ vào **một file Bundle YAML duy nhất** (ví dụ `backend-api.bundle.yaml` hoặc `*.bundle.yaml`).
+  * Toàn bộ các artifact kỹ thuật về sau — bao gồm Frontend Prototype (Nuxt 4 / Vue 3), Backend Service (FastAPI / Node.js), DTO Schemas, Playwright E2E Testcases và Technical Architecture Docs — đều được bóc tách và sinh tự động (**Deterministic Codegen**) từ file Bundle SSOT này.
+  * Khi có thay đổi nghiệp vụ, BA/Dev chỉ cần cập nhật file Spec SSOT và chạy lệnh đồng bộ. Loại bỏ hoàn toàn tình trạng tài liệu mô tả một đằng, code chạy một nẻo, hay testcase lệch với thực tế.
+* **Tài liệu tham khảo chi tiết**:
+  * 🛤️ [Tổng quan Pipeline Vòng đời Vận hành](./docs/2-lifecycle/overview.md)
+  * 🏗️ [Luồng Phát triển Chi tiết cho Developer](./docs/2-lifecycle/development-flows.md)
+  * 🧠 [Luồng Vận hành Backend & AI Integration](./docs/2-lifecycle/backend-workflow.md)
+
+### 📊 1.3. Đánh Giá Vận Hành Kỹ Thuật Tổng Quan
 
 | Tiêu chí Vận hành | Đánh giá Kỹ thuật Chi tiết |
 |---|---|
@@ -87,20 +97,20 @@ Hệ thống Forgekit được thiết kế nhằm chuẩn hóa toàn bộ vòng
 ### 🔵 CASE 3: Bảo Trì & Phát Triển Hệ Thống Cũ (Legacy Maintenance)
 - **Đặc trưng**: Mức độ tương thích tuyệt đối với Tech Stack cũ.
 - **Cơ chế Vận hành**:
-  1. Khởi tạo dự án qua `forgekit init` chọn profile **Custom / Existing Base**.
+  1. Khởi tạo dự án qua `flowgrid init` chọn profile **Custom / Existing Base**.
   2. Chỉ định **Golden Sample** (màn hình hình mẫu đẹp nhất của dự án cũ).
-  3. Chạy `forgekit build-template-code`: Hệ thống tự động bóc tách DNA dự án, học danh mục UI library (Element Plus, Ant Design, Vuetify...) và sinh `design.registry.json` kèm Lexicon tùy biến.
+  3. Chạy `flowgrid build-template-code`: Hệ thống tự động bóc tách DNA dự án, học danh mục UI library (Element Plus, Ant Design, Vuetify...) và sinh `design.registry.json` kèm Lexicon tùy biến.
   4. Nạp Lexicon vào SQLite Local ArtifactGraph ➔ **Dập tắt hoàn toàn báo đỏ giả (`#needs-component`)**, cho phép sinh code bảo trì chuẩn phong cách dự án cũ mà không bị vỡ giao diện.
 
 ---
 
 ## 🎯 3. MÔ HÌNH NHÂN SỰ T-SHAPED AGILE & TƯƠNG TÁC CROSS-ROLE
 
-Trong một đội ngũ Scrum Agile vận hành theo mô hình nhân sự **T-Shaped** (Thành viên có chuyên môn sâu một mảng nhưng có khả năng làm việc liên mảng), Forgekit đóng vai trò là **chất kết dính giao tiếp**, loại bỏ hoàn toàn các điểm nghẽn (Siloed Bottlenecks):
+Trong một đội ngũ Scrum Agile vận hành theo mô hình nhân sự **T-Shaped** (Thành viên có chuyên môn sâu một mảng nhưng có khả năng làm việc liên mảng), FlowGrid đóng vai trò là **chất kết dính giao tiếp**, loại bỏ hoàn toàn các điểm nghẽn (Siloed Bottlenecks):
 
 ```mermaid
 mindmap
-  root((Forgekit Cross-Role Collaboration))
+  root((FlowGrid Cross-Role Collaboration))
     PM Scrum Master
       Quản lý C4 Overview surfaces/
       Theo dõi tiến độ qua common-plan.md
@@ -147,9 +157,9 @@ mindmap
 
 ## 🔍 4. ĐỊNH HƯỚNG PHÁT TRIỂN TƯƠNG LAI (FUTURE ROADMAP)
 
-Để tiếp tục nâng cao hiệu quả vận hành cho các đội ngũ phần mềm enterprise, lộ trình phát triển tiếp theo của Forgekit tập trung vào 2 tính năng trọng tâm:
+Để tiếp tục nâng cao hiệu quả vận hành cho các đội ngũ phần mềm enterprise, lộ trình phát triển tiếp theo của FlowGrid tập trung vào 2 tính năng trọng tâm:
 
-1. **📊 Metrics Dashboard CLI (`forgekit metrics`)**:
+1. **📊 Metrics Dashboard CLI (`flowgrid metrics`)**:
    - Tự động thống kê và xuất báo cáo chỉ số tái sử dụng Common Code.
    - Đo lường mức độ giảm thiểu Tech Debt và tỷ lệ % bao phủ linh kiện `CMN-*` giữa các dự án.
 
@@ -170,4 +180,14 @@ Toàn bộ thông tin hướng dẫn chuyên sâu đã được phân tách thà
 
 ---
 
-**🔥 Dành cho Đội ngũ Phần mềm:** Mọi thứ đã được chuẩn hóa khép kín. Hãy cài đặt Forgekit ngay hôm nay để trải nghiệm quy trình AI Engineering kỷ luật và hiện đại!
+## ⚡ Cài Đặt Nhanh (One-Liner)
+
+Dành cho Linux / WSL. Yêu cầu hệ thống: `Node.js >= 22` và `git`.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ShanYuCoder/flowgrid/main/install.sh | bash
+```
+
+---
+
+**🔥 Dành cho Đội ngũ Phần mềm:** Mọi thứ đã được chuẩn hóa khép kín. Hãy cài đặt FlowGrid ngay hôm nay để trải nghiệm quy trình AI Engineering kỷ luật và hiện đại!

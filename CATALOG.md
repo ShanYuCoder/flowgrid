@@ -11,11 +11,11 @@ _Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sử
     - [Hướng Dẫn Quy Trình Spec, Audit Script & Grill Cho Dự Án Mới (Greenfield Spec Workflow)](docs/1-guide/spec-grill-audit-workflow.md)
     - [System doc structure — canonical layer meanings, Operating Model và Architecture](docs/1-guide/system-doc-structure.md)
     - [Backend Phase 3b Workflow](docs/1-guide/team-backend-phase3b-slides.md)
-    - [Forgekit & Các Bộ Công Cụ (Kits)](docs/1-guide/toolkits.md)
+    - [FlowGrid & Các Bộ Công Cụ (Kits)](docs/1-guide/toolkits.md)
   - 2-lifecycle
     - [Team AI Backend Workflow](docs/2-lifecycle/backend-workflow.md)
     - [Backend / API phase (Nest in-repo)](docs/2-lifecycle/development-flows.md)
-    - [🏛 Sổ Tay Kiến Trúc & Vòng Đời Của Forgekit](docs/2-lifecycle/overview.md)
+    - [🏛 Sổ Tay Kiến Trúc & Vòng Đời Của FlowGrid](docs/2-lifecycle/overview.md)
     - [Test phase — E2E lane (Playwright)](docs/2-lifecycle/quality-maintenance.md)
   - 3-artifacts
     - [Bundle ↔ IR split](docs/3-artifacts/bundle-and-ir.md)
