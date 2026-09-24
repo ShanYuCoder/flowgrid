@@ -18,7 +18,7 @@ INSTALL_DIR="${FLOWGRID_INSTALL_DIR:-${FORGEKIT_INSTALL_DIR:-$HOME/.flowgrid-cli
 BIN_DIR="${FLOWGRID_BIN_DIR:-${FORGEKIT_BIN_DIR:-$HOME/.local/bin}}"
 
 if [ -z "${FLOWGRID_REF:-${FORGEKIT_REF:-}}" ]; then
-  LATEST_TAG=$(git ls-remote --tags --sort="v:refname" "https://github.com/$REPO.git" | grep -v "\^{}" | tail -n1 | awk -F/ '{print $3}')
+  LATEST_TAG=$(git ls-remote --tags --sort="v:refname" "https://github.com/$REPO.git" | grep -v "\^{}" | tail -n1 | awk -F/ '{print $3}' || true)
   if [ -n "$LATEST_TAG" ]; then
     REF="$LATEST_TAG"
   else
