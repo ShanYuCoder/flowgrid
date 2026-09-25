@@ -14,7 +14,7 @@ Auth-first Next.js · App Router · shadcn · Playwright. Code under `src/`.
 
 ## Gen trước (code)
 
-1. Codegenkit `gen` / repo shim from IR already grilled
+1. bộ code `gen` / repo shim from IR already grilled
 2. AI only fills gaps: Mo* / `#needs-*` not yet in registries
 3. Do not write boilerplate when codegen already covers it
 

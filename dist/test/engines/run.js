@@ -5,7 +5,11 @@ export function runEngine(opts) {
     const result = spawnSync(process.execPath, [engine, ...(opts.argv ?? [])], {
         cwd: opts.projectRoot,
         encoding: 'utf8',
-        env: { ...process.env, TESTKIT_ROOT: opts.projectRoot, ...opts.env },
+        env: {
+            ...process.env,
+            FLOWGRID_PROJECT_ROOT: opts.projectRoot,
+            ...opts.env,
+        },
     });
     return { status: result.status, stdout: result.stdout ?? '', stderr: result.stderr ?? '' };
 }

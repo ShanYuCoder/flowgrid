@@ -1,6 +1,6 @@
-<!-- docskit-catalog -->
+<!-- flowgrid-catalog -->
 **[Danh mục tài liệu](CATALOG.md)**
-<!-- /docskit-catalog -->
+<!-- /flowgrid-catalog -->
 
 # FlowGrid — Enterprise Disciplined AI Engineering Platform
 

@@ -14,14 +14,15 @@
 <ol>
 <li>Cài đặt và quản lý tập trung qua CLI <code>flowgrid</code> và máy chủ MCP <code>flowgrid</code>.</li>
 <li>Cấu hình dự án lưu tại <code>.flowgrid/config.json</code> ở thư mục gốc.</li>
-<li>Dữ liệu liên repo kết nối qua biến môi trường cục bộ (như <code>DOCSKIT_ROOT</code>), đảm bảo an toàn và bảo mật tuyệt đối.</li>
+<li>Dữ liệu liên repo kết nối qua biến môi trường cục bộ (như <code>FLOWGRID_DOCS_ROOT</code>), đảm bảo an toàn và bảo mật tuyệt đối.</li>
+<li>Tool <strong>hỗ trợ</strong> grill/audit/gate — không thay review người: <a href="./tool-vs-team-responsibility.md">Tool vs team responsibility</a>.</li>
 </ol>
 </div>
 </div>
 
 ---
 
-## 1. Bảng phân loại "Bộ Công Cụ" (Kits) trong FlowGrid
+## 1. Ba phân hệ trong FlowGrid
 
 Khi khởi tạo dự án với `flowgrid init`, hệ thống cấu hình các bộ kỹ năng tương ứng với Project Type của bạn:
 
@@ -36,22 +37,22 @@ Khi khởi tạo dự án với `flowgrid init`, hệ thống cấu hình các b
 
 <div class="intro-grid">
   <div class="intro-card">
-    <img src="./assets/forgekit-docs.jpg" alt="Bộ Docs" style="border-radius: 8px; margin-bottom: 12px;" />
-    <h4>Bộ Docs (Docskit SSOT)</h4>
+    <img src="./assets/flowgrid-docs.jpg" alt="Bộ Docs" style="border-radius: 8px; margin-bottom: 12px;" />
+    <h4>Bộ docs</h4>
     <p>Quản lý Document Hub, Architecture Arc42, 5-Tier Validation, State & Action Flow Matrix, Bundle IR và Specs chuẩn mực.</p>
   </div>
   <div class="intro-card">
-    <img src="./assets/forgekit-code.jpg" alt="Bộ Code" style="border-radius: 8px; margin-bottom: 12px;" />
-    <h4>Bộ Code (Codegenkit)</h4>
+    <img src="./assets/flowgrid-code.jpg" alt="Bộ Code" style="border-radius: 8px; margin-bottom: 12px;" />
+    <h4>Bộ code</h4>
     <p>Sinh mã nguồn FE/BE tự động theo Adapters, kiểm soát contract parity và sinh Unit Test.</p>
   </div>
   <div class="intro-card">
-    <img src="./assets/forgekit-test.jpg" alt="Bộ Test" style="border-radius: 8px; margin-bottom: 12px;" />
-    <h4>Bộ Test (Testkit)</h4>
+    <img src="./assets/flowgrid-test.jpg" alt="Bộ Test" style="border-radius: 8px; margin-bottom: 12px;" />
+    <h4>Bộ test</h4>
     <p>Kế hoạch kiểm thử phân hoạch tương đương & phân tích giá trị biên (IEEE 29119), sinh kịch bản Playwright E2E tự động.</p>
   </div>
   <div class="intro-card">
-    <img src="./assets/forgekit-common.jpg" alt="Common" style="border-radius: 8px; margin-bottom: 12px;" />
+    <img src="./assets/flowgrid-common.jpg" alt="Common" style="border-radius: 8px; margin-bottom: 12px;" />
     <h4>Common (ArtifactGraph)</h4>
     <p>Graph database local, hỗ trợ gap analysis, code tagging và metadata liên repo.</p>
   </div>
@@ -79,8 +80,8 @@ Repo **Document Hub** là nơi duy nhất sở hữu registry sản phẩm đầ
 
 | Từ repo | Pointer (MCP env) | Ai dùng |
 |---------|-------------------|---------|
-| FE / BE | `CODEGENKIT_DOCS_ROOT` / `DOCSKIT_ROOT` | Bộ Code đọc IR (`ir/design.yaml`) |
-| Tests | `TESTKIT_DOCS_ROOT` | Bộ Test phân tích `FLOW-*` |
+| FE / BE | `FLOWGRID_DOCS_ROOT` | Bộ code đọc IR (`ir/design.yaml`) |
+| Tests | `FLOWGRID_DOCS_ROOT` · `FLOWGRID_TESTS_ROOT` | Bộ test phân tích `FLOW-*` và test plans |
 
 1. Pointer là **đường dẫn tuyệt đối do dev chọn** trên máy đó (config lúc chạy `flowgrid init`).
 2. Registry / architecture **SSOT ở lại repo docs**. 
@@ -120,11 +121,14 @@ Mọi thao tác đều thông qua lệnh `flowgrid`.
 
 ## 5. Kiến Trúc MCP Server Hợp Nhất (`flowgrid`)
 
-**FlowGrid** cung cấp **một tiến trình MCP Server duy nhất** (`bin/flowgrid-mcp.mjs`), tự động cấu hình vào `.agents/mcp_config.json` hoặc `.cursor/mcp.json` sau khi chạy `flowgrid init`.
+**FlowGrid** cung cấp **một tiến trình MCP Server duy nhất** (`bin/flowgrid-mcp.mjs`), tự động cấu hình sau `flowgrid init`:
+
+- **Antigravity:** `.agents/mcp_config.json` (server `flowgrid` → `bin/flowgrid-mcp.mjs`)
+- **Cursor:** `.cursor/mcp.json` (cùng server `flowgrid` và env `FLOWGRID_DOCS_ROOT`, `FLOWGRID_TESTS_ROOT`, `FLOWGRID_ADAPTER`, …)
 
 | Nhóm công cụ MCP | Tiền tố Tool | Trách nhiệm chính |
 |---|---|---|
-| **Docs Hub** | `docskit_*` | Quản lý cây kiến trúc arc42, routing ID, split `*.bundle.yaml` sang IR, render `spec.md` chuẩn bảng biểu (Data Dictionary & State Matrix), publish `CATALOG.md`. |
+| **Docs Hub** | `flowgrid_docs_*` | Quản lý cây kiến trúc arc42, routing ID, split `*.bundle.yaml` sang IR, render `spec.md` chuẩn bảng biểu (Data Dictionary & State Matrix), publish `CATALOG.md`. |
 | **Code Generation (FE)** | `codegen_*`, `common_*`, `unit_*` | Sinh mã nguồn Component UI theo adapter (Next.js, Nuxt), sinh molecule chung từ surface/module common, sinh Vitest/Jest Unit Test. |
 | **Code Generation (BE)** | `api_*` | Sinh API routes, controller, DTO, validation schemas từ `01-backend-spec.yaml`, sinh Backend Unit Test. |
 | **Test Engineering** | `cases_*`, `testcase_*` | Kiểm tra cú pháp testplan, rà soát coverage gaps, sinh mã Playwright E2E tự động từ kịch bản IEEE 29119. |

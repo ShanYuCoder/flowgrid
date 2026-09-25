@@ -3,7 +3,7 @@ import { spawnSync } from 'node:child_process'
 import { resolveLaravelProject } from '../../../shared/project.mjs'
 
 const { laravelRoot } = resolveLaravelProject()
-const php = process.env.CODEGENKIT_PHP || 'php'
+const php = process.env.FLOWGRID_PHP || 'php'
 
 function splitCommand(line) {
   const args = []

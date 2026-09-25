@@ -563,7 +563,7 @@ export function renderPageComposition(design = {}, opts = {}) {
 
   if (!opts.businessOnly) {
     parts.push(
-      '## Kỹ thuật (Codegenkit / FE)',
+      '## Kỹ thuật (FlowGrid / FE)',
       '',
       'Chỉ nằm trên `ir/design.yaml`. VitePress đọc `ir/spec.yaml`.',
       ''

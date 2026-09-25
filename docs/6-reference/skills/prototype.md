@@ -12,7 +12,7 @@
 - Gọi qua slash command: `/prototype` và `/grill-prototype`.
 
 ## Input (Dữ liệu đầu vào)
-- Đọc đặc tả giao diện (`ir/design.yaml`) sau khi `forgekit split` thành công.
+- Đọc đặc tả giao diện (`ir/design.yaml`) sau khi `flowgrid split` thành công.
 - Các thẻ tags `#needs-component:*`, `#custom-slot:*`.
 
 ## Output (Kết quả mong đợi)
@@ -22,5 +22,5 @@
 
 ## Description / Ý nghĩa
 - Nằm ở **Phase 2a (Scaffold)**.
-- Thay vì bắt AI phải tự viết toàn bộ trang web từ con số 0 dẫn đến rác code, Forgekit ép buộc dùng `portal:gen` để đẻ ra cấu trúc chuẩn trước. AI (`/prototype`) chỉ đóng vai trò "thợ xây" điền vào các chỗ trống (những Component chưa tồn tại trong Design System).
+- Thay vì bắt AI phải tự viết toàn bộ trang web từ con số 0 dẫn đến rác code, FlowGrid ép buộc dùng `portal:gen` để đẻ ra cấu trúc chuẩn trước. AI (`/prototype`) chỉ đóng vai trò "thợ xây" điền vào các chỗ trống (những Component chưa tồn tại trong Design System).
 - Ở phase này, UI chạy độc lập hoàn toàn, không cần gọi Backend thật.

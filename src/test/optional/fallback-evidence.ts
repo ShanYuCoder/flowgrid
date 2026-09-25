@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs'
 
 export const OPTIONAL_FALLBACK_SCHEMA_VERSION = '1.0.0' as const
-export const OPTIONAL_FALLBACK_EVENT = 'testkit.missing-optional' as const
-export const TESTKIT_PACKAGE = '@platform/testkit' as const
+export const OPTIONAL_FALLBACK_EVENT = 'flowgrid.missing-optional' as const
+export const FLOWGRID_TEST_PACKAGE = '@platform/flowgrid-test' as const
 
 export type OptionalFallbackReason =
   | 'not-configured'
@@ -21,7 +21,7 @@ export interface ReadMetrics {
 export interface MissingOptionalEvent {
   schemaVersion: typeof OPTIONAL_FALLBACK_SCHEMA_VERSION
   event: typeof OPTIONAL_FALLBACK_EVENT
-  package: typeof TESTKIT_PACKAGE
+  package: typeof FLOWGRID_TEST_PACKAGE
   runId: string
   optional: string
   reason: OptionalFallbackReason
@@ -67,8 +67,8 @@ export function validateMissingOptionalEvent(value: unknown): {
   if (event.event !== OPTIONAL_FALLBACK_EVENT) {
     errors.push(`event must be ${OPTIONAL_FALLBACK_EVENT}`)
   }
-  if (event.package !== TESTKIT_PACKAGE) {
-    errors.push(`package must be ${TESTKIT_PACKAGE}`)
+  if (event.package !== FLOWGRID_TEST_PACKAGE) {
+    errors.push(`package must be ${FLOWGRID_TEST_PACKAGE}`)
   }
   if (typeof event.runId !== 'string' || event.runId.length === 0) {
     errors.push('runId must be a non-empty string')
@@ -134,7 +134,7 @@ export class MissingOptionalEventEmitter {
     const event: MissingOptionalEvent = {
       schemaVersion: OPTIONAL_FALLBACK_SCHEMA_VERSION,
       event: OPTIONAL_FALLBACK_EVENT,
-      package: TESTKIT_PACKAGE,
+      package: FLOWGRID_TEST_PACKAGE,
       ...input,
       metrics: { ...input.metrics },
     }

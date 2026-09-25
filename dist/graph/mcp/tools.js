@@ -168,7 +168,7 @@ export function registerTools(server) {
         return text({ ok: true, subject, choice, kind: kind ?? 'grill' });
     });
     /** Recommend/materialize an allowlisted command without executing it. */
-    server.tool('artifactgraph_recommend_command', 'Inspect and materialize a product-owned allowlisted command without executing it. Use the owning kit (Docskit/Codegenkit/Testkit) to run.', {
+    server.tool('artifactgraph_recommend_command', 'Inspect and materialize a product-owned allowlisted command without executing it. Run via FlowGrid (bộ docs / bộ code / bộ test).', {
         commandKey: z.string().describe('Key in artifactgraph.json commands'),
         spec: z.string().optional().describe('Substituted for {spec}'),
     }, async ({ commandKey, spec }) => {
@@ -198,7 +198,7 @@ export function registerTools(server) {
      * Compatibility shim (2.x): executable command runner.
      * Deprecated; remove in the next major after kits own execution.
      */
-    server.tool('artifactgraph_gen', 'DEPRECATED compatibility shim: executes an allowlisted product command. Prefer artifactgraph_recommend_command/allowlist_check, then run via Docskit/Codegenkit/Testkit.', {
+    server.tool('artifactgraph_gen', 'DEPRECATED compatibility shim: executes an allowlisted product command. Prefer artifactgraph_recommend_command/allowlist_check, then run via FlowGrid CLI.', {
         commandKey: z.string().describe('Key in artifactgraph.json commands'),
         spec: z.string().optional().describe('Substituted for {spec} (bundle path, ir/spec, or testcase path)'),
     }, async ({ commandKey, spec }) => {

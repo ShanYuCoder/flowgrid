@@ -11,10 +11,12 @@ const auditApiPath = path.join(rootDir, 'engines/spec/lib/audit-api-gaps.mjs');
 const auditTestcasePath = path.join(rootDir, 'engines/spec/lib/audit-testcase-gaps.mjs');
 const auditLegacyPath = path.join(rootDir, 'engines/spec/lib/audit-legacy-gaps.mjs');
 const auditFlowPath = path.join(rootDir, 'engines/spec/lib/audit-flow-gaps.mjs');
+const auditFeBePath = path.join(rootDir, 'engines/spec/lib/audit-fe-be-alignment.mjs');
+const auditScenarioPath = path.join(rootDir, 'engines/spec/lib/audit-scenario-coverage.mjs');
 
 // Helper to create temporary files for deterministic testing
 function withTempFile(prefix, extension, content, callback) {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), `forgekit-test-${prefix}-`));
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), `flowgrid-test-${prefix}-`));
   const tmpFilePath = path.join(tmpDir, `test-sample.${extension}`);
   fs.writeFileSync(tmpFilePath, content, 'utf8');
 
@@ -107,6 +109,61 @@ fields:
     });
   });
 
+  await t.test('audit-bundle-gaps.mjs - UX affordance (delete, disabledReason, list DSL)', () => {
+    const deleteToastOnly = `
+title: User List
+page-id: W-AD-LIST-002
+summary: List with delete
+userStories:
+  contextAndHandoff:
+    screenAccess:
+      accessType: directRoute
+      routePath: /users
+columns:
+  - key: name
+    title: Name
+rowActions:
+  - id: btn_delete
+    label: Delete
+actions:
+  - id: btn_delete
+    outcomes:
+      onSuccess:
+        toast: Deleted
+`;
+    withTempFile('bundle-ux-delete', 'yaml', deleteToastOnly, (filePath) => {
+      const output = execSync(`node "${auditBundlePath}" "${filePath}" --type list`, { encoding: 'utf8' });
+      const report = JSON.parse(output);
+      assert.ok(report.uxAffordanceGaps >= 1);
+      assert.ok(report.gaps.some((g) => g.code === 'UX_GAP_DELETE_CONFIRM'));
+      assert.ok(report.gaps.some((g) => g.code === 'UX_GAP_DELETE_RESULT_DIALOG'));
+      assert.ok(report.confirms.some((c) => c.code === 'CONFIRM_UX_LIST_DSL'));
+    });
+
+    const disabledNoReason = `
+title: Form
+page-id: W-AD-F-002
+summary: Form
+userStories:
+  contextAndHandoff:
+    screenAccess:
+      accessType: directRoute
+      routePath: /f
+fields:
+  - key: x
+actions:
+  - id: btn_save
+    preconditions:
+      uiState: valid
+    disabled: true
+`;
+    withTempFile('bundle-ux-disabled', 'yaml', disabledNoReason, (filePath) => {
+      const output = execSync(`node "${auditBundlePath}" "${filePath}" --type create`, { encoding: 'utf8' });
+      const report = JSON.parse(output);
+      assert.ok(report.gaps.some((g) => g.code === 'UX_GAP_DISABLED_REASON'));
+    });
+  });
+
   await t.test('audit-bundle-gaps.mjs - Mutation Actions & State Matrix Checks', () => {
     const mutationContent = `
 title: Order Action
@@ -175,6 +232,44 @@ endpoints:
   // -------------------------------------------------------------------------
   // 3. AUDIT-TESTCASE-GAPS TESTS
   // -------------------------------------------------------------------------
+  await t.test('audit-testcase-gaps.mjs - --bundle cross-reference scenarios', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'flowgrid-test-tc-bundle-'));
+    const bundlePath = path.join(tmpDir, 'foo.bundle.yaml');
+    const tcPath = path.join(tmpDir, 'plan.test.yaml');
+    const bundleContent = `
+userStories:
+  scenarios:
+    - name: "Only Uncovered Scenario XYZ"
+  acceptanceCriteria:
+    - "[ ] Must verify orphan AC line unique token"
+design:
+  actions:
+    - id: btn_orphan_action
+      outcomes:
+        onSuccess:
+          toast: ok
+`;
+    const tcContent = `
+testcases:
+  - id: TC-1
+    title: Initial Load success validation Happy Path 409 error boundary double concurrency RBAC permission role empty
+`;
+    try {
+      fs.writeFileSync(bundlePath, bundleContent, 'utf8');
+      fs.writeFileSync(tcPath, tcContent, 'utf8');
+      const output = execSync(
+        `node "${auditTestcasePath}" "${tcPath}" --bundle "${bundlePath}"`,
+        { encoding: 'utf8' },
+      );
+      const report = JSON.parse(output);
+      assert.ok(report.bundleCrossGaps?.length > 0);
+      assert.ok(report.gaps.some((g) => g.code === 'TC_BUNDLE_SCENARIO_UNCOVERED'));
+      assert.ok(report.gaps.some((g) => g.code === 'TC_BUNDLE_AC_UNCOVERED'));
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   await t.test('audit-testcase-gaps.mjs - Comprehensive Test Coverage (Boundary, Concurrency, RBAC)', () => {
     const incompleteTcContent = `
 title: User Management Test Plan
@@ -197,11 +292,85 @@ testcases:
     });
   });
 
+  await t.test('audit-fe-be-alignment.mjs - apiRef mapping', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'flowgrid-test-febe-'));
+    const bundlePath = path.join(tmpDir, 'screen.bundle.yaml');
+    const backendPath = path.join(tmpDir, 'api', '01', '01-backend-spec.yaml');
+    fs.mkdirSync(path.dirname(backendPath), { recursive: true });
+    fs.writeFileSync(
+      bundlePath,
+      `
+design:
+  actions:
+    - id: btn_save
+      executionContract:
+        apiRef: records.create
+`,
+      'utf8',
+    );
+    fs.writeFileSync(
+      backendPath,
+      `
+endpoints:
+  - id: records.create
+    method: POST
+    path: /api/v1/records
+    action: records.create
+`,
+      'utf8',
+    );
+    try {
+      const output = execSync(
+        `node "${auditFeBePath}" "${bundlePath}" --backend-spec "${backendPath}"`,
+        { encoding: 'utf8' },
+      );
+      const report = JSON.parse(output);
+      assert.equal(report.totalGaps, 0);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  await t.test('audit-scenario-coverage.mjs - screens vs TC files', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'flowgrid-test-sc-'));
+    const scPath = path.join(tmpDir, 'SC-01.md');
+    const casesDir = path.join(tmpDir, 'cases', 'auth');
+    fs.mkdirSync(casesDir, { recursive: true });
+    fs.writeFileSync(
+      scPath,
+      `---
+id: SC-01
+screens:
+  - W-AD-AUTH-001
+  - W-AD-MISSING-002
+---
+# Scenario
+`,
+      'utf8',
+    );
+    fs.writeFileSync(
+      path.join(casesDir, 'TC-auth-001.yaml'),
+      'refs:\n  screen: W-AD-AUTH-001\n',
+      'utf8',
+    );
+    try {
+      const output = execSync(
+        `node "${auditScenarioPath}" "${scPath}" --tests-root "${tmpDir}"`,
+        { encoding: 'utf8' },
+      );
+      const report = JSON.parse(output);
+      assert.ok(report.gaps.some((g) => g.code === 'SC_SCREEN_NO_TC' && g.path.includes('W-AD-MISSING-002')));
+      assert.equal(report.coveredScreens.length, 1);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   // -------------------------------------------------------------------------
   // 4. AUDIT-LEGACY-GAPS TESTS
   // -------------------------------------------------------------------------
   await t.test('audit-legacy-gaps.mjs - Critical Missing Inventory & Target ID Mapping', () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'forgekit-test-legacy-'));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'flowgrid-test-legacy-'));
     const mockInventoryPath = path.join(tmpDir, 'adoption-inventory.md');
 
     try {

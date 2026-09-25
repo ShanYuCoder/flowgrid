@@ -1,5 +1,7 @@
 # Common UI Spec (Portal)
 
+**CMN SSOT:** `surfaces/common/md/` + `common-*.bundle.yaml` below — promote via `gen-common`, do not paste into every `W-*` YAML.
+
 Follow `base-docs Code / `--id`` before copying legacy UI ad hoc.
 
 - **Design registry:** `registries/design.registry.json` when present in the FE checkout; list default `#shell: DataListPage`. Promotion: `platform/toolchain/DESIGN-REGISTRY-PROMOTION.md`.

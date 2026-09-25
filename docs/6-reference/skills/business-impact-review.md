@@ -8,7 +8,7 @@
 - Lệnh mang tính chất phân tích (Read-only analysis), Agent tuyệt đối không tự ý sửa code nếu không được yêu cầu.
 
 ## Input (Dữ liệu đầu vào)
-- Đọc thông tin cấu hình Multi-repo của nền tảng Forgekit (ví dụ: `dna/platform.json` cho hệ thống mới, hoặc `dna/legacy.json` cho hệ thống cũ).
+- Đọc thông tin cấu hình Multi-repo của nền tảng FlowGrid (ví dụ: `dna/platform.json` cho hệ thống mới, hoặc `dna/legacy.json` cho hệ thống cũ).
 - Nhận diện các phương thức (methods), API routes, Jobs, Events, Listeners vừa bị thay đổi.
 
 ## Output (Kết quả mong đợi)

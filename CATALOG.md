@@ -1,6 +1,6 @@
 # Danh mục tài liệu
 
-_Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sửa tay._
+_Sinh bởi `flowgrid publish`. Click link để mở trang Markdown. Không sửa tay._
 
 - [Docs](docs/index.md)
   - 1-guide
@@ -15,7 +15,7 @@ _Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sử
   - 2-lifecycle
     - [Team AI Backend Workflow](docs/2-lifecycle/backend-workflow.md)
     - [Backend / API phase (Nest in-repo)](docs/2-lifecycle/development-flows.md)
-    - [🏛 Sổ Tay Kiến Trúc & Vòng Đời Của Forgekit](docs/2-lifecycle/overview.md)
+    - [🏛 Sổ Tay Kiến Trúc & Vòng Đời Của FlowGrid](docs/2-lifecycle/overview.md)
     - [Test phase — E2E lane (Playwright)](docs/2-lifecycle/quality-maintenance.md)
   - 3-artifacts
     - [Bundle ↔ IR split](docs/3-artifacts/bundle-and-ir.md)
@@ -57,8 +57,8 @@ _Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sử
       - [db-erd](docs/6-reference/skills/db-erd.md)
       - [Skill: `/decision`](docs/6-reference/skills/decision.md)
       - [Skill: `/deployment`](docs/6-reference/skills/deployment.md)
+      - [Skill: `/docs-hub` — bộ docs (tra cứu & CLI)](docs/6-reference/skills/docs-hub.md)
       - [Kỹ năng: `/docs-mark`](docs/6-reference/skills/docs-mark.md)
-      - [Skill: `/docskit` & Các lệnh CLI Automation](docs/6-reference/skills/docskit.md)
       - [Skill: `/grill-api-spec`](docs/6-reference/skills/grill-api-spec.md)
       - [Skill: `/grill-api`](docs/6-reference/skills/grill-api.md)
       - [Skill: `/grill-bqa`](docs/6-reference/skills/grill-bqa.md)

@@ -44,7 +44,7 @@ disable-model-invocation: true
 - **[MANDATORY]** `bundle.gen.codegen.profile` (+ entity/module when required) MUST be set.
   - Login/forgot/reset → `auth` (NOT `create`).
   - ❌ If missing or wrong → do NOT set `grillStatus.full: done`. Report and hand back to `/grill-dev`.
-- **[MANDATORY]** After bundle is reconciled: `docskit_bundle_split` → `docs_render`.
+- **[MANDATORY]** After bundle is reconciled: `flowgrid_docs_bundle_split` → `docs_render`.
 - **[RECOMMENDED]** If ArtifactGraph is available: use `artifactgraph_allowlist_check` + `artifactgraph_recommend_command` for `genDry`; never execute FE generation here.
 
 ---
@@ -55,8 +55,8 @@ disable-model-invocation: true
 2. Reconcile common patterns (BQA flows ↔ Dev `#pattern`, `#split-hook:` tags).
 3. Reconcile `#reuse-api` on page actions/items (no duplicate `api/<seq>/` for reused APIs).
 4. Verify codegen gate: `bundle.gen.codegen.profile` set correctly.
-5. Write/fix `bundle.gen` → `docskit_bundle_split` → `docs_render`.
-6. Handoff ID/path + recommendation to FE Codegenkit.
+5. Write/fix `bundle.gen` → `flowgrid_docs_bundle_split` → `docs_render`.
+6. Handoff ID/path + recommendation to bộ code FE.
 
 ---
 
@@ -68,7 +68,7 @@ disable-model-invocation: true
 
 ## Handoff
 
-→ `/prototype` after FE Codegenkit dry-run passes.
+→ `/prototype` after bộ code FE dry-run passes.
 
 ---
 
@@ -76,4 +76,4 @@ disable-model-invocation: true
 
 - [ ] Conflicts reconciled in `*.bundle.yaml`, or deferred with `qa/open/QA-…`. No `openQuestions`.
 - [ ] `bundle.gen.codegen.profile` present and correct.
-- [ ] `docskit split` succeeded with zero errors.
+- [ ] `flowgrid split` succeeded with zero errors.

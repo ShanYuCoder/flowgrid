@@ -19,7 +19,7 @@ extractBundle: architecture-core
 
 ## Rule: ID Resolution
 
-- **[MANDATORY]** When a CMP ID or module name is provided → use `docskit_route` or glob to resolve to `surfaces/[Surface]/[CMP-ID]/`. Do NOT demand the full path from the user.
+- **[MANDATORY]** When a CMP ID or module name is provided → use `flowgrid_docs_route` or glob to resolve to `surfaces/[Surface]/[CMP-ID]/`. Do NOT demand the full path from the user.
 - **[MANDATORY]** Sub-folder IDs (function/sub-module) MUST use pure numeric hierarchical segments (e.g. `01/01/02/`). NO textual slugs in sub-folder path segments.
 - VitePress/publish menu uses **Document Code** (e.g. `SPEC-PORTAL-AUTH-00`) as menu text, not the H1 heading.
 
@@ -45,7 +45,7 @@ extractBundle: architecture-core
 
 ## Modifier: `/legacy`
 
-- **[MANDATORY]** If `adoption-inventory.md` is missing at workspace root → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** If `adoption-inventory.md` is missing at workspace root → STOP: *"Run `/docs-hub /adopt` first."*
 - **[MANDATORY]** If file exists: look up CMP ID → get legacy file path → write `surfaces/[Surface]/[CMP-ID]/legacy-module.md`.
 - **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield commands.
 

@@ -151,7 +151,7 @@ Với từng `CMN-*` được Member duyệt trong Plan, Agent chạy tuần t�
 
 1. **Bước 3.1 (`common-spec`)**: Sinh file Spec chuẩn cho Common (`common/specs/CMN-*.yaml`), định nghĩa rõ Props, Inputs/Outputs, Exception handling, và DSL Schema.
 2. **Bước 3.2 (`codegen common`)**: Sinh code triển khai thực tế trong thư mục shared/common của repo mới (`shared/components/`, `shared/services/`, `shared/utils/`).
-3. **Bước 3.3 (`DSL Registration`)**: Đăng ký `CMN-*` vào ForgeKit DSL Registry.
+3. **Bước 3.3 (`DSL Registration`)**: Đăng ký `CMN-*` vào FlowGrid DSL Registry.
 
 ---
 

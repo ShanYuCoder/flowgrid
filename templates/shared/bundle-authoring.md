@@ -8,9 +8,9 @@ Hub: `docs/templates/feature.bundle.yaml` · split: `pnpm spec:split`
 |-----|---------|
 | `page-id` | Screen identity (`cmp-adm-000-01`). Split copies this onto `ir/spec.yaml` as `page-id` (not `id`, so it does not collide with requirement/section ids). Legacy bundles may still use `id`. |
 | `summary` | Phải trình bày dạng bullet. Bắt buộc có các tiêu đề (chuẩn Arc42 business): **mục tiêu nghiệp vụ** (business_goals), **các bên liên quan** (stakeholders), **kịch bản người dùng** (user_journey), **bối cảnh** (description, input liên kết cross-page/module, output) và **cách giải quyết** (tùy chọn). Mục đích để 100% Non-tech Stakeholder hiểu và duyệt. |
-| `userStories` | **Khối User Stories chuyên sâu cho màn hình:** Cấu trúc gồm `primary` (asA, iWant, soThat), `contextAndHandoff` (chứa `screenAccess` hỗ trợ 3 loại: `directRoute` cho URL công khai/trực tiếp, `sidebarMenu` cho menu trái đa cấp + label text, `contextualAction` cho nút bấm kích hoạt từ màn hình A), `scenarios` (5 kịch bản chi tiết: Initial Load, Input/Validation, Submit, Exceptions & Fallback, Background Logic Trigger), và `acceptanceCriteria`. Split sao chép nguyên vẹn sang `ir/spec.yaml` và render khối `## User Stories & Screen Journey` ra Markdown. |
+| `userStories` | **Khối User Stories chuyên sâu cho màn hình:** `primary`, `contextAndHandoff` (+ `screenAccess`), `scenarios` (5 kịch bản chuẩn + **scenario thứ 6 “Affordances UX”** khi màn có delete/filter/breadcrumb/disabled/import — xem `feature.bundle.yaml`), `acceptanceCriteria` (kèm checkbox UX khi áp dụng). **Split:** `pnpm spec:split` copy nguyên khối sang `ir/spec.yaml` (business prose); **không** tự sinh từ `design` — Agent phải cập nhật `userStories` khi bổ sung DSL/`#needs-component`/audit `UX_*`. Render → `## User Stories & Screen Journey` trong Markdown. |
 | `spec` | Design v1 — actors, requirements, `ui.routes`, **`ui.list` / `ui.form` / `ui.detail`**, `acceptance`. **Không** author `spec.api` — API SSOT là `api/<seq>/01-backend-spec.yaml`. |
-| `gen` | **Bắt buộc trước codegenkit:** `codegen.profile` (`auth` login/forgot/reset; `change-password`; `public`; `not-found`/`error`; `list`/`create`/`admin-crud`) + entity/module, `tags`, derived `ui.*`. `/grill-dev` ghi. Endpoint `action` ghi trên **01**, không trên bundle. |
+| `gen` | **Bắt buộc trước flowgrid gen:** `codegen.profile` (`auth` login/forgot/reset; `change-password`; `public`; `not-found`/`error`; `list`/`create`/`admin-crud`) + entity/module, `tags`, derived `ui.*`. `/grill-dev` ghi. Endpoint `action` ghi trên **01**, không trên bundle. |
 | `legacy` | Legacy facts + evidence pointers |
 | `design` | Nested **`sections[]`** (card/container/form + `meaning` + `purpose` + `visual` + `interaction` + `validation` + `messages` + `states` + `bind`/`db`) · **`nav`** (`screenAccess` & `sidebar.hierarchy`) · `zones[]` fallback · `behavior` · **`actions[]`** (onSuccess, onSpecificError, backgroundTrigger) |
 | `review` | BA prose only — **không** split sang `ir/*` |
@@ -43,7 +43,7 @@ Hub: `docs/templates/feature.bundle.yaml` · split: `pnpm spec:split`
 - `ui.routes`, `ui.list`, `ui.form`, `ui.detail`, `ui.toolbar` (intent)
 - `acceptance`
 
-API: **chỉ** `…/api/<seq>/01-backend-spec.yaml` (`/api-spec`). Split **chiếu** `api.endpoints` (id/method/path/action) sang `ir/design.yaml` cho FE/testkit — không author trên bundle.
+API: **chỉ** `…/api/<seq>/01-backend-spec.yaml` (`/api-spec`). Split **chiếu** `api.endpoints` (id/method/path/action) sang `ir/design.yaml` cho FE/bộ test — không author trên bundle.
 
 ## spec — không (thuộc `gen`)
 
@@ -57,10 +57,24 @@ Split exists so agents **Read the entire `ir/design.yaml`** (tech) or **entire `
 
 Authoring (`/spec`, grill-*) still **writes** `*.bundle.yaml`, then split.
 
+### UX affordance ↔ `userStories` (before `pnpm spec:split`)
+
+| Design / audit signal | Business layer (`userStories` → `ir/spec.yaml`) |
+|----------------------|--------------------------------------------------|
+| `design.nav.breadcrumb`, `CONFIRM_UX_BREADCRUMB_*` | Scenario **Initial Load** + scenario **Affordances UX**; AC deep link |
+| `spec.ui.list.filters`, `CONFIRM_UX_FILTER_*` | Scenario **Initial Load** / **Affordances UX**; AC empty “no results” |
+| `#pattern: delete-flow`, `UX_GAP_DELETE_*` | Scenario **Affordances UX** + **Exceptions**; AC delete confirm + result dialog |
+| `disabledReason`, `UX_GAP_DISABLED_REASON` | Scenario **Affordances UX**; AC disabled explanation |
+| Status column + chip, `CONFIRM_UX_STATUS_CHIP` | Scenario **Initial Load**; AC status readable |
+| `#needs-component` / `#needs-ui` | `primary.iWant` or scenario step naming the custom block in Vietnamese |
+| `flowgrid audit spec` `suggestedStoryPatch` on UX items | Apply verbatim to matching scenario step or AC |
+
+**Không** chỉ ghi tech vào `design.actions` — stakeholder đọc `ir/spec.yaml` / rendered MD phải thấy cùng hành vi.
+
 | Artifact | Đọc bởi | Nội dung |
 |----------|---------|----------|
-| `*.bundle.yaml` | Ghi SSOT (`/spec`, grill-*) | Đầy đủ spec+gen+design |
-| `ir/design.yaml` | **Đọc cả file** — grill-*, FE `/prototype`, `/testcase` | Tech: id, kind, tags, bind, visual CSS, `api` chiếu từ 01. Giữ label/purpose. |
+| `*.bundle.yaml` | **Ghi** `/spec`, grill-*; **đọc cả file** `/testcase`, `/grill-testcase` | Đầy đủ spec+gen+design+`userStories`; tests hub read-only |
+| `ir/design.yaml` | **Đọc cả file** — grill-*, FE `/prototype`, codegen | Tech sau split; `api` chiếu từ 01. |
 | `ir/spec.yaml` | VitePress + stakeholder | Business page + requirements/acceptance. Không id/tag/bind. `"Q&A"`. Không stub `legacy` rỗng. |
 | `…/api/<seq>/01-backend-spec.yaml` | BE `/api`, `openapi:gen`, **author API** | Tech BE — SSOT duy nhất cho endpoint |
 | `<slug>.md` | Người (BA/QA) | Render từ **`ir/spec.yaml`** (chưa split thì không có trang) |
@@ -268,7 +282,7 @@ Do **not** write `openQuestions` anywhere. Schema/render không còn field này.
 
 ## ir/spec.yaml vs ir/design.yaml
 
-`pnpm spec:split` ghi hai file. Docskit grill **không** đọc `ir/*` khi author — chỉ bundle. Split ghi `"Q&A":` trên **`ir/spec.yaml`** (id `QA-<bundle.id>-NNNN` cách nhau bởi `, `) từ `qa/open/` — không nhét list vào bundle.
+`pnpm spec:split` ghi hai file. FlowGrid bộ docs grill **không** đọc `ir/*` khi author — chỉ bundle. Split ghi `"Q&A":` trên **`ir/spec.yaml`** (id `QA-<bundle.id>-NNNN` cách nhau bởi `, `) từ `qa/open/` — không nhét list vào bundle.
 
 Downstream (UI gen, API gen, testcase) đọc **chỉ `ir/design.yaml`**. Thiếu file = split/spec chưa xong. Story/copy chưa đủ thì **bổ sung design** (bundle.gen + split), không đọc `ir/spec.yaml`. `ir/spec.yaml` chỉ văn mô tả + `legacy` + `qa` (id treo).
 

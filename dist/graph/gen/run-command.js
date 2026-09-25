@@ -9,10 +9,10 @@ import { spawnSync } from 'node:child_process';
 import { expandArgvPaths } from '../config/resolve-paths.js';
 function commandOwner(commandKey) {
     if (['docsRender', 'specSplit', 'specMerge', 'legacyValidate'].includes(commandKey)) {
-        return 'docskit';
+        return 'flowgrid-docs';
     }
     if (['testcaseGen', 'testcaseGenDry', 'casesRender', 'testE2e', 'e2eRegistry'].includes(commandKey)) {
-        return 'testkit';
+        return 'flowgrid-test';
     }
     if ([
         'gen',
@@ -29,7 +29,7 @@ function commandOwner(commandKey) {
         'nestGenDry',
         'nestRegistry',
     ].includes(commandKey)) {
-        return 'codegenkit';
+        return 'flowgrid-code';
     }
     return 'unknown';
 }

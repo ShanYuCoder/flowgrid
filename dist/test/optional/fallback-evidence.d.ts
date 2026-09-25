@@ -1,6 +1,6 @@
 export declare const OPTIONAL_FALLBACK_SCHEMA_VERSION: "1.0.0";
-export declare const OPTIONAL_FALLBACK_EVENT: "testkit.missing-optional";
-export declare const TESTKIT_PACKAGE: "@platform/testkit";
+export declare const OPTIONAL_FALLBACK_EVENT: "flowgrid.missing-optional";
+export declare const FLOWGRID_TEST_PACKAGE: "@platform/flowgrid-test";
 export type OptionalFallbackReason = 'not-configured' | 'unavailable' | 'invocation-failed';
 export type OptionalFallbackMode = 'local-deterministic-coverage' | 'local-deterministic-search';
 export interface ReadMetrics {
@@ -10,7 +10,7 @@ export interface ReadMetrics {
 export interface MissingOptionalEvent {
     schemaVersion: typeof OPTIONAL_FALLBACK_SCHEMA_VERSION;
     event: typeof OPTIONAL_FALLBACK_EVENT;
-    package: typeof TESTKIT_PACKAGE;
+    package: typeof FLOWGRID_TEST_PACKAGE;
     runId: string;
     optional: string;
     reason: OptionalFallbackReason;

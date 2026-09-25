@@ -13,11 +13,11 @@
 #   FLOWGRID_REF           git ref (default: main)
 set -euo pipefail
 
-REPO="${FLOWGRID_REPO:-${FORGEKIT_REPO:-ShanYuCoder/flowgrid}}"
-INSTALL_DIR="${FLOWGRID_INSTALL_DIR:-${FORGEKIT_INSTALL_DIR:-$HOME/.flowgrid-cli}}"
-BIN_DIR="${FLOWGRID_BIN_DIR:-${FORGEKIT_BIN_DIR:-$HOME/.local/bin}}"
+REPO="${FLOWGRID_REPO:-ShanYuCoder/flowgrid}"
+INSTALL_DIR="${FLOWGRID_INSTALL_DIR:-$HOME/.flowgrid-cli}"
+BIN_DIR="${FLOWGRID_BIN_DIR:-$HOME/.local/bin}"
 
-if [ -z "${FLOWGRID_REF:-${FORGEKIT_REF:-}}" ]; then
+if [ -z "${FLOWGRID_REF:-}" ]; then
   LATEST_TAG=$(git ls-remote --tags --sort="v:refname" "https://github.com/$REPO.git" | grep -v "\^{}" | tail -n1 | awk -F/ '{print $3}' || true)
   if [ -n "$LATEST_TAG" ]; then
     REF="$LATEST_TAG"
@@ -25,23 +25,21 @@ if [ -z "${FLOWGRID_REF:-${FORGEKIT_REF:-}}" ]; then
     REF="main"
   fi
 else
-  REF="${FLOWGRID_REF:-${FORGEKIT_REF}}"
+  REF="$FLOWGRID_REF"
 fi
 
 if [ "${1:-}" = "--uninstall" ]; then
-  rm -f "$BIN_DIR/flowgrid" "$BIN_DIR/flowgrid-mcp" "$BIN_DIR/forgekit" "$BIN_DIR/forgekit-mcp"
+  rm -f "$BIN_DIR/flowgrid" "$BIN_DIR/flowgrid-mcp"
   rm -rf "$INSTALL_DIR"
-  
-  # Remove path from shell configs
+
   for rc in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile"; do
-    if [ -f "$rc" ] && (grep -q "# --- flowgrid start ---" "$rc" || grep -q "# --- forgekit start ---" "$rc"); then
+    if [ -f "$rc" ] && grep -q "# --- flowgrid start ---" "$rc"; then
       sed -i.bak '/# --- flowgrid start ---/,/# --- flowgrid end ---/d' "$rc"
-      sed -i.bak '/# --- forgekit start ---/,/# --- forgekit end ---/d' "$rc"
       rm -f "${rc}.bak"
       echo "Removed flowgrid PATH from $rc"
     fi
   done
-  
+
   echo "flowgrid uninstalled ($INSTALL_DIR)."
   exit 0
 fi
@@ -81,8 +79,6 @@ fi
 mkdir -p "$BIN_DIR"
 ln -sf "$INSTALL_DIR/bin/flowgrid.mjs" "$BIN_DIR/flowgrid"
 ln -sf "$INSTALL_DIR/bin/flowgrid-mcp.mjs" "$BIN_DIR/flowgrid-mcp"
-ln -sf "$INSTALL_DIR/bin/flowgrid.mjs" "$BIN_DIR/forgekit"
-ln -sf "$INSTALL_DIR/bin/flowgrid-mcp.mjs" "$BIN_DIR/forgekit-mcp"
 chmod +x "$INSTALL_DIR/bin/"*.mjs
 
 echo "Linked $BIN_DIR/flowgrid"
@@ -108,7 +104,7 @@ case ":$PATH:" in
         fi
       fi
     done
-    
+
     if [ "$ADDED" -eq 1 ]; then
       echo "  Added $BIN_DIR to shell configuration."
     elif [ "$ALREADY_EXISTS" -eq 1 ]; then

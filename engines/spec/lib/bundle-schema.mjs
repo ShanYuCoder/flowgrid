@@ -119,7 +119,7 @@ export function codegenProfileReady(gen = {}) {
   return nonEmptyField(gen?.codegen?.profile)
 }
 
-/** Profiles that codegenkit resolves via codegen.entity + codegen.module (no silent modules[0]). */
+/** Profiles that flowgrid resolves via codegen.entity + codegen.module (no silent modules[0]). */
 export const CODEGEN_ENTITY_PROFILES = new Set([
   'list',
   'create',

@@ -4,7 +4,7 @@ import { analyzeWorkspace, inferWireFromSpec } from './workspace-analysis.mjs'
 import { enrichPlanContext } from './orm-fields.mjs'
 import { toKebab, toPascal } from './read-spec.mjs'
 
-const defaultRepoRoot = path.resolve(process.env.CODEGENKIT_ROOT ?? process.cwd())
+const defaultRepoRoot = path.resolve(process.env.FLOWGRID_PROJECT_ROOT ?? process.cwd())
 
 export function resolveCodegenContext(spec) {
   const codegen = spec.codegen ?? {}

@@ -1,5 +1,5 @@
-# Tech SSOT after split — FE/BE/testkit read this file, not ir/spec.yaml.
-# codegen.profile is REQUIRED for codegenkit (from bundle.gen).
+# Tech SSOT after split — bộ code / bộ test đọc file này, không đọc ir/spec.yaml.
+# codegen.profile is REQUIRED for flowgrid (from bundle.gen).
 
 id: role-domain-function
 

@@ -10,7 +10,7 @@ import {
   lookupAlias
 } from './lib/design-registry.mjs'
 
-const root = path.resolve(process.env.CODEGENKIT_ROOT || process.cwd())
+const root = path.resolve(process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd())
 
 async function pathExists(relativePath) {
   try {

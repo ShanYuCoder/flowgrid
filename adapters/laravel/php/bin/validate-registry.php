@@ -6,10 +6,10 @@ declare(strict_types=1);
 $engineRoot = dirname(__DIR__);
 require_once $engineRoot.'/src/Autoload.php';
 
-use Codegenkit\Laravel\UnitGen\UnitRegistry;
+use FlowGrid\Laravel\UnitGen\UnitRegistry;
 
 try {
-    $root = getenv('CODEGENKIT_ROOT') ?: dirname($engineRoot);
+    $root = getenv('FLOWGRID_PROJECT_ROOT') ?: dirname($engineRoot);
     $loaded = UnitRegistry::load($root);
     $registry = $loaded['registry'];
     $errors = [];

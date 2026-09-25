@@ -3,7 +3,7 @@
   "mode": "brownfield",
   "commands": {
     "genDry": [
-      "codegenkit",
+      "flowgrid",
       "gen:dry",
       "--adapter=dotnet-line",
       "--",
@@ -11,7 +11,7 @@
       "{spec}"
     ],
     "gen": [
-      "codegenkit",
+      "flowgrid",
       "gen",
       "--adapter=dotnet-line",
       "--",
@@ -19,7 +19,7 @@
       "{spec}"
     ],
     "registryValidate": [
-      "codegenkit",
+      "flowgrid",
       "registry",
       "--adapter=dotnet-line"
     ]
@@ -37,7 +37,7 @@
   "templates": {
     "root": "adapters/dotnet-line/codegen",
     "engine": "scriban",
-    "note": "SSOT in Codegenkit; product has no root codegen/"
+    "note": "SSOT in FlowGrid bộ code; product has no root codegen/"
   },
   "dsl": {
     "ssot": "product-repo",
@@ -54,7 +54,7 @@
           "#needs-shell",
           "#needs-widget"
         ],
-        "note": "WinForms/kiosk client — Codegenkit CLI; MCP indexes only"
+        "note": "WinForms/kiosk client — FlowGrid bộ code CLI; MCP indexes only"
       }
     }
   },

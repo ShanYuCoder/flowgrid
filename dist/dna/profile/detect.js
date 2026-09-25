@@ -107,7 +107,7 @@ function validateBeAdapter(root, adapter, force) {
                 throw new Error('Selected laravel, but composer.json does not require laravel/framework');
             }
             if (!dependencies['nwidart/laravel-modules']) {
-                throw new Error('Codegenkit laravel adapter requires nwidart/laravel-modules (modules-v1)');
+                throw new Error('FlowGrid Laravel adapter requires nwidart/laravel-modules (modules-v1)');
             }
         }
     }

@@ -33,8 +33,8 @@ disable-model-invocation: true
 
 - **[MANDATORY]** Output MUST be `.bundle.yaml`. Do NOT write `.md` directly.
 - **[MANDATORY]** All strings containing `:` must be double-quoted.
-- **[MANDATORY]** After writing: instruct user to run `docskit split -- <path>` (must emit `ir/design.yaml`), then `docskit render`. Run `docskit split --check` to verify.
-- **[STRICTLY FORBIDDEN]** Do NOT send BE `/api` a common FE bundle. Codegenkit → FE `/gen-common` only.
+- **[MANDATORY]** After writing: instruct user to run `flowgrid split -- <path>` (must emit `ir/design.yaml`), then `flowgrid render`. Run `flowgrid split --check` to verify.
+- **[STRICTLY FORBIDDEN]** Do NOT send BE `/api` a common FE bundle. bộ code → FE `/gen-common` only.
 
 ---
 
@@ -43,7 +43,7 @@ disable-model-invocation: true
 1. Read `common-scope.md`. Identify consumers → one LCA `common/yaml/<slug>/`.
    - Example module-local: `surfaces/admin/CMP-ADM-002/common/yaml/confirm-dialog/confirm-dialog.bundle.yaml`
 2. Generate `.bundle.yaml` using `portal-feature-bundle/v1` schema.
-3. Instruct user: `docskit split -- <path>` → `docskit render`.
+3. Instruct user: `flowgrid split -- <path>` → `flowgrid render`.
 
 ---
 
@@ -52,4 +52,4 @@ disable-model-invocation: true
 - [ ] LCA resolved from `common-scope.md`; path correctly scoped.
 - [ ] `design.shell.tag` matches target surface type.
 - [ ] `.bundle.yaml` output only (no `.md`). YAML strings with `:` are double-quoted.
-- [ ] `docskit split --check` passes (emits `ir/design.yaml`).
+- [ ] `flowgrid split --check` passes (emits `ir/design.yaml`).

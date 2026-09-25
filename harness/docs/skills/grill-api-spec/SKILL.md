@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 # /grill-api-spec — API Contract Audit (Portal FE)
 
-After `/api-spec`. Before Codegenkit BE `/api`. No code implementation on docs hub.
+After `/api-spec`. Before bộ code BE `/api`. No code implementation on docs hub.
 
 Shared extracts: `spec-evolution.md`, `api-spec-sync.md`, `entity-relationship.md`, `api-codegen-readiness.md`, `api-codegen-tags.md`, `agent-discipline.md`, `verify-gate.md`
 
@@ -33,9 +33,9 @@ Shared extracts: `spec-evolution.md`, `api-spec-sync.md`, `entity-relationship.m
   - Endpoint error storming: `{id}` routes → `#err:not-found` (404) + `#err:idor-violation` (403); POST/PUT → `#err:validation` (422); authed routes → `#err:permission-denied` (403).
 - **[MANDATORY]** Step 4 — Enrich `01` with: `codegen.profile|entity|module`, `api.endpoints[].action`, `#gen:*` tags, `approval`.
 - **[MANDATORY]** Step 5 — Run gates:
-  - `docskit api:check --spec surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml`
-  - `docskit openapi:gen --spec …/01-backend-spec.yaml`
-  - `docskit openapi:render`
+  - `flowgrid check --spec surfaces/<surface>/CMP-*/<NN…>/api/<seq>/01-backend-spec.yaml`
+  - `flowgrid openapi_gen --spec …/01-backend-spec.yaml`
+  - `flowgrid openapi_render`
 - **[MANDATORY]** Only ask member for product decisions; resolve technical gaps from codebase/Portal evidence.
 
 ---
@@ -53,5 +53,5 @@ Shared extracts: `spec-evolution.md`, `api-spec-sync.md`, `entity-relationship.m
 - [ ] Target: `01-backend-spec.yaml` under `…/api/<seq>/` or `…/common/yaml/<slug>/`.
 - [ ] Error matrix: `{id}` → 404 + 403 IDOR; POST/PUT → 422; global via OpenAPI `$ref`.
 - [ ] `#gen:*` + `action` populated on new `01` files.
-- [ ] Gates executed: `docskit api:check` + `openapi:gen` + `openapi:render` exit 0.
+- [ ] Gates executed: `flowgrid check` + `openapi:gen` + `openapi:render` exit 0.
 - [ ] `approval.status` updated on new `01` YAML.

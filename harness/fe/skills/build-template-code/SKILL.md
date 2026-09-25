@@ -14,13 +14,13 @@ Member wants to automatically generate or update frontend/backend codegen templa
 ### Action
 ```bash
 # Dry-run inspection
-forgekit build-template-code --dry-run
+flowgrid build-template-code --dry-run
 
 # Scaffolding templates and registry entries from Golden Sample
-forgekit build-template-code --sample=src/pages/users/UserList.vue
+flowgrid build-template-code --sample=src/pages/users/UserList.vue
 
 # Force overwrite existing custom templates
-forgekit build-template-code --force
+flowgrid build-template-code --force
 ```
 
 #### CLI Parameters

@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 **Owner:** Platform DNA (`--type=be|monolith --be-adapter=dotnet-integration`)
 
-.NET integration host · Codegenkit grill/gen first when applicable.
+.NET integration host · bộ code grill/gen first when applicable.
 
 ## Gen trước (code)
 

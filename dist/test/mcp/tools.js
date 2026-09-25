@@ -18,9 +18,9 @@ export function registerTools(server) {
                 argv.push('--dry-run');
             const env = {};
             if (input.testsRoot)
-                env.TESTKIT_TESTS_ROOT = input.testsRoot;
+                env.FLOWGRID_TESTS_ROOT = input.testsRoot;
             if (input.docsRoot)
-                env.TESTKIT_DOCS_ROOT = input.docsRoot;
+                env.FLOWGRID_DOCS_ROOT = input.docsRoot;
             const result = runEngine({
                 engineRel,
                 projectRoot: resolveProjectRoot(input.projectRoot),

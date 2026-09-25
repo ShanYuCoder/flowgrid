@@ -70,8 +70,10 @@ disable-model-invocation: true
 ## Rule: Proactive Member Wizard (Step B)
 
 - **[MANDATORY]** AskQuestion wizard for remaining gaps — one question at a time, ≥3 options per question.
-- **[PROACTIVE BRAINSTORMING INTERLOCK]**: When member inputs are brief or missing boundary rules, the Agent MUST NOT ask open-ended questions like "How should this be validated?". Instead, the Agent MUST synthesize realistic candidate validations (e.g. `(Recommended): phone_vn with 10 digits and duplicate DB check`) and provide them as selectable options.
-- **[MANDATORY]** After member picks named option or writes "Other with text" → apply to `design` / `review`.
+- **[PROACTIVE BRAINSTORMING INTERLOCK]**: When member inputs are brief or missing boundary rules, the Agent MUST NOT ask open-ended questions like "How should this be validated?". Instead, synthesize realistic candidate validations (e.g. `(Recommended): phone_vn with 10 digits and duplicate DB check`) as selectable options.
+- **[MANDATORY]** UI affordance gaps (not validation): apply `flowgrid-ux-common.mdc` + `.cursor/extracts/ux-common-patterns.md`; `(Recommended)` = top checklist-based proposal — same as `/spec` zone pipeline.
+- **[MANDATORY]** After member picks named option or writes "Other with text" → apply to `design` / `spec.ui` / `userStories` / `acceptanceCriteria` — **not** `bundle.review` alone.
+- **[MANDATORY]** `bundle.review` is a BA scratchpad during grill; it does **not** split to `ir/*`. Any settled behavior, copy, or AC must land in `userStories`, `acceptanceCriteria`, `design.*`, or `spec.ui` before split.
 - **[MANDATORY]** Set `grillStatus.bqaOpen: done` when all answers or QA pointer files are on disk. Leftover `#missing_info` with `QA-…` id is allowed (does not block).
 
 ---
@@ -79,18 +81,18 @@ disable-model-invocation: true
 ## Workflow
 
 **Step A — fact-lock** (`grillStatus.bqaFacts`):
-1. Compare `design.zones/behavior/actions` vs `legacy.ui` vs common UI.
+1. Compare `design.zones/behavior/actions` vs `legacy.ui` vs common UI; cross-check affordances via `flowgrid-ux-common.mdc` when DSL tags exist but behavior is thin.
 2. Audit business focus (summary, requirements, CSS, error flows).
 3. Cross-check common patterns.
 4. Audit UI error handling flows (all 3 outcomes per action).
-5. Patch bundle → `docskit split`.
+5. Patch bundle → `flowgrid split`.
 6. Set `grillStatus.bqaFacts: done`.
 
 **Step B — member wizard** (`grillStatus.bqaOpen`):
 7. AskQuestion for remaining gaps (batches ≤5).
 8. Apply member decisions to bundle.
 9. Set `grillStatus.bqaOpen: done`.
-10. User runs `docs_render` / `docskit render`.
+10. User runs `docs_render` / `flowgrid render`.
 
 ---
 

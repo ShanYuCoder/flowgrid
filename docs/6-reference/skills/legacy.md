@@ -19,5 +19,5 @@
 
 ## Description / Ý nghĩa
 - Bản thân `/legacy` không phải là một luồng công việc độc lập. Nó đóng vai trò "công tắc" chuyển bối cảnh (Context Shift) của Agent.
-- Khi bật công tắc này, hệ thống Forgekit hiểu rằng nhiệm vụ hiện tại không phải là xây tính năng mới, mà là "khai quật" và hệ thống hóa lại các tính năng, API, hoặc luồng dữ liệu từ một nền tảng cũ kỹ để chuẩn bị cho quá trình chuyển đổi (migration) hoặc thay thế.
+- Khi bật công tắc này, hệ thống FlowGrid hiểu rằng nhiệm vụ hiện tại không phải là xây tính năng mới, mà là "khai quật" và hệ thống hóa lại các tính năng, API, hoặc luồng dữ liệu từ một nền tảng cũ kỹ để chuẩn bị cho quá trình chuyển đổi (migration) hoặc thay thế.
 - Giúp bảo vệ tính toàn vẹn của Spec, ngăn chặn Agent "cầm đèn chạy trước ô tô" tự chế logic khi khảo sát hệ thống cũ.

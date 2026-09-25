@@ -1,10 +1,10 @@
 {
-  "name": "codegenkit/laravel-unitgen",
-  "description": "Codegenkit Laravel unit-test generator (synced into src/.codegenkit)",
+  "name": "flowgrid/laravel-unitgen",
+  "description": "FlowGrid Laravel unit-test generator (synced into src/.flowgrid/php)",
   "type": "library",
   "autoload": {
     "psr-4": {
-      "Codegenkit\\Laravel\\UnitGen\\": "src/"
+      "FlowGrid\\Laravel\\UnitGen\\": "src/"
     }
   },
   "require": {

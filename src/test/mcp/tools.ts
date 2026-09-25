@@ -27,8 +27,8 @@ export function registerTools(server: McpServer): void {
         const argv = [...(input.argv ?? [])]
         if (dryRun && !argv.includes('--dry-run')) argv.push('--dry-run')
         const env: Record<string, string> = {}
-        if (input.testsRoot) env.TESTKIT_TESTS_ROOT = input.testsRoot
-        if (input.docsRoot) env.TESTKIT_DOCS_ROOT = input.docsRoot
+        if (input.testsRoot) env.FLOWGRID_TESTS_ROOT = input.testsRoot
+        if (input.docsRoot) env.FLOWGRID_DOCS_ROOT = input.docsRoot
         const result = runEngine({
           engineRel,
           projectRoot: resolveProjectRoot(input.projectRoot),

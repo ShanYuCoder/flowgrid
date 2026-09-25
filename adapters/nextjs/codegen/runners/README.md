@@ -4,17 +4,17 @@
 
 Generate 4-layer scaffold from feature `ir/design.yaml` (Handlebars) into **`src/`**. API/contract uses the same `ir/design.yaml`.
 
-**Models:** `codegenkit gen` **không** sinh `models/`. Chạy `codegenkit contract-gen --spec .../ir/design.yaml` trước để có `@portal/models` (`packages/models/src/`).
+**Models:** `flowgrid gen` **không** sinh `models/`. Chạy `flowgrid contract-gen --spec .../ir/design.yaml` trước để có `@portal/models` (`packages/models/src/`).
 
 ## Usage
 
 ```bash
-codegenkit contract-gen:dry --spec docs/features/yaml/.../ir/design.yaml
-codegenkit contract-gen --spec docs/features/yaml/.../ir/design.yaml
-codegenkit registry   # validate registries/design.registry.json
-codegenkit gen --spec docs/features/yaml/admin/hotel/list/ir/design.yaml
-codegenkit gen:dry --spec docs/features/.../ir/design.yaml
-codegenkit gen --spec ... --force
+flowgrid contract-gen:dry --spec docs/features/yaml/.../ir/design.yaml
+flowgrid contract-gen --spec docs/features/yaml/.../ir/design.yaml
+flowgrid registry   # validate registries/design.registry.json
+flowgrid gen --spec docs/features/yaml/admin/hotel/list/ir/design.yaml
+flowgrid gen:dry --spec docs/features/.../ir/design.yaml
+flowgrid gen --spec ... --force
 ```
 
 ## Design registry
@@ -24,7 +24,7 @@ codegenkit gen --spec ... --force
 
 - shadcn/ui = canonical (`#ui: AlertDialog`)
 - List default shell: `#shell: DataListPage` (aliases: `DataListTable`, `common list`)
-- `codegenkit gen` resolves shell → list template (`page.tsx.hbs` vs `page.custom.tsx.hbs`)
+- `flowgrid gen` resolves shell → list template (`page.tsx.hbs` vs `page.custom.tsx.hbs`)
 - Unknown `#ui:` / `#widget:` → dry-run fails
 
 ## Spec requirements
@@ -38,7 +38,7 @@ Copy `docs/templates/spec.yaml`. Required:
 - `api.endpoints` with `action: list` or `create`
 - `tags` — see `.cursor/extracts/codegen/tags.md`
 
-**Lifecycle:** Khi ghi `src/app/(dashboard)/**/page.tsx`, codegenkit gen cập nhật registry (`prototype`) + `pnpm portal:lifecycle sync`. Xóa: `pnpm portal:remove --spec <file>`. Doc: `docs/operational/PAGE-LIFECYCLE.md`.
+**Lifecycle:** Khi ghi `src/app/(dashboard)/**/page.tsx`, flowgrid gen cập nhật registry (`prototype`) + `pnpm portal:lifecycle sync`. Xóa: `pnpm portal:remove --spec <file>`. Doc: `docs/operational/PAGE-LIFECYCLE.md`.
 
 ## Output (Next.js)
 

@@ -30,7 +30,7 @@ disable-model-invocation: true
 
 - **[STRICTLY FORBIDDEN]** Do NOT output new files from this skill.
 - **[MANDATORY]** If issues are found → inform user + suggest fixes, or fix directly in `.bundle.yaml` if instructed.
-- **[MANDATORY]** If bundle passes → instruct user: run `docskit split -- <path>` (must emit `ir/design.yaml`), then Codegenkit FE `/gen-common`.
+- **[MANDATORY]** If bundle passes → instruct user: run `flowgrid split -- <path>` (must emit `ir/design.yaml`), then bộ code FE `/gen-common`.
 - **[STRICTLY FORBIDDEN]** Do NOT send BE `/api` a common FE bundle.
 
 ---

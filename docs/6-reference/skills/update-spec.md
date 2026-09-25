@@ -16,7 +16,7 @@
 - File `*.bundle.yaml` được patch (sửa đổi) cục bộ.
 - Gắn thêm tag `#update:*` và tăng `specRevision`.
 - Đổi trạng thái `featureStatus` từ `wire` sang `need-update` nếu cần.
-- Chạy `forgekit split` và kiểm tra tính toàn vẹn thành công.
+- Chạy `flowgrid split` và kiểm tra tính toàn vẹn thành công.
 
 ## Description / Ý nghĩa
 - Cập nhật **cục bộ (Delta Update)**: Dùng khi có thay đổi nhỏ (một kịch bản, 1 khối UI, 1 trường API) trên hệ thống hiện hành. Không dùng để viết lại toàn bộ từ đầu (full rewrite).

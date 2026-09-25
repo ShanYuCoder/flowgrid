@@ -1,8 +1,8 @@
-# 🏛 Sổ Tay Kiến Trúc & Vòng Đời Của Forgekit
+# 🏛 Sổ Tay Kiến Trúc & Vòng Đời Của FlowGrid
 
-Tài liệu này giải thích cách hệ thống **Forgekit** vận hành dưới nắp capo, từ lúc bắt đầu hình thành ý tưởng (Bullet points) cho đến khi sinh ra mã nguồn và tài liệu test hoàn chỉnh.
+Tài liệu này giải thích cách hệ thống **FlowGrid** vận hành dưới nắp capo, từ lúc bắt đầu hình thành ý tưởng (Bullet points) cho đến khi sinh ra mã nguồn và tài liệu test hoàn chỉnh.
 
-Hệ thống Forgekit được vận hành bởi 3 bộ máy cốt lõi (Suites):
+Hệ thống FlowGrid được vận hành bởi 3 bộ máy cốt lõi (Suites):
 1. **Bộ Docs**: Phụ trách xử lý Tài liệu, Đặc tả (Specs) cho cả Frontend, Backend, và Common (chuẩn Arc42, Data Dictionary, State Matrix).
 2. **Bộ Code**: Phụ trách sinh mã nguồn thực thi (Code FE/BE theo Adapters), sinh Unit Test, và sinh mã kiểm thử tự động (Playwright E2E).
 3. **Bộ Test**: Phụ trách quản lý, kiểm tra, và kết xuất các kịch bản kiểm thử (Test Case Documents) theo chuẩn IEEE 29119 Boundary Test Matrix.
@@ -11,7 +11,7 @@ Hệ thống Forgekit được vận hành bởi 3 bộ máy cốt lõi (Suites)
 
 ## 1. Bức Tranh Toàn Cảnh (The Big Picture)
 
-Forgekit hoạt động như một dây chuyền sản xuất tự động, nơi dữ liệu chảy qua 3 bộ máy liên hoàn:
+FlowGrid hoạt động như một dây chuyền sản xuất tự động, nơi dữ liệu chảy qua 3 bộ máy liên hoàn:
 
 ```mermaid
 graph TD
@@ -47,7 +47,7 @@ Quá trình thảo luận giữa Agent và Lập trình viên không chấp nh�
 - **QA & Tech Debt**: Bất kỳ điểm mù nào chưa thể chốt ngay phải được cô lập thành file vật lý tại thư mục `qa/open/QA-<id>-<NNNN>.yaml` (`kind: customer` hoặc `kind: tech-debt`).
 
 ### Giai đoạn 3: Biên dịch & Kết Xuất Chuẩn Mực (Render Phase)
-Khi bạn chạy lệnh của **Bộ Docs** (ví dụ `forgekit render` hoặc `forgekit build`):
+Khi bạn chạy lệnh của **Bộ Docs** (ví dụ `flowgrid render` hoặc `flowgrid build`):
 - Rendering Engine (`render-design-tables.mjs`) chuyển hóa 100% cấu trúc kỹ thuật sang các bảng Markdown tự nhiên chuẩn Arc42:
   - Bảng **Data Dictionary Table (6 cột)** cho trường nhập liệu và quy tắc validation.
   - Bảng **State & Permission Matrix Table** cho trạng thái màn hình và phân quyền.
@@ -63,7 +63,7 @@ Khi bạn chạy lệnh của **Bộ Docs** (ví dụ `forgekit render` hoặc `
 
 ## 3. Hệ Sinh Thái Skills Của AI Agent
 
-Để thúc đẩy vòng đời trên chạy trơn tru, Forgekit cung cấp một dàn Agent Skills mạnh mẽ:
+Để thúc đẩy vòng đời trên chạy trơn tru, FlowGrid cung cấp một dàn Agent Skills mạnh mẽ:
 
 ### 3.1. Nhóm thao tác với Docs (Bộ Docs)
 - **`grill-dev` / `grill-api-spec` / `grill-bqa`**: Các skill "khó tính". Nhiệm vụ của chúng là soi mói các lỗ hổng trong Spec, đào bới logic mâu thuẫn để tạo ra các câu hỏi mở (`qa/open/`).
@@ -80,7 +80,7 @@ Khi bạn chạy lệnh của **Bộ Docs** (ví dụ `forgekit render` hoặc `
 
 ## 4. Mối Quan Hệ Của Các Scripts Dưới Nắp Capo
 
-CLI chính yếu `bin/forgekit.mjs` đóng vai trò là "Nhạc trưởng" điều phối toàn bộ các yêu cầu người dùng xuống các Engine bên dưới:
+CLI chính yếu `bin/flowgrid.mjs` đóng vai trò là "Nhạc trưởng" điều phối toàn bộ các yêu cầu người dùng xuống các Engine bên dưới:
 
 - **Bộ Docs (`engines/docs/`, `engines/openapi/`)**: Phụ trách lệnh `build`, `split`, `openapi_render`. Nơi biến YAML thành tài liệu tĩnh Vitepress.
 - **Bộ Code (`engines/codegen/`)**: Nhận lệnh `gen`, `unit-gen`, `api-gen`. Nơi tích hợp các Adapter (NextJS, FastAPI, DotNet) để sinh code thực tế và mã Unit Test/Playwright E2E.
@@ -280,12 +280,12 @@ flowchart TD
     SPLIT["pnpm spec:split"]
     BQA["/grill-bqa"]
     DEV["/grill-dev\nbundle.gen"]
-    DRY["Bộ Code (Forgekit) gen:dry\nir/design.yaml"]
+    DRY["flowgrid gen:dry\nir/design.yaml"]
   end
 
   subgraph OUT["Prototype → scaffold handoff"]
     PR["/prototype"]
-    GEN["Bộ Code (Forgekit) gen"]
+    GEN["flowgrid gen"]
     GP["/grill-prototype"]
     NEXT["Phase 2 Tests + API"]
   end
@@ -328,15 +328,15 @@ Tint trong gam emerald: **Entry** đậm hơn · **Core** giữa · **Out** nh�
 | Lệnh | Artifact |
 |------|----------|
 | `/architecture` … (Phase 0) | Overview, surfaces, modules, `architecture/03-business-process/FLOW-*`, deployment/ADR — không bundle Code |
-| `/legacy /spec` | Platform DNA `/legacy` + Bộ Docs (Forgekit) `/spec` → legacy-dynamics + bundle.legacy |
+| `/legacy /spec` | Platform DNA `/legacy` + bộ docs `/spec` → legacy-dynamics + bundle.legacy |
 | `/spec` | bundle design v1, `specOrigin: requirement` |
 | `/grill-bqa` | Inventory UI vs common; AskQuestion / `qa/open` |
 | `/grill-dev` | `bundle.gen` + 01 `action` → split `ir/design.yaml` |
 | `/grill-docs` | Reconcile — **không** default |
-| `/prototype` | Đọc **`ir/design.yaml`** (Bộ Code (Forgekit) FE) |
+| `/prototype` | Đọc **`ir/design.yaml`** (bộ code FE) |
 | `/qa-resolve` | Đóng `qa/open/QA-…` |
-| `pnpm forge:render` | `ir/spec.yaml` → `ir/generated/` + `qa/index.md` |
-| `pnpm forge:publish` | `CATALOG.md` + README (GitHub) |
+| `pnpm flowgrid:render` | `ir/spec.yaml` → `ir/generated/` + `qa/index.md` |
+| `pnpm flowgrid:publish` | `CATALOG.md` + README (GitHub) |
 
 ## Lệnh script (design phase)
 

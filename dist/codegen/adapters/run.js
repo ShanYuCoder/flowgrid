@@ -14,7 +14,7 @@ function runDotnetLine(opts) {
     if (argv[0] === 'registry' || argv[0] === 'dry' || argv[0] === 'write')
         argv.shift();
     const project = path.join(packageRoot(), 'adapters', 'dotnet-line', 'codegen', 'runners', 'LineGen', 'LineGen.csproj');
-    const executable = process.env.CODEGENKIT_DOTNET || 'dotnet';
+    const executable = process.env.FLOWGRID_DOTNET || 'dotnet';
     const result = spawnSync(executable, ['run', '--project', project, '--', command, ...argv], {
         cwd: opts.projectRoot,
         encoding: 'utf8',
@@ -24,7 +24,7 @@ function runDotnetLine(opts) {
         return {
             status: 1,
             stdout: '',
-            stderr: `No .NET runtime found; set CODEGENKIT_DOTNET or install dotnet (.NET 8 SDK required).\n`,
+            stderr: `No .NET runtime found; set FLOWGRID_DOTNET or install dotnet (.NET 8 SDK required).\n`,
         };
     }
     return { status: result.status, stdout: result.stdout ?? '', stderr: result.stderr ?? '' };
@@ -36,11 +36,11 @@ export function runAdapterEngine(opts) {
     }
     const env = {
         ...process.env,
-        CODEGENKIT_ROOT: opts.projectRoot,
-        CODEGENKIT_ADAPTER: opts.adapter,
+        FLOWGRID_PROJECT_ROOT: opts.projectRoot,
+        FLOWGRID_ADAPTER: opts.adapter,
     };
     if (opts.docsRoot)
-        env.CODEGENKIT_DOCS_ROOT = opts.docsRoot;
+        env.FLOWGRID_DOCS_ROOT = opts.docsRoot;
     if (opts.adapter === 'dotnet-line') {
         return runDotnetLine({ ...opts, argv, env });
     }
@@ -71,11 +71,11 @@ export function runCommonGen(opts) {
     }
     const env = {
         ...process.env,
-        CODEGENKIT_ROOT: opts.projectRoot,
-        CODEGENKIT_ADAPTER: opts.adapter,
+        FLOWGRID_PROJECT_ROOT: opts.projectRoot,
+        FLOWGRID_ADAPTER: opts.adapter,
     };
     if (opts.docsRoot)
-        env.CODEGENKIT_DOCS_ROOT = opts.docsRoot;
+        env.FLOWGRID_DOCS_ROOT = opts.docsRoot;
     const engine = path.join(packageRoot(), 'adapters', 'shared', 'common-gen.mjs');
     const result = spawnSync(process.execPath, [engine, ...argv], {
         cwd: opts.projectRoot,
@@ -96,11 +96,11 @@ export function runCssGen(opts) {
     }
     const env = {
         ...process.env,
-        CODEGENKIT_ROOT: opts.projectRoot,
-        CODEGENKIT_ADAPTER: opts.adapter,
+        FLOWGRID_PROJECT_ROOT: opts.projectRoot,
+        FLOWGRID_ADAPTER: opts.adapter,
     };
     if (opts.docsRoot)
-        env.CODEGENKIT_DOCS_ROOT = opts.docsRoot;
+        env.FLOWGRID_DOCS_ROOT = opts.docsRoot;
     const engine = path.join(packageRoot(), 'adapters', 'shared', 'css-gen.mjs');
     // ensure --adapter=... is passed down to css-gen.mjs if not provided
     if (!argv.some(a => a.startsWith('--adapter='))) {
@@ -125,11 +125,11 @@ export function runContractEngine(opts) {
     }
     const env = {
         ...process.env,
-        CODEGENKIT_ROOT: opts.projectRoot,
-        CODEGENKIT_ADAPTER: 'nextjs',
+        FLOWGRID_PROJECT_ROOT: opts.projectRoot,
+        FLOWGRID_ADAPTER: 'nextjs',
     };
     if (opts.docsRoot)
-        env.CODEGENKIT_DOCS_ROOT = opts.docsRoot;
+        env.FLOWGRID_DOCS_ROOT = opts.docsRoot;
     const script = opts.registry ? 'validate-registry.mjs' : 'generate.mjs';
     const engine = path.join(packageRoot(), 'adapters', 'nextjs', 'contractgen', 'runners', script);
     const result = spawnSync(process.execPath, [engine, ...argv], {

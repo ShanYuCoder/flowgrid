@@ -8,11 +8,11 @@ disable-model-invocation: true
 
 **Owner:** Platform DNA (`--type=be|monolith --be-adapter=laravel`)
 
-Laravel · `nwidart/laravel-modules` (modules-v1) · Codegenkit grill/gen first.
+Laravel · `nwidart/laravel-modules` (modules-v1) · bộ code grill/gen first.
 
 ## Gen trước (code)
 
-1. Codegenkit `gen` / repo shim from IR already grilled
+1. bộ code `gen` / repo shim from IR already grilled
 2. AI only fills `#needs-*` / gaps not yet in registries
 3. Do not hand-write module scaffolding codegen already covers
 

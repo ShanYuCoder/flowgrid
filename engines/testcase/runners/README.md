@@ -6,7 +6,7 @@ Reads **plans** from the tests hub → writes `tests/e2e/` in the FE project.
 pnpm testcase:gen:dry --id TC-LOGIN-VALID
 pnpm testcase:gen --id W-AD-AUTH-001
 pnpm testcase:gen --id smoke
-pnpm testcase:gen --testcase "$TESTKIT_TESTS_ROOT/cases/W-AD-AUTH-001/TC-LOGIN-VALID.yaml"
+pnpm testcase:gen --testcase "$FLOWGRID_TESTS_ROOT/cases/W-AD-AUTH-001/TC-LOGIN-VALID.yaml"
 pnpm testcase:gen --feature W-AD-AUTH-001   # all TC-* under cases/{id}/
 ```
 
@@ -22,6 +22,6 @@ an actionable error. Validation is all-or-nothing: if any output in a batch is
 rejected, nothing is written.
 
 Design `ir/design.yaml` (testIds) is optional enrichment loaded from the **docs
-hub** via `refs.screen` when available. Set `TESTKIT_DOCS_ROOT` explicitly for
+hub** via `refs.screen` when available. Set `FLOWGRID_DOCS_ROOT` explicitly for
 a non-local docs hub; generation continues with testcase-only context if it is
 unavailable.

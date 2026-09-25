@@ -30,11 +30,11 @@ disable-model-invocation: true
 
 ## Rule: Audit Interlock with Page Type
 
-- **[MANDATORY]** Before grilling, run: `node engines/spec/lib/audit-bundle-gaps.mjs <bundle> --type <profile>`.
+- **[MANDATORY]** Before grilling, run: `flowgrid audit spec <bundle> --type <profile>`.
   - `<profile>` lấy từ `gen.codegen.profile` đã xác nhận (list | create | detail | admin-crud | auth | ...).
   - Nếu profile chưa set → hỏi member xác định profile trước, KHÔNG chạy audit với `--type unknown`.
-  - Script output `gaps[]` (thiếu field bắt buộc) + `confirms[]` (optional cần hỏi member).
-  - Agent xử lý `gaps[]` → bổ sung trực tiếp; `confirms[]` → hỏi qua wizard.
+  - Script output `gaps[]` + `confirms[]` (includes `UX_*` / `CONFIRM_UX_*` affordance — see `flowgrid-ux-common.mdc`).
+  - Agent patches structural `gaps[]`; UX confirms → wizard with `(Recommended)` from audit output.
 
 ---
 
@@ -139,7 +139,8 @@ disable-model-invocation: true
   1. `gen.codegen.profile` is set (double-quoted string).
   2. `entity` + `module` are non-empty (for list/create/admin-crud/auth/change-password/public).
   3. Sibling `01` endpoint `action` + path suffix are explicitly set.
-- **[MANDATORY]** Run `docskit_bundle_split` after editing bundle; user runs `docs_render`.
+- **[MANDATORY]** When bundle actions carry `executionContract.apiRef`, run `flowgrid audit fe-be <bundle.yaml> [--backend-spec …/01-backend-spec.yaml]` after `/api-update`; fix `FEBE_*` before `grillStatus.dev: done`.
+- **[MANDATORY]** Run `flowgrid_docs_bundle_split` after editing bundle; user runs `docs_render`.
 - **[MANDATORY]** If ArtifactGraph is available: call `artifactgraph_allowlist_check(commandKey=genDry)` then `artifactgraph_recommend_command`. Do NOT execute code generation in docs hub.
 
 ---
@@ -152,7 +153,7 @@ disable-model-invocation: true
 
 ## Handoff
 
-- FE Codegenkit dry pass → `/prototype`
+- bộ code FE dry pass → `/prototype`
 - BQA↔Dev conflict → `/grill-docs`
 - Legacy fact gap → `/update-spec-legacy`
 - Confirmed common promote → `/docs-mark` (same session or before `/prototype`)

@@ -1,0 +1,10 @@
+---
+description: Antigravity — FlowGrid MCP wiring (mcp_config.json)
+alwaysApply: false
+---
+# Antigravity + FlowGrid
+
+- MCP config file: `.agents/mcp_config.json` (not `mcp.json`).
+- Server name: `flowgrid` → `bin/flowgrid-mcp.mjs` from the FlowGrid package used at `flowgrid init`.
+- Skills live under `.agents/skills/`; rules under `.agents/rules/`.
+- Re-sync after config changes: `flowgrid harness sync --agent=gemini_antigravity`.

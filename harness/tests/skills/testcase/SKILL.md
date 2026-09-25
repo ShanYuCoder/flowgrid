@@ -6,17 +6,18 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY PRE-FLIGHT
 > **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
-> **[MANDATORY]** Read entire `ir/design.yaml` for the target screen BEFORE authoring any test case.
+> **[MANDATORY]** Read the entire function **`*.bundle.yaml`** (sibling of `ir/` on docs hub) BEFORE authoring any test case. Do not split-read `ir/spec.yaml` + `ir/design.yaml` for coverage traceability.
 
 # /testcase — E2E Test Case Authoring (Tests Hub)
 
-**Owner:** Testkit (`--type=tests`). Design rules stay on docs hub. Playwright generation is FE `/test`.
+**Owner:** bộ test (`--type=tests`). Design rules stay on docs hub. Playwright generation is FE `/test`.
 
 ---
 
 ## Rule: Audit Interlock & Workload Threshold (Law 2)
 
-- **[MANDATORY]** Always run static audit first: `node engines/spec/lib/audit-testcase-gaps.mjs <target-test.yaml>`.
+- **[MANDATORY]** Always run static audit first: `flowgrid audit testcase <cases/.../TC-*.yaml> --bundle <function.bundle.yaml>` (bundle path = same leaf you read for SSOT).
+- **[MANDATORY]** Every new TC file MUST declare **`schemaVersion: 2`** and pass `flowgrid cases:check` (JSON Schema) plus audit (matrix facets).
   - ✅ Consume JSON gap report to fix coverage gaps.
   - **Threshold Interlock (Law 2):**
     - **Small Scope (≤5 missing testcases/gaps):** Resolve inline in chat thread.
@@ -25,17 +26,21 @@ disable-model-invocation: true
 
 ---
 
-## Rule: Missing Scenarios / Acceptance Criteria
+## Rule: Bundle SSOT (read)
 
-- **[MANDATORY]** If `userStories.scenarios` or `userStories.acceptance` is missing in `ir/design.yaml`:
-  → **STOP**. Output a complete gap report in chat formatted as a ready-to-paste prompt: `@docskit /update-spec [exact missing details]`. Do NOT invent test cases.
-- **[STRICTLY FORBIDDEN]** Do NOT write docs hub files (`ir/*`, `*.bundle.yaml`). Do NOT read `ir/spec.yaml` for testcase authoring. Do NOT read generated `*.md`.
+- **[MANDATORY]** Resolve the function leaf via `flowgrid_docs_route` / glob → read **`…/<slug>.bundle.yaml`** (exactly one bundle per function folder).
+- **[MANDATORY]** Trace coverage from bundle: `userStories` (top-level), `acceptanceCriteria`, `spec.ui`, `design.sections`, `design.actions`, `design.stateMatrix`.
+- **[MANDATORY]** If bundle missing or `userStories.scenarios` / `acceptanceCriteria` empty → **STOP**; hand off `/docs-hub /update-spec` or `/spec` (paste-ready gap prompt). Do NOT invent tests.
+- **[MANDATORY]** If `flowgrid check` / split:check fails on that bundle → hand off docs-hub to reconcile bundle ↔ `ir/*` before testcase grill.
+- **[STRICTLY FORBIDDEN]** Write docs hub (`ir/*`, `*.bundle.yaml`). Do NOT use generated `*.md` as SSOT.
+
+**Codegen / Playwright** still consume **`ir/design.yaml`** on FE repo after split; bundle is the **authoring** SSOT for test design.
 
 ---
 
 ## Rule: ID Resolution
 
-- **[MANDATORY]** Use `docskit_route` or `docskit_get_element` (or glob under `TESTKIT_DOCS_ROOT` / `surfaces/…`) to resolve target paths from ID or slug.
+- **[MANDATORY]** Use `flowgrid_docs_route` or `flowgrid_docs_get_element` (or glob under `FLOWGRID_DOCS_ROOT` / `surfaces/…`) to resolve target paths from ID or slug.
 - **[STRICTLY FORBIDDEN]** Do NOT demand full filesystem path from user when ID or slug is given.
 
 ---
@@ -51,7 +56,9 @@ disable-model-invocation: true
 
 ## Rule: Test Case Content Requirements & Equivalence Partitioning (testMatrix)
 
-- **[MANDATORY]** Read `userStories.scenarios`, `validation`, and `actions` from `ir/design.yaml`.
+- **[MANDATORY]** Root field **`schemaVersion: 2`** on every `TC-*.yaml` (release gate SSOT).
+- **[MANDATORY]** Populate **`traceability`** (`bundleScreen`, `bundleScenarios[]` slugs, `acceptanceRefs[]` as `AC-01`…, `actionRefs[]` as `btn_*`) from bundle before grill sign-off — required for `cases:gate --strict`.
+- **[MANDATORY]** Map cases to `userStories.scenarios`, field `validation`, and `design.actions` from the **bundle** (whole file).
 - **[MANDATORY]** Every test case file MUST declare a structured `testMatrix` covering:
   1. `positive_boundary`: Minimum / maximum valid lengths and ranges.
   2. `negative_length` / `negative_format`: Under min, over max, and regex pattern violations with expected localized error messages.
@@ -71,8 +78,8 @@ disable-model-invocation: true
 ## Rule: Route Cross-Repo Evidence
 
 - **[MANDATORY]** Route evidence by owner:
-  - Functions/`W-*` → Docskit
-  - Plan/docs → `TESTKIT_TESTS_ROOT` / `TESTKIT_DOCS_ROOT`
+  - Functions/`W-*` → bộ docs
+  - Plan/docs → `FLOWGRID_TESTS_ROOT` / `FLOWGRID_DOCS_ROOT`
   - Symbols for repo X → `codegraph-<repo-key>` (Platform DNA-wired server)
 - **[STRICTLY FORBIDDEN]** Never query one workspace-wide graph. Never hand-edit MCP config.
 
@@ -81,7 +88,7 @@ disable-model-invocation: true
 ## Verification Checklist
 
 - [ ] Audit script run; all coverage gaps resolved or gap report generated for docs hub.
-- [ ] `ir/design.yaml` read in full (not partial slices).
+- [ ] Function `*.bundle.yaml` read in full (not partial slices).
 - [ ] All `userStories.scenarios` covered by corresponding test cases.
 - [ ] Equivalence Partitioning & Boundary Value Analysis `testMatrix` declared (min/max boundary, regex failure, duplicate 409, double-submit lock, offline preservation).
 - [ ] Scenario markdown (`SC-*.md`) formatted with IEEE 29119 Boundary Analysis Table & Gherkin BDD.

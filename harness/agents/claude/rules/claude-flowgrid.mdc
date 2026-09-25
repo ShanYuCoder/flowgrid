@@ -1,0 +1,9 @@
+---
+description: Claude Code — FlowGrid MCP wiring
+alwaysApply: false
+---
+# Claude Code + FlowGrid
+
+- MCP: `.claude/mcp.json`, server `flowgrid`.
+- Skills: `.claude/skills/<name>/SKILL.md`.
+- Re-sync: `flowgrid harness sync --agent=claude`.

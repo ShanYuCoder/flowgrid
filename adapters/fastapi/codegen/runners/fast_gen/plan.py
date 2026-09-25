@@ -24,9 +24,9 @@ def render_template(template_name: str, ctx: dict, *, templates_dir: Path | None
 
 
 def repo_root() -> Path:
-  target = os.environ.get("CODEGENKIT_ROOT")
+  target = os.environ.get("FLOWGRID_PROJECT_ROOT")
   if not target:
-    raise RuntimeError("CODEGENKIT_ROOT is required for the FastAPI adapter")
+    raise RuntimeError("FLOWGRID_PROJECT_ROOT is required for the FastAPI adapter")
   return Path(target).resolve()
 
 

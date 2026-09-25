@@ -17,7 +17,7 @@ function walk(dir) {
   return results;
 }
 
-const files = walk('/home/vutv/workspace/forgekit/src/modules');
+const files = walk('/home/vutv/workspace/flowgrid/src/modules');
 
 let totalReplaced = 0;
 

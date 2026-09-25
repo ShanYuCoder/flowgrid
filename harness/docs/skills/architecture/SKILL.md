@@ -7,7 +7,7 @@ extractBundle: architecture-core
 
 > [!CRITICAL] MANDATORY PRE-FLIGHT
 > **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
-> **[MANDATORY]** Use `docskit_route`, `docskit_list_ids`, or glob search to resolve target path before authoring.
+> **[MANDATORY]** Use `flowgrid_docs_route`, `flowgrid_docs_list_ids`, or glob search to resolve target path before authoring.
 
 # /architecture — Architecture Router
 
@@ -52,6 +52,6 @@ extractBundle: architecture-core
 
 ## Verification Checklist
 
-- [ ] Used `docskit_route` or `docskit_get_element` to locate target element.
+- [ ] Used `flowgrid_docs_route` or `flowgrid_docs_get_element` to locate target element.
 - [ ] Routed to correct child skill.
 - [ ] Architecture boundary respected (no Personas, no UI copy, no API contracts).

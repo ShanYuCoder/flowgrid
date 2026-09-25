@@ -13,10 +13,10 @@ Active: `/prototype` · `/grill-prototype` — **một** command / session.
 | `/prototype` | `.cursor/skills/prototype/SKILL.md` |
 | `/grill-prototype` | `.cursor/skills/grill-prototype/SKILL.md` |
 
-Prerequisite: member-configured `CODEGENKIT_DOCS_ROOT` points to the grilled
+Prerequisite: member-configured `FLOWGRID_DOCS_ROOT` points to the grilled
 docs registry hub → `npm run codegen:dry -- --id …` OK. Never infer a sibling docs
 checkout; local ArtifactGraph is not the docs bridge. Architecture IDs →
-Docskit (`DOCSKIT_ROOT`); never CodeGraph for C4/architecture.
+bộ docs (`FLOWGRID_DOCS_ROOT`); never CodeGraph for C4/architecture.
 
 ## Thứ tự
 

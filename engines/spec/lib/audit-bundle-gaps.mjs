@@ -2,7 +2,7 @@
 
 /**
  * audit-bundle-gaps.mjs
- * Zero-dependency deterministic gap audit for Forgekit feature bundle YAML.
+ * Zero-dependency deterministic gap audit for FlowGrid feature bundle YAML.
  *
  * PURPOSE: Check QUANTITY only — does the field EXIST or not?
  *          Quality analysis (is content good? logical? consistent?) is the Agent's job.
@@ -14,10 +14,12 @@
  * If --type is omitted, script auto-detects from codegen.profile or design.shell.tag.
  *
  * Output: JSON with gaps[] (missing required) + confirms[] (optional, agent must ask member).
+ * UX affordance checks (flowgrid-ux-common) merge in with category "ux" and codes UX_* / CONFIRM_UX_*.
  */
 
 import fs from 'fs';
 import path from 'path';
+import { auditUxAffordance } from './audit-ux-affordance.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -516,6 +518,17 @@ function auditBundleContent(rawText, filePath, pageType) {
   }
 
   // =========================================================================
+  // UX affordance (flowgrid-ux-common checklists)
+  // =========================================================================
+
+  const ux = auditUxAffordance(rawText, pageType);
+  for (const g of ux.gaps) gaps.push(g);
+  for (const c of ux.confirms) confirms.push(c);
+
+  const uxGaps = gaps.filter((g) => g.category === 'ux').length;
+  const uxConfirms = confirms.filter((c) => c.category === 'ux').length;
+
+  // =========================================================================
   // Result
   // =========================================================================
 
@@ -524,6 +537,8 @@ function auditBundleContent(rawText, filePath, pageType) {
     detectedType: pageType,
     totalGaps: gaps.length,
     totalConfirms: confirms.length,
+    uxAffordanceGaps: uxGaps,
+    uxAffordanceConfirms: uxConfirms,
     criticalGaps: gaps.filter(g => g.severity === 'critical').length,
     warningGaps: gaps.filter(g => g.severity === 'warning').length,
     infoGaps: gaps.filter(g => g.severity === 'info').length,

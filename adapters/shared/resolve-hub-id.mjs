@@ -220,8 +220,8 @@ export function resolveBackendSpecPaths(specOrDir) {
 export function resolveHubId(repoRoot, id, mode = 'api-codegen') {
   if (!id || typeof id !== 'string') throw new Error('Missing --id')
   const notes = []
-  const docsRoot = process.env.CODEGENKIT_DOCS_ROOT
-    ? path.resolve(process.env.CODEGENKIT_DOCS_ROOT)
+  const docsRoot = process.env.FLOWGRID_DOCS_ROOT
+    ? path.resolve(process.env.FLOWGRID_DOCS_ROOT)
     : (() => {
         try { return resolveProjectRoot(repoRoot, 'docs') } catch {
           return resolveProjectRoot(repoRoot, 'base-docs')
@@ -229,8 +229,8 @@ export function resolveHubId(repoRoot, id, mode = 'api-codegen') {
       })()
   let testsRoot
   try {
-    testsRoot = process.env.CODEGENKIT_TESTS_ROOT
-      ? path.resolve(process.env.CODEGENKIT_TESTS_ROOT)
+    testsRoot = process.env.FLOWGRID_TESTS_ROOT
+      ? path.resolve(process.env.FLOWGRID_TESTS_ROOT)
       : (() => {
           try { return resolveProjectRoot(repoRoot, 'tests') } catch {
             return resolveProjectRoot(repoRoot, 'base-tests')

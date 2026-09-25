@@ -1,0 +1,9 @@
+---
+description: Cursor — FlowGrid MCP wiring
+alwaysApply: false
+---
+# Cursor + FlowGrid
+
+- MCP: `.cursor/mcp.json`, server `flowgrid`.
+- Skills: `.cursor/skills/<name>/SKILL.md`.
+- Re-sync: `flowgrid harness sync --agent=cursor`.

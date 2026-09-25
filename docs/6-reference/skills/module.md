@@ -10,7 +10,7 @@
 - Chia sẻ tài nguyên chung của 1 Module: `/module <CMP-ID> common`
 
 ## Input (Dữ liệu đầu vào)
-- Nhận diện CMP ID do người dùng cung cấp. Agent sẽ tự động phân giải (Resolve Target) xem Module đó đang nằm ở Surface nào bằng `docskit_route` hoặc glob search.
+- Nhận diện CMP ID do người dùng cung cấp. Agent sẽ tự động phân giải (Resolve Target) xem Module đó đang nằm ở Surface nào bằng `flowgrid_docs_route` hoặc glob search.
 - Định nghĩa các cụm chức năng (Clusters), quy trình hoặc API nội bộ trong Module đó.
 
 ## Output (Kết quả mong đợi)

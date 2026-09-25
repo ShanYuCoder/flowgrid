@@ -4,7 +4,7 @@ import { buildEnrichedPlan, enrichSpecCodegen } from './lib/plan.mjs'
 import { parseArgs, readSpecFile } from './lib/read-spec.mjs'
 import { writeManifest, writeOutputs } from './lib/write-files.mjs'
 
-const repoRoot = path.resolve(process.env.CODEGENKIT_ROOT ?? process.cwd())
+const repoRoot = path.resolve(process.env.FLOWGRID_PROJECT_ROOT ?? process.cwd())
 
 import { resolveHubId, resolveBackendSpecPaths } from '../../../shared/resolve-hub-id.mjs'
 import { mergeI18nFlat } from '../../../shared/i18n-merge.mjs'

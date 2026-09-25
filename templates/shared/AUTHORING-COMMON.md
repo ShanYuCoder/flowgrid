@@ -1,6 +1,6 @@
 # Hướng dẫn tạo Common Function / Pattern
 
-Tài liệu này hướng dẫn quy trình tiêu chuẩn để định nghĩa và thiết kế các thành phần dùng chung (Common) trong hệ thống Docskit, bao gồm: UI Patterns, Backend Middlewares, API Functions, và các Business Rules.
+Tài liệu này hướng dẫn quy trình tiêu chuẩn để định nghĩa và thiết kế các thành phần dùng chung (Common) trong hệ thống FlowGrid bộ docs, bao gồm: UI Patterns, Backend Middlewares, API Functions, và các Business Rules.
 
 ## 1. Phạm vi Common (bắt buộc)
 
@@ -51,7 +51,7 @@ Trước khi sinh code, bạn có thể yêu cầu AI kiểm tra lại bundle:
 ### Bước 5: Render và Tích hợp
 Sau khi có file YAML, chạy lệnh để sinh tài liệu Markdown cho toàn team đọc:
 ```bash
-docskit split -- surfaces/<surface>/common/yaml/auth-middleware/auth-middleware.bundle.yaml
+flowgrid split -- surfaces/<surface>/common/yaml/auth-middleware/auth-middleware.bundle.yaml
 ---
 
 ## 2.1 Quy tắc Chuẩn hóa Chất lượng khi Tạo Common

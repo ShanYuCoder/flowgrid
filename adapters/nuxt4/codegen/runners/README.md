@@ -7,10 +7,10 @@ Generate 4-layer scaffold from feature `ir/design.yaml` (Handlebars).
 ## Usage
 
 ```bash
-codegenkit registry   # validate registries/design.registry.json
-codegenkit gen --spec docs/features/yaml/admin/hotel/list/ir/design.yaml
-codegenkit gen:dry --spec docs/features/.../ir/design.yaml
-codegenkit gen --spec ... --force
+flowgrid registry   # validate registries/design.registry.json
+flowgrid gen --spec docs/features/yaml/admin/hotel/list/ir/design.yaml
+flowgrid gen:dry --spec docs/features/.../ir/design.yaml
+flowgrid gen --spec ... --force
 ```
 
 ## Design registry
@@ -20,7 +20,7 @@ codegenkit gen --spec ... --force
 
 - shadcn/ui = canonical (`#ui: AlertDialog`)
 - List default shell: `#shell: DataListPage` (aliases: `DataListTable`, `common list`)
-- `codegenkit gen` resolves shell → list template (`page.vue.hbs` vs `page.custom.vue.hbs`)
+- `flowgrid gen` resolves shell → list template (`page.vue.hbs` vs `page.custom.vue.hbs`)
 - Unknown `#ui:` / `#widget:` → dry-run fails
 
 ## Spec requirements
@@ -47,7 +47,7 @@ tags:
 
 **Namespace collision:** `entity: hotel` + `module: chain-hotels` writes to `models/chain-hotel/`, not `models/hotel/` (admin). Explicit `codegen.namespace: chain-hotel` also works.
 
-**Lifecycle:** Khi ghi `pages/*.vue`, codegenkit gen cập nhật registry (`prototype`) + `pnpm portal:lifecycle sync`. Xóa: `pnpm portal:remove --spec <file>`. Doc: `docs/operational/PAGE-LIFECYCLE.md`.
+**Lifecycle:** Khi ghi `pages/*.vue`, flowgrid gen cập nhật registry (`prototype`) + `pnpm portal:lifecycle sync`. Xóa: `pnpm portal:remove --spec <file>`. Doc: `docs/operational/PAGE-LIFECYCLE.md`.
 
 ## Output
 

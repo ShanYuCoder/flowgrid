@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Read-only analysis by default. Do not implement fixes unless explicitly asked.
 
-**Owner:** Common Hub (Cross-Boundary Inspector)
+**Owner:** Common Hub (Cross-Boundary Inspector). Optional rule: `flowgrid-process.mdc`.
 
 ## Checkout resolution
 
@@ -90,12 +90,12 @@ if CodeGraph available: changed symbols + callers + call graph — for repo X us
   open repo's index; unindexed repo → report `cd <root> && codegraph init`
 else: targeted repository search/read
 
-if Docskit available: map process steps to CMP/CTR/FLOW docs via DOCSKIT_ROOT
+if bộ docs available: map process steps to CMP/CTR/FLOW docs via FLOWGRID_DOCS_ROOT
   (never CodeGraph for architecture Markdown)
 else: repository conventions/search
 
 IR / registry / generation questions → pointer kits
-  (CODEGENKIT_DOCS_ROOT, TESTKIT_DOCS_ROOT, TESTKIT_TESTS_ROOT)
+  (FLOWGRID_DOCS_ROOT, FLOWGRID_DOCS_ROOT, FLOWGRID_TESTS_ROOT)
 
 if ArtifactGraph available: affected tags/registries/parity
   (local-only — never a shared index for other repos)

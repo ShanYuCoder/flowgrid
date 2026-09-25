@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codegenkit\Laravel\UnitGen;
+namespace FlowGrid\Laravel\UnitGen;
 
 final class ProjectResolver
 {
@@ -11,9 +11,9 @@ final class ProjectResolver
      */
     public static function resolve(): array
     {
-        $configured = getenv('CODEGENKIT_ROOT');
+        $configured = getenv('FLOWGRID_PROJECT_ROOT');
         if ($configured === false || $configured === '') {
-            throw new \RuntimeException('CODEGENKIT_ROOT is required for Laravel generation');
+            throw new \RuntimeException('FLOWGRID_PROJECT_ROOT is required for Laravel generation');
         }
 
         $target = realpath($configured) ?: $configured;
@@ -88,7 +88,7 @@ final class ProjectResolver
 
     public static function adapterRoot(): string
     {
-        // adapters/laravel/php → adapters/laravel; or src/.codegenkit → parent product
+        // adapters/laravel/php → adapters/laravel; or src/.flowgrid → parent product
         $engine = self::engineRoot();
         $parent = dirname($engine);
         if (is_dir($parent.DIRECTORY_SEPARATOR.'registries')) {

@@ -53,7 +53,7 @@ surfaces/<surface>/CMP-*/<NN…>/
   api/<seq>/01-backend-spec.yaml
 ```
 
-Line + integration use the same bundle schema owned by Bộ Docs (Forgekit).
+Line + integration use the same bundle schema owned by bộ docs.
 
 ---
 

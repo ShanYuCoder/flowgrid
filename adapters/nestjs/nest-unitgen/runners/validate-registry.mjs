@@ -4,7 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const adapterRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
-const productRoot = path.resolve(process.env.CODEGENKIT_ROOT ?? process.cwd())
+const productRoot = path.resolve(process.env.FLOWGRID_PROJECT_ROOT ?? process.cwd())
 
 async function resolveRegistry() {
   const name = 'registries/nest-unit-test.registry.json'

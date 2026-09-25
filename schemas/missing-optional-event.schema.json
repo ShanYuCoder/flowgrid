@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/raintr91/Testkit/schemas/missing-optional-event.schema.json",
-  "title": "Testkit missing optional accelerator event",
+  "$id": "https://platform.local/schemas/flowgrid-test/missing-optional-event.schema.json",
+  "title": "FlowGrid bộ test missing optional accelerator event",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -16,16 +16,14 @@
   ],
   "properties": {
     "schemaVersion": { "const": "1.0.0" },
-    "event": { "const": "testkit.missing-optional" },
-    "package": { "const": "@platform/testkit" },
+    "event": { "const": "flowgrid.missing-optional" },
+    "package": { "const": "@platform/flowgrid-test" },
     "runId": { "type": "string", "minLength": 1 },
     "optional": { "type": "string", "minLength": 1 },
     "reason": {
       "enum": ["not-configured", "unavailable", "invocation-failed"]
     },
-    "fallback": {
-      "enum": ["local-deterministic-coverage", "local-deterministic-search"]
-    },
+    "fallback": { "type": "string", "minLength": 1 },
     "metrics": {
       "type": "object",
       "additionalProperties": false,

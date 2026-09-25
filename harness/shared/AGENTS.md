@@ -1,8 +1,8 @@
-# {{DOC_SKIT_AGENT_LABEL}} Workspace Rules — Docskit Physical Interlocks
+# {{FLOWGRID_AGENT_LABEL}} Workspace Rules — bộ docs Physical Interlocks
 
 > [!CRITICAL]
 > These are **PHYSICAL INTERLOCKS**, not casual checklist reminders.
-> Generated at `docskit init` for agent `{{DOC_SKIT_AGENT_ID}}` → `{{DOC_SKIT_AGENT_DIR}}/{{DOC_SKIT_OVERLAY_FILE}}`.
+> Generated at `flowgrid init` for agent `{{FLOWGRID_AGENT_ID}}` → `{{FLOWGRID_AGENT_DIR}}/{{FLOWGRID_OVERLAY_FILE}}`.
 > Synchronized with `SSOT_AGENT_PROTOCOL.md`.
 > Any violation of these laws → run **FAILED**. Chat-only "done" = **STRICTLY REJECTED**.
 >
@@ -11,18 +11,18 @@
 
 **Path SSOT:** `surfaces/<surface>/CMP-*/<slug>/` (NO `modules/` segment)  
 **Task tracking:** Checklist in chat thread (≤5 items) or implementation plan artifact / Plan Mode (large tasks). **DO NOT** create physical `TODO.md` files in the repository.  
-**Skill root:** `{{DOC_SKIT_AGENT_DIR}}/skills/<name>/SKILL.md`  
-**Tools:** read=`{{DOC_SKIT_READ_TOOL}}` · write=`{{DOC_SKIT_WRITE_TOOL}}`
+**Skill root:** `{{FLOWGRID_AGENT_DIR}}/skills/<name>/SKILL.md`  
+**Tools:** read=`{{FLOWGRID_READ_TOOL}}` · write=`{{FLOWGRID_WRITE_TOOL}}`
 
 ---
 
 ## LAW 1 — CRITICAL RULE FOR PRE-FLIGHT CHECK
 
-In any thread (new or continuing), whenever a user requests to run a skill or feature, the **MANDATORY FIRST ACTION** is to invoke `{{DOC_SKIT_READ_TOOL}}` directly on the target `SKILL.md` to load the current standards.
+In any thread (new or continuing), whenever a user requests to run a skill or feature, the **MANDATORY FIRST ACTION** is to invoke `{{FLOWGRID_READ_TOOL}}` directly on the target `SKILL.md` to load the current standards.
 
 **STRICTLY FORBIDDEN** to rely on speculative memory or context from prior turns.
 
-Without first invoking `{{DOC_SKIT_READ_TOOL}}` on `SKILL.md` → **FORBIDDEN** to generate plans, YAML files, or any product artifacts.
+Without first invoking `{{FLOWGRID_READ_TOOL}}` on `SKILL.md` → **FORBIDDEN** to generate plans, YAML files, or any product artifacts.
 
 ---
 
@@ -79,7 +79,7 @@ The verification checklist at the bottom of a skill serves only to audit evidenc
 
 Whenever the agent generates a persistent result, it **MUST NOT** retain it solely in RAM or chat context.
 
-**MANDATORY TO USE TOOL `{{DOC_SKIT_WRITE_TOOL}}` TO WRITE PHYSICAL FILES IMMEDIATELY.**
+**MANDATORY TO USE TOOL `{{FLOWGRID_WRITE_TOOL}}` TO WRITE PHYSICAL FILES IMMEDIATELY.**
 
 Physical output of step N = Physical input of step N+1.
 
@@ -133,12 +133,12 @@ In standard `/spec` runs, the sole duty is to **consume existing common definiti
 
 **1. Boundaries & Ownership:**
 - ArtifactGraph manages solely `artifactgraph.json`, `registries/*.json`, `templates`, and `lexicon/` within the current repository.
-- It does **NOT** manage Architecture Markdown (owned by Docskit), Code Generators (owned by Codegenkit/Testkit), or Symbol Indexes (owned by CodeGraph).
+- It does **NOT** manage Architecture Markdown (owned by bộ docs), Code Generators (owned by bộ code/bộ test), or Symbol Indexes (owned by CodeGraph).
 
 **2. Cross-Repo Routing:**
 - **STRICTLY FORBIDDEN** to use ArtifactGraph for broad cross-repo scanning or entire workspace graphs. Route by ownership:
-  - Architecture ID / C4 path → Delegate to **Docskit** (`DOCSKIT_ROOT`).
-  - IR / registry / generation → Delegate to **Owning Kit** (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
+  - Architecture ID / C4 path → Delegate to **bộ docs** (`FLOWGRID_DOCS_ROOT`).
+  - IR / registry / generation → Delegate to **Owning Kit** (`FLOWGRID_DOCS_ROOT`, `FLOWGRID_DOCS_ROOT`, `FLOWGRID_TESTS_ROOT`).
   - Symbol / Call-graph lookups for repo X → Use **CodeGraph MCP** for repo X (`codegraph-<key>`).
 
 **3. Protocol for MCP Usage:**
@@ -154,8 +154,8 @@ In standard `/spec` runs, the sole duty is to **consume existing common definiti
 ## Mandatory Lock Sequence
 
 ```text
-{{DOC_SKIT_READ_TOOL}} SKILL.md
-  → For every persistent result: {{DOC_SKIT_WRITE_TOOL}} IMMEDIATELY (No RAM)
+{{FLOWGRID_READ_TOOL}} SKILL.md
+  → For every persistent result: {{FLOWGRID_WRITE_TOOL}} IMMEDIATELY (No RAM)
   → Data source: User | ArtifactGraph only; tag gaps with #missing_info
   → Grill: 4-step protocol + STOP for Confirmation before writing SSOT
   → Common/DSL: only via /common|/common-spec|/docs-mark|Confirm
@@ -166,4 +166,4 @@ In standard `/spec` runs, the sole duty is to **consume existing common definiti
 - **MANDATORY** to execute **strictly one** skill as requested by the user. **STRICTLY FORBIDDEN** to merge sibling skills.
 - **STRICTLY FORBIDDEN** to generate fake Markdown reports when the skill requires YAML/bundle output.
 
-Full wording: `SSOT_AGENT_PROTOCOL.md` (located in `{{DOC_SKIT_AGENT_DIR}}/`).
+Full wording: `SSOT_AGENT_PROTOCOL.md` (located in `{{FLOWGRID_AGENT_DIR}}/`).

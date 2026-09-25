@@ -21,7 +21,7 @@ export interface InspectCommandResult {
     knownKeys: string[];
     argv?: string[];
     cwd: string;
-    executableOwner: 'product-repo' | 'codegenkit' | 'testkit' | 'docskit' | 'unknown';
+    executableOwner: 'product-repo' | 'flowgrid-code' | 'flowgrid-test' | 'flowgrid-docs' | 'unknown';
     recommendation: string;
 }
 /**

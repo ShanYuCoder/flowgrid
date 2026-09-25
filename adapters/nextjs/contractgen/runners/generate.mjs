@@ -8,18 +8,18 @@ import { parseArgs, readSpecFile } from './lib/naming.mjs'
 import { writeManifest, writeOutputs } from './lib/write-files.mjs'
 import { requireDesignIrPath } from '../../../shared/read-fe-ir.mjs'
 
-const root = path.resolve(process.env.CODEGENKIT_ROOT ?? process.cwd())
+const root = path.resolve(process.env.FLOWGRID_PROJECT_ROOT ?? process.cwd())
 
 /**
- * Prefer explicit --yaml-root, then CODEGENKIT_DOCS_ROOT (+ optional /product),
- * then product-local docs/features/yaml under CODEGENKIT_ROOT.
+ * Prefer explicit --yaml-root, then FLOWGRID_DOCS_ROOT (+ optional /product),
+ * then product-local docs/features/yaml under FLOWGRID_PROJECT_ROOT.
  */
 function resolveIrGlobRoots(options) {
   const roots = []
   if (options.yamlRoot) {
     roots.push(path.resolve(options.yamlRoot))
   }
-  const docsRoot = process.env.CODEGENKIT_DOCS_ROOT || process.env.DOCSKIT_ROOT
+  const docsRoot = process.env.FLOWGRID_DOCS_ROOT
   if (docsRoot) {
     const abs = path.resolve(docsRoot)
     roots.push(path.join(abs, 'surfaces'))
@@ -59,7 +59,7 @@ async function resolveSpecPaths(options) {
     if (discovered.length > 0) return discovered
   }
   throw new Error(
-    'No ir/design.yaml found — pass --spec <ir/design.yaml>, --yaml-root, or set CODEGENKIT_DOCS_ROOT',
+    'No ir/design.yaml found — pass --spec <ir/design.yaml>, --yaml-root, or set FLOWGRID_DOCS_ROOT',
   )
 }
 

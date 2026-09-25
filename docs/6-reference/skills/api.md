@@ -20,7 +20,7 @@
   - Nếu tính năng đó là Webhook/Partner không có giao diện Frontend → Gọi `/api-integration`.
   - Nếu Spec đã có nhưng cần sửa đổi/đồng bộ → Gọi `/api-update`.
   - Nếu Spec đã có nhưng chưa được duyệt (not approved) → Chuyển sang khâu kiểm toán bằng `/grill-api-spec` hoặc `/grill-integration-spec`.
-  - Nếu Spec đã được `approved` và có lệnh triển khai → Bàn giao cho Codegenkit chạy `/api --type=be` để sinh code PHP/Python thực tế.
+  - Nếu Spec đã được `approved` và có lệnh triển khai → Bàn giao cho bộ code chạy `/api --type=be` để sinh code PHP/Python thực tế.
 
 ## Các Skill liên quan
 - Luôn gọi xuống các lệnh thuộc Phase 3 như: `/api-spec`, `/api-integration`, `/api-update`, `/grill-api-spec`.

@@ -16,7 +16,7 @@ import {
 import { writeSpecTags } from './lib/write-spec-tags.mjs'
 import { resolveHubId, resolveProjectRoot } from '../../codegen/runners/lib/resolve-hub-id.mjs'
 
-const root = path.resolve(process.env.CODEGENKIT_ROOT || process.cwd())
+const root = path.resolve(process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd())
 
 function parseArgs(argv) {
   const options = { dryRun: false, force: false, spec: null, id: null, phase: 'prototype', writeSpecTags: false }
@@ -34,8 +34,8 @@ function parseArgs(argv) {
 
   if (!options.spec && !options.id) {
     throw new Error(
-      'Usage: codegenkit unit-gen --id W-AD-AUTH-001 [--dry-run] [--force] [--phase prototype|wire]\n' +
-        '       codegenkit unit-gen --spec <path-to-ir/design.yaml> …',
+      'Usage: flowgrid unit-gen --id W-AD-AUTH-001 [--dry-run] [--force] [--phase prototype|wire]\n' +
+        '       flowgrid unit-gen --spec <path-to-ir/design.yaml> …',
     )
   }
 

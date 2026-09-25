@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { loadUnitTestRegistry, REGISTRY_REL } from './lib/unit-registry.mjs'
 import { getTemplatesRoot } from './lib/render.mjs'
 
-const root = path.resolve(process.env.CODEGENKIT_ROOT || process.cwd())
+const root = path.resolve(process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd())
 
 async function pathExists(relativePath) {
   try {

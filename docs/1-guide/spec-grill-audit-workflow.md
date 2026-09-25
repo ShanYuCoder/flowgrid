@@ -107,11 +107,12 @@ Trước khi tiến hành audit hoặc sinh spec, Agent **PHẢI** xác định 
 
 Agent gọi script audit tĩnh:
 ```bash
-node engines/spec/lib/audit-bundle-gaps.mjs <path-to-bundle.yaml> --type <pageType>
+flowgrid audit spec <path-to-bundle.yaml> --type <pageType>
 ```
 
 #### Xử Lý Kết Quả Output JSON:
 - **`gaps[]` (Lỗi định lượng)**: Các trường required bị thiếu (Title, Summary, Page ID, Screen Access, Columns/Fields, Outcomes Matrix). Agent tự động bổ sung trực tiếp vào bundle.
+- **`gaps[]` / `confirms[]` UX affordance** (`category: ux`, mã `UX_*` / `CONFIRM_UX_*`): delete confirm/result dialog, `disabledReason`, list DSL tags, status chip, breadcrumb detail, filter+pagination, import feedback — khớp `flowgrid-ux-common.mdc`. JSON có `uxAffordanceGaps`, `uxAffordanceConfirms`.
 - **`confirms[]` (Câu hỏi xác nhận)**: Các tính năng optional tùy thuộc vào màn hình (Search bar, Sort, Pagination, Row actions, Bulk actions, Export CSV/Excel, Breadcrumbs). Agent hiển thị qua **AskQuestion Wizard** từng câu một với **≥3 lựa chọn**:
   - `(Recommended) Option đề xuất chuẩn`
   - `Option tùy chọn khác`
@@ -140,7 +141,7 @@ Agent dành riêng từng Turn giao tiếp để phân tích và hoàn thiện t
 ### 📌 Bước 4: Thẩm Định Độc Lập Qua `/grill-dev` & `/grill-with-docs`
 
 Khi Member yêu cầu rà soát phản biện (`/grill-dev`):
-1. **Audit Check**: Agent kích hoạt lại `audit-bundle-gaps.mjs --type <pageType>` để đảm bảo không còn gap kỹ thuật.
+1. **Audit Check**: Agent kích hoạt lại `flowgrid audit spec <bundle> --type <pageType>` để đảm bảo không còn gap kỹ thuật.
 2. **Zone-Based Grill**: Agent tiến hành hỏi phản biện từng Zone (Zone-by-Zone Grill) thay vì dồn tất cả câu hỏi vào một lượt:
    - *Hỏi Zone Search*: "Bộ lọc ngày có cần hỗ trợ lọc theo múi giờ UTC không?"
    - *Hỏi Zone Table*: "Cột Số tiền có cần format dạng tiền tệ VND kèm màu âm/dương không?"
@@ -149,13 +150,15 @@ Khi Member yêu cầu rà soát phản biện (`/grill-dev`):
 
 ## 4. Danh Sách Script Audit Đi Kèm Trong Hệ Thống
 
-| Script Name | Mục Đích Audit | Tham Số Bắt Buộc | Output chính |
+| Lệnh CLI | Mục đích | Tham số | Output chính |
 |---|---|---|---|
-| [`audit-bundle-gaps.mjs`](file:///home/vutv/workspace/forgekit/engines/spec/lib/audit-bundle-gaps.mjs) | Audit cấu trúc YAML Spec của màn hình | `--type <pageType>` | `gaps[]`, `confirms[]` |
-| [`audit-api-gaps.mjs`](file:///home/vutv/workspace/forgekit/engines/spec/lib/audit-api-gaps.mjs) | Audit hợp đồng API (SLA, Resilience, Errors) | `<path-to-api.yaml>` | `gaps[]` |
-| [`audit-testcase-gaps.mjs`](file:///home/vutv/workspace/forgekit/engines/spec/lib/audit-testcase-gaps.mjs) | Audit bao phủ ma trận Testcase | `<path-to-test.yaml>` | `gaps[]` |
-| [`audit-flow-gaps.mjs`](file:///home/vutv/workspace/forgekit/engines/spec/lib/audit-flow-gaps.mjs) | Audit 6 phần đặc tả Business Process | `<path-to-FLOW.md>` | `gaps[]` |
-| [`audit-legacy-gaps.mjs`](file:///home/vutv/workspace/forgekit/engines/spec/lib/audit-legacy-gaps.mjs) | Audit chỉ mục khảo cổ dự án cũ | `<target-id>` | `gaps[]` |
+| `flowgrid audit spec` | Audit cấu trúc YAML Spec màn hình | `<bundle.yaml>` `--type <pageType>` | `gaps[]`, `confirms[]` |
+| `flowgrid audit api` | Audit hợp đồng API | `<api.yaml>` | `gaps[]` |
+| `flowgrid audit testcase` | Audit ma trận testcase (+ `--bundle` cross-ref) | `<test.yaml> [--bundle *.bundle.yaml]` | `gaps[]`, `bundleCrossGaps[]` |
+| `flowgrid audit fe-be` | Khớp `apiRef` bundle ↔ `01-backend-spec` | `<bundle.yaml> [--backend-spec …]` | `FEBE_*` |
+| `flowgrid audit scenario` | SC `screens[]` ↔ `cases/**` TC | `<SC.md> --tests-root …` | `SC_*` |
+| `flowgrid audit flow` | Audit FLOW business process | `<FLOW.md>` | `gaps[]` |
+| `flowgrid audit legacy` | Audit legacy adoption | `<target-id>` | `gaps[]` |
 
 ---
 

@@ -1,0 +1,9 @@
+---
+description: Kiro — FlowGrid MCP wiring
+alwaysApply: false
+---
+# Kiro + FlowGrid
+
+- MCP: `.kiro/mcp.json`, server `flowgrid`.
+- Skills: `.kiro/skills/<name>/SKILL.md`.
+- Re-sync: `flowgrid harness sync --agent=kiro`.

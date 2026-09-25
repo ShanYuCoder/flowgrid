@@ -7,6 +7,8 @@
 ## 1. Tầm Nhìn & Triết Lý Cốt Lõi
 
 ### AI Phục Vụ Con Người — Không Phải Con Người Phục Vụ AI
+
+> Ranh giới trách nhiệm tool vs member (grill, gate, CR testcase): [Tool vs team responsibility](./tool-vs-team-responsibility.md).
 - **Không bắt member viết đầu vào phức tạp:** Team vẫn bắt đầu bằng các yêu cầu thô: gạch đầu dòng, ghi chú ngắn, ảnh chụp màn hình, mô tả user story cơ bản hoặc mã nguồn legacy cần bóc tách behavior.
 - **AI đảm nhiệm chuẩn hóa kỹ thuật:** AI tiếp nhận input thô, xử lý và tạo ra cấu trúc kỹ thuật chuẩn mực (YAML Bundle, Data Dictionary, State Matrix, Validation Rules, Test Scenarios).
 - **Con người review trực quan & ra quyết định:** Member (BA/QA/Dev) không cần đọc các file cấu hình máy phức tạp mà tập trung review bản Markdown trực quan và tương tác trực tiếp trên màn hình Prototype.

@@ -21,6 +21,9 @@
       ".cursor/extracts/core/agent-discipline.md",
       ".cursor/extracts/docs-mark.md",
       ".cursor/extracts/docs-mark-detect.md"
+    ],
+    "ux-common": [
+      ".cursor/extracts/ux-common-patterns.md"
     ]
   }
 }

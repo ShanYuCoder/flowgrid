@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codegenkit\Laravel\UnitGen;
+namespace FlowGrid\Laravel\UnitGen;
 
 final class UnitRegistry
 {
@@ -17,9 +17,9 @@ final class UnitRegistry
         if ($preferredRoot !== null && $preferredRoot !== '') {
             $candidates[] = rtrim($preferredRoot, '/\\');
         }
-        $codegenkitRoot = getenv('CODEGENKIT_ROOT') ?: '';
-        if ($codegenkitRoot !== '') {
-            $candidates[] = rtrim($codegenkitRoot, '/\\');
+        $envRoot = getenv('FLOWGRID_PROJECT_ROOT') ?: getenv('FLOWGRID_PROJECT_ROOT') ?: '';
+        if ($envRoot !== '') {
+            $candidates[] = rtrim($envRoot, '/\\');
         }
         $engineRoot = ProjectResolver::engineRoot();
         $candidates[] = dirname($engineRoot); // adapters/laravel when running from kit

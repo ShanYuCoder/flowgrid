@@ -28,7 +28,7 @@ extractBundle: architecture-core
 
 - **[MANDATORY]** Only author a full `DEP-*` deployment document when the user explicitly confirms placement matters.
 - **[MANDATORY]** Path: `Architecture/Deployment/`; ID: `DEP-*`.
-- **[MANDATORY]** Use `docskit_list_ids kind:DEP` to check existing IDs before creating new ones.
+- **[MANDATORY]** Use `flowgrid_docs_list_ids kind:DEP` to check existing IDs before creating new ones.
 - **[STRICTLY FORBIDDEN]** Do NOT confuse with journey sequences (those belong to `/journey`).
 
 Parent: `/architecture`

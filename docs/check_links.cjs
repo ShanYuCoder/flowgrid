@@ -14,7 +14,7 @@ function getFiles(dir, files = []) {
   return files;
 }
 
-const docsDir = '/home/vutv/workspace/forgekit/docs';
+const docsDir = path.join(__dirname);
 const mdFiles = getFiles(docsDir);
 const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
 

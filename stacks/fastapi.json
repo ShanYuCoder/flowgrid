@@ -3,7 +3,7 @@
   "mode": "brownfield",
   "commands": {
     "genDry": [
-      "codegenkit",
+      "flowgrid",
       "api-gen:dry",
       "--adapter=fastapi",
       "--",
@@ -11,7 +11,7 @@
       "{spec}"
     ],
     "gen": [
-      "codegenkit",
+      "flowgrid",
       "api-gen",
       "--adapter=fastapi",
       "--",
@@ -19,7 +19,7 @@
       "{spec}"
     ],
     "unitGenDry": [
-      "codegenkit",
+      "flowgrid",
       "api-unit-gen:dry",
       "--adapter=fastapi",
       "--",
@@ -27,7 +27,7 @@
       "{spec}"
     ],
     "unitGen": [
-      "codegenkit",
+      "flowgrid",
       "api-unit-gen",
       "--adapter=fastapi",
       "--",
@@ -35,12 +35,12 @@
       "{spec}"
     ],
     "registryValidate": [
-      "codegenkit",
+      "flowgrid",
       "api-registry",
       "--adapter=fastapi"
     ],
     "commonRegistry": [
-      "codegenkit",
+      "flowgrid",
       "common-registry"
     ]
   },
@@ -58,7 +58,7 @@
   "templates": {
     "root": "adapters/fastapi/codegen/templates",
     "engine": "jinja2",
-    "note": "SSOT in Codegenkit; product has no root codegen/"
+    "note": "SSOT in FlowGrid bộ code; product has no root codegen/"
   },
   "dsl": {
     "ssot": "product-repo",
@@ -76,7 +76,7 @@
           "#needs-endpoint",
           "#needs-dto"
         ],
-        "note": "Registries at product root; engines in Codegenkit"
+        "note": "Registries at product root; engines in FlowGrid bộ code"
       },
       "unit": {
         "registries": [

@@ -2,7 +2,7 @@
 
 /**
  * audit-api-gaps.mjs
- * Zero-dependency static audit script for Forgekit API Contracts (backend-api.bundle.yaml, backend-api-integration.yaml).
+ * Zero-dependency static audit script for FlowGrid API Contracts (backend-api.bundle.yaml, backend-api-integration.yaml).
  * Ensures 100% adherence to API payload rules, SLA, async events, and resilience policies.
  */
 

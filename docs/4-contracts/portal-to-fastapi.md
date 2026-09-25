@@ -129,7 +129,7 @@ Env: `MES_BASE_URL`, `CMMS_BASE_URL`, … trong fast `.env.example`.
 
 | Bước | Lệnh |
 |------|------|
-| Sau `01-backend-spec.yaml` | `Bộ Docs (Forgekit) openapi:gen --spec <docs>/…/api/<seq>/01-backend-spec.yaml` |
+| Sau `01-backend-spec.yaml` | `flowgrid openapi_gen --spec <docs>/…/api/<seq>/01-backend-spec.yaml` |
 | Output | `backend/02-openapi.yaml` cạnh spec (portal yaml tree) |
 | Pilot có file | `_example/contract-pilot/backend/02-openapi.yaml` |
 | Pilot thiếu file | `factory/knowledge-hub` — **chưa** export |

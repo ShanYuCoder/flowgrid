@@ -23,7 +23,7 @@
 ## Description / Ý nghĩa
 - Dùng để lập **Bản đồ chỉ mục & Mã hóa ID (Index & Mapping Directory)** cho dự án Legacy.
 - Giải quyết bài toán không ai có thời gian khảo cổ 100% dự án legacy. Đóng vai trò làm bản tra cứu giúp Member tìm nhanh ID của chức năng cần làm và file code cũ tương ứng.
-- Khi Member cần nâng cấp/sửa lỗi Chức năng A, Member tra `adoption-inventory.md` tại root để lấy ID (ví dụ `W-AD-AUTH-001`), sau đó gọi lệnh khảo cổ đi kèm `/legacy` (`@docskit /legacy /spec W-AD-AUTH-001`).
+- Khi Member cần nâng cấp/sửa lỗi Chức năng A, Member tra `adoption-inventory.md` tại root để lấy ID (ví dụ `W-AD-AUTH-001`), sau đó gọi lệnh khảo cổ đi kèm `/legacy` (`/docs-hub /legacy /spec W-AD-AUTH-001`).
 
 ## Các Skill liên quan
 - Kích hoạt sau khi cài đặt hoặc bắt đầu tiếp cận dự án legacy: `/adopt`.

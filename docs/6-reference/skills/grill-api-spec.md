@@ -5,7 +5,7 @@
 
 ## Cách dùng (Command/Trigger)
 - Gọi qua slash command: `/grill-api-spec <page-id/slug>`
-- Luôn phải chạy sau `/api-spec` và trước khi qua bước Codegenkit (`/api`) của Backend.
+- Luôn phải chạy sau `/api-spec` và trước khi qua bước bộ code (`/api`) của Backend.
 
 ## Input (Dữ liệu đầu vào)
 - Đọc `ir/design.yaml` để xác minh lại việc Frontend cần những API gì (actions / apiRefs).
@@ -14,7 +14,7 @@
 ## Output (Kết quả mong đợi)
 - File `01-backend-spec.yaml` được vá/sửa đổi nếu phát hiện sai sót.
 - Bổ sung các thẻ gencode (`codegen.profile`, `entity`, `module`, `#gen:*`) vào `01-backend-spec.yaml`.
-- Chạy qua các cổng kiểm định CLI: `forgekit openapi_gen` và `forgekit openapi_render`.
+- Chạy qua các cổng kiểm định CLI: `flowgrid openapi_gen` và `flowgrid openapi_render`.
 
 ## Description / Ý nghĩa
 - Kỹ năng **kiểm toán (Audit)** độc quyền cho Technical Backend.
@@ -24,7 +24,7 @@
 
 ## Các Skill liên quan
 - **Trước đó:** `/api-spec`.
-- **Sau đó:** `pnpm docs:render` để team review giao diện, sau đó bàn giao cho Backend Codegenkit (`/api`) để đẻ source code thực tế.
+- **Sau đó:** `pnpm docs:render` để team review giao diện, sau đó bàn giao cho bộ code BE (`/api`) để đẻ source code thực tế.
 
 ## Chú ý quan trọng
 - **Cấm đoán:** Tuyệt đối không sinh Markdown reports, BQA 3-Pillars reports hay mã nguồn (FastAPI, Laravel) bằng tay.

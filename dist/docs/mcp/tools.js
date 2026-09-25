@@ -50,11 +50,11 @@ function chapterHasId(docsRoot, id) {
     return body.includes(id);
 }
 export function registerTools(server) {
-    server.tool('docskit_list_ids', 'List architecture/product IDs (CMP/FLOW/DEP/ADR/W/API/UI) from docs hub MD (skips redirect stubs)', {
+    server.tool('flowgrid_docs_list_ids', 'List architecture/product IDs (CMP/FLOW/DEP/ADR/W/API/UI) from docs hub MD (skips redirect stubs)', {
         docsRoot: z
             .string()
             .optional()
-            .describe('Hub root; defaults to project MCP DOCSKIT_ROOT or a valid cwd'),
+            .describe('Hub root; defaults to project MCP FLOWGRID_DOCS_ROOT or a valid cwd'),
         kind: z
             .enum(['CMP', 'FLOW', 'DEP', 'ADR', 'W', 'API', 'UI', 'OTHER', 'ALL'])
             .optional(),
@@ -75,7 +75,7 @@ export function registerTools(server) {
             return text({ ok: false, error: err instanceof Error ? err.message : String(err) });
         }
     });
-    server.tool('docskit_get_element', 'Get primary + related files and short excerpts for one ID (canonical path first)', {
+    server.tool('flowgrid_docs_get_element', 'Get primary + related files and short excerpts for one ID (canonical path first)', {
         id: z.string(),
         docsRoot: z.string().optional(),
         maxChars: z.number().optional().default(1200),
@@ -105,7 +105,7 @@ export function registerTools(server) {
             return text({ ok: false, error: err instanceof Error ? err.message : String(err) });
         }
     });
-    server.tool('docskit_deps_of', 'IDs referenced from files that define/mention this ID', {
+    server.tool('flowgrid_docs_deps_of', 'IDs referenced from files that define/mention this ID', {
         id: z.string(),
         docsRoot: z.string().optional(),
     }, async ({ id, docsRoot }) => {
@@ -123,7 +123,7 @@ export function registerTools(server) {
             return text({ ok: false, error: err instanceof Error ? err.message : String(err) });
         }
     });
-    server.tool('docskit_dependents_of', 'Other IDs whose files mention this ID', {
+    server.tool('flowgrid_docs_dependents_of', 'Other IDs whose files mention this ID', {
         id: z.string(),
         docsRoot: z.string().optional(),
     }, async ({ id, docsRoot }) => {
@@ -139,7 +139,7 @@ export function registerTools(server) {
             return text({ ok: false, error: err instanceof Error ? err.message : String(err) });
         }
     });
-    server.tool('docskit_orphans', 'Heuristic orphans vs arc42 layout: missing FLOW/ADR/CMP/W/API files; heading IDs missing from chapter', {
+    server.tool('flowgrid_docs_orphans', 'Heuristic orphans vs arc42 layout: missing FLOW/ADR/CMP/W/API files; heading IDs missing from chapter', {
         docsRoot: z.string().optional(),
     }, async ({ docsRoot }) => {
         try {
@@ -201,7 +201,7 @@ export function registerTools(server) {
             return text({ ok: false, error: err instanceof Error ? err.message : String(err) });
         }
     });
-    server.tool('docskit_validate_links', 'Find broken MD links under architecture/ + product (skips redirect-stub sources)', {
+    server.tool('flowgrid_docs_validate_links', 'Find broken MD links under architecture/ + product (skips redirect-stub sources)', {
         docsRoot: z.string().optional(),
         includeProduct: z.boolean().optional().default(true),
     }, async ({ docsRoot, includeProduct }) => {
@@ -225,12 +225,12 @@ export function registerTools(server) {
             return text({ ok: false, error: err instanceof Error ? err.message : String(err) });
         }
     });
-    server.tool('docskit_route', 'Map a natural-language topic to arc42 chapter path + skill (/architecture router helper)', {
+    server.tool('flowgrid_docs_route', 'Map a natural-language topic to arc42 chapter path + skill (/architecture router helper)', {
         topic: z.string().describe('e.g. "login sequence", "ADR auth"'),
     }, async ({ topic }) => {
         return text({ ok: true, topic, routes: routeTopic(topic) });
     });
-    server.tool('docskit_business_processes', 'List FLOW-* under architecture/03-business-process and surfaces/**/common/processes', {
+    server.tool('flowgrid_docs_business_processes', 'List FLOW-* under architecture/03-business-process and surfaces/**/common/processes', {
         docsRoot: z.string().optional(),
     }, async ({ docsRoot }) => {
         try {
@@ -247,7 +247,7 @@ export function registerTools(server) {
             return text({ ok: false, error: err instanceof Error ? err.message : String(err) });
         }
     });
-    server.tool('docskit_layout', 'Describe expected arc42 × C4 docs hub layout (canonical paths per ID kind)', {}, async () => {
+    server.tool('flowgrid_docs_layout', 'Describe expected arc42 × C4 docs hub layout (canonical paths per ID kind)', {}, async () => {
         return text({
             ok: true,
             chapters: 'architecture/01 … architecture/12',
@@ -274,21 +274,21 @@ export function registerTools(server) {
         projectRoot: z
             .string()
             .optional()
-            .describe('Docs hub root; defaults to DOCSKIT_ROOT or cwd'),
+            .describe('Docs hub root; defaults to FLOWGRID_DOCS_ROOT or cwd'),
     };
-    server.tool('docskit_bundle_split', 'Split one or more *.bundle.yaml files into ir/* and colocated spec Markdown (docs-hub)', {
+    server.tool('flowgrid_docs_bundle_split', 'Split one or more *.bundle.yaml files into ir/* and colocated spec Markdown (docs-hub)', {
         ...rootField,
         paths: z.array(z.string()).describe('Bundle YAML paths relative to project root or absolute'),
     }, async ({ projectRoot, paths }) => toolEngine('split', paths, projectRoot));
-    server.tool('docskit_bundle_merge', 'Merge ir/* back into *.bundle.yaml', {
+    server.tool('flowgrid_docs_bundle_merge', 'Merge ir/* back into *.bundle.yaml', {
         ...rootField,
         paths: z.array(z.string()),
     }, async ({ projectRoot, paths }) => toolEngine('merge', paths, projectRoot));
-    server.tool('docskit_bundle_check', 'Check that ir/* matches split output for bundles', {
+    server.tool('flowgrid_docs_bundle_check', 'Check that ir/* matches split output for bundles', {
         ...rootField,
         paths: z.array(z.string()),
     }, async ({ projectRoot, paths }) => toolEngine('check', paths, projectRoot));
-    server.tool('docskit_bundle_split_all', 'Split all bundles under a yaml root (default product or --root)', {
+    server.tool('flowgrid_docs_bundle_split_all', 'Split all bundles under a yaml root (default product or --root)', {
         ...rootField,
         root: z.string().optional().describe('Optional yaml root relative to project'),
         check: z.boolean().optional(),
@@ -300,11 +300,11 @@ export function registerTools(server) {
             extra.push('--check');
         return toolEngine('split_all', [], projectRoot, extra);
     });
-    server.tool('docskit_bundle_normalize', 'Normalize bundle.gen sections', {
+    server.tool('flowgrid_docs_bundle_normalize', 'Normalize bundle.gen sections', {
         ...rootField,
         paths: z.array(z.string()),
     }, async ({ projectRoot, paths }) => toolEngine('normalize', paths, projectRoot));
-    server.tool('docskit_docs_render', 'Render design Markdown from product YAML/bundles (no testcase MD)', {
+    server.tool('flowgrid_docs_docs_render', 'Render design Markdown from product YAML/bundles (no testcase MD)', {
         ...rootField,
         yamlRoot: z.string().optional(),
         mdRoot: z.string().optional(),
@@ -322,10 +322,10 @@ export function registerTools(server) {
             extra.push('--no-index');
         return toolEngine('render', [], projectRoot, extra);
     });
-    server.tool('docskit_docs_publish', 'Write CATALOG.md + README link from existing ir/generated + qa/index.md (does not re-render specs)', {
+    server.tool('flowgrid_docs_docs_publish', 'Write CATALOG.md + README link from existing ir/generated + qa/index.md (does not re-render specs)', {
         ...rootField,
     }, async ({ projectRoot }) => toolEngine('publish', [], projectRoot));
-    server.tool('docskit_docs_render_common', 'Render common UI design MD under Surfaces/Common', {
+    server.tool('flowgrid_docs_docs_render_common', 'Render common UI design MD under Surfaces/Common', {
         ...rootField,
     }, async ({ projectRoot }) => {
         const rootPath = projectRoot || process.cwd();
@@ -343,7 +343,7 @@ export function registerTools(server) {
             '--no-index',
         ]);
     });
-    server.tool('docskit_legacy_dynamics_validate', 'Validate portal-legacy-dynamics YAML module files', {
+    server.tool('flowgrid_docs_legacy_dynamics_validate', 'Validate portal-legacy-dynamics YAML module files', {
         ...rootField,
         paths: z.array(z.string()),
     }, async ({ projectRoot, paths }) => toolEngine('legacy_validate', paths, projectRoot));

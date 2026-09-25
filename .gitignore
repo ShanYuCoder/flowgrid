@@ -1,4 +1,8 @@
 node_modules
+dist
+
+# VitePress
+docs/.vitepress/cache
 
 # Auto-generated CLI test snapshots
-test/forgekit-test-cli-*.mjs
+test/flowgrid-test-cli-*.mjs

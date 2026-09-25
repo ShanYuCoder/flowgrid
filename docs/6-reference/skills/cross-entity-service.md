@@ -17,7 +17,7 @@
 ## Description / Ý nghĩa
 - Dành riêng cho việc điều phối luồng dữ liệu liên quan đến nhiều thực thể (Cross-aggregate orchestration). 
 - Ví dụ: API Tạo Đơn hàng không chỉ đụng tới bảng `Order` mà còn phải gọi sang bảng `Inventory` (kiểm tra tồn kho), gọi sang `User` (lấy điểm thưởng). Hành động vượt biên giới thực thể này bắt buộc phải được đánh dấu bằng cờ `#cross-entity-service`.
-- Codegenkit của Backend khi nhìn thấy cờ này sẽ tự động sinh code theo mô hình khác (Ví dụ: tách logic ra Service Layer thay vì nhét chung vào Controller hay Repository đơn lẻ).
+- bộ code của Backend khi nhìn thấy cờ này sẽ tự động sinh code theo mô hình khác (Ví dụ: tách logic ra Service Layer thay vì nhét chung vào Controller hay Repository đơn lẻ).
 
 ## Chú ý quan trọng
 - **Tuyệt đối cấm:** Kỹ năng này chỉ được phép ghi thêm tag vào file `01-backend-spec.yaml`. Không được quyền can thiệp vào file giao diện Frontend `ir/design.yaml`, và tuyệt đối không xuất ra các file Markdown report giả mạo.

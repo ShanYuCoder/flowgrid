@@ -14,7 +14,7 @@
 ## Output (Kết quả mong đợi)
 - File `01-backend-spec.yaml` (và file mock data) được vá/cập nhật (Delta Patch).
 - Ghi log thay đổi vào `changeLog` và tự động tăng `feature.version` trong file `01`.
-- Chạy lệnh CLI để kiểm định và sinh lại OpenAPI: `forgekit openapi_gen`.
+- Chạy lệnh CLI để kiểm định và sinh lại OpenAPI: `flowgrid openapi_gen`.
 
 ## Description / Ý nghĩa
 - Dùng để **Đồng bộ hóa (Sync) / Cập nhật (Update)** hợp đồng Backend API khi giao diện Frontend (Portal) có sự thay đổi về đặc tả, hoặc khi team Backend có những yêu cầu logic ngầm mới (BE-only requirements).

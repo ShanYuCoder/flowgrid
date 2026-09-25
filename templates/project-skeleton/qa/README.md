@@ -7,5 +7,5 @@ Open customer / choice / tech-debt questions live here — **not** in `*.bundle.
 - Sequence is **per screen** (`0001`, `0002`, …). Different screens never share a counter.
 - Close with **`/qa-resolve QA-<bundle.id>-NNNN`** plus the decision (skill deletes the file).
 
-Template: `.docskit/templates/qa-item.yaml`  
+Template: `.flowgrid/templates/qa-item.yaml`  
 Rules: `.cursor/extracts/qa-inbox.md`

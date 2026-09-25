@@ -74,13 +74,13 @@ function chapterHasId(docsRoot: string, id: string): boolean {
 }
 
 export function registerTools(server: McpServer): void {
-  server.tool('docskit_list_ids',
+  server.tool('flowgrid_docs_list_ids',
     'List architecture/product IDs (CMP/FLOW/DEP/ADR/W/API/UI) from docs hub MD (skips redirect stubs)',
     {
       docsRoot: z
         .string()
         .optional()
-        .describe('Hub root; defaults to project MCP DOCSKIT_ROOT or a valid cwd'),
+        .describe('Hub root; defaults to project MCP FLOWGRID_DOCS_ROOT or a valid cwd'),
       kind: z
         .enum(['CMP', 'FLOW', 'DEP', 'ADR', 'W', 'API', 'UI', 'OTHER', 'ALL'])
         .optional(),
@@ -101,7 +101,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_get_element',
+  server.tool('flowgrid_docs_get_element',
     'Get primary + related files and short excerpts for one ID (canonical path first)',
     {
       id: z.string(),
@@ -134,7 +134,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_deps_of',
+  server.tool('flowgrid_docs_deps_of',
     'IDs referenced from files that define/mention this ID',
     {
       id: z.string(),
@@ -155,7 +155,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_dependents_of',
+  server.tool('flowgrid_docs_dependents_of',
     'Other IDs whose files mention this ID',
     {
       id: z.string(),
@@ -174,7 +174,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_orphans',
+  server.tool('flowgrid_docs_orphans',
     'Heuristic orphans vs arc42 layout: missing FLOW/ADR/CMP/W/API files; heading IDs missing from chapter',
     {
       docsRoot: z.string().optional(),
@@ -245,7 +245,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_validate_links',
+  server.tool('flowgrid_docs_validate_links',
     'Find broken MD links under architecture/ + product (skips redirect-stub sources)',
     {
       docsRoot: z.string().optional(),
@@ -273,7 +273,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_route',
+  server.tool('flowgrid_docs_route',
     'Map a natural-language topic to arc42 chapter path + skill (/architecture router helper)',
     {
       topic: z.string().describe('e.g. "login sequence", "ADR auth"'),
@@ -283,7 +283,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_business_processes',
+  server.tool('flowgrid_docs_business_processes',
     'List FLOW-* under architecture/03-business-process and surfaces/**/common/processes',
     {
       docsRoot: z.string().optional(),
@@ -304,7 +304,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_layout',
+  server.tool('flowgrid_docs_layout',
     'Describe expected arc42 × C4 docs hub layout (canonical paths per ID kind)',
     {},
     async () => {
@@ -335,10 +335,10 @@ export function registerTools(server: McpServer): void {
     projectRoot: z
       .string()
       .optional()
-      .describe('Docs hub root; defaults to DOCSKIT_ROOT or cwd'),
+      .describe('Docs hub root; defaults to FLOWGRID_DOCS_ROOT or cwd'),
   }
 
-  server.tool('docskit_bundle_split',
+  server.tool('flowgrid_docs_bundle_split',
     'Split one or more *.bundle.yaml files into ir/* and colocated spec Markdown (docs-hub)',
     {
       ...rootField,
@@ -347,7 +347,7 @@ export function registerTools(server: McpServer): void {
     async ({ projectRoot, paths }) => toolEngine('split', paths, projectRoot),
   )
 
-  server.tool('docskit_bundle_merge',
+  server.tool('flowgrid_docs_bundle_merge',
     'Merge ir/* back into *.bundle.yaml',
     {
       ...rootField,
@@ -356,7 +356,7 @@ export function registerTools(server: McpServer): void {
     async ({ projectRoot, paths }) => toolEngine('merge', paths, projectRoot),
   )
 
-  server.tool('docskit_bundle_check',
+  server.tool('flowgrid_docs_bundle_check',
     'Check that ir/* matches split output for bundles',
     {
       ...rootField,
@@ -365,7 +365,7 @@ export function registerTools(server: McpServer): void {
     async ({ projectRoot, paths }) => toolEngine('check', paths, projectRoot),
   )
 
-  server.tool('docskit_bundle_split_all',
+  server.tool('flowgrid_docs_bundle_split_all',
     'Split all bundles under a yaml root (default product or --root)',
     {
       ...rootField,
@@ -380,7 +380,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_bundle_normalize',
+  server.tool('flowgrid_docs_bundle_normalize',
     'Normalize bundle.gen sections',
     {
       ...rootField,
@@ -389,7 +389,7 @@ export function registerTools(server: McpServer): void {
     async ({ projectRoot, paths }) => toolEngine('normalize', paths, projectRoot),
   )
 
-  server.tool('docskit_docs_render',
+  server.tool('flowgrid_docs_docs_render',
     'Render design Markdown from product YAML/bundles (no testcase MD)',
     {
       ...rootField,
@@ -408,7 +408,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_docs_publish',
+  server.tool('flowgrid_docs_docs_publish',
     'Write CATALOG.md + README link from existing ir/generated + qa/index.md (does not re-render specs)',
     {
       ...rootField,
@@ -416,7 +416,7 @@ export function registerTools(server: McpServer): void {
     async ({ projectRoot }) => toolEngine('publish', [], projectRoot),
   )
 
-  server.tool('docskit_docs_render_common',
+  server.tool('flowgrid_docs_docs_render_common',
     'Render common UI design MD under Surfaces/Common',
     {
       ...rootField,
@@ -439,7 +439,7 @@ export function registerTools(server: McpServer): void {
     },
   )
 
-  server.tool('docskit_legacy_dynamics_validate',
+  server.tool('flowgrid_docs_legacy_dynamics_validate',
     'Validate portal-legacy-dynamics YAML module files',
     {
       ...rootField,

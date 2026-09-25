@@ -46,9 +46,9 @@ export function parseCommonGenArgs(argv) {
 }
 
 export function resolveDocsRoot(projectRoot) {
-  const env = process.env.CODEGENKIT_DOCS_ROOT || process.env.DOCSKIT_ROOT
+  const env = process.env.FLOWGRID_DOCS_ROOT
   if (env) return path.resolve(env)
-  throw new Error('Set CODEGENKIT_DOCS_ROOT or pass --docs-root; no sibling docs hub is assumed')
+  throw new Error('Set FLOWGRID_DOCS_ROOT or pass --docs-root; no sibling docs hub is assumed')
 }
 
 function toPascalCase(value) {
@@ -336,7 +336,7 @@ export function inventorySurface(opts) {
 }
 
 export function selectSources(surfaceListed, moduleListed, options) {
-  const moduleId = options.module || process.env.CODEGENKIT_MODULE || null
+  const moduleId = options.module || process.env.FLOWGRID_MODULE || null
   if (moduleId || options.allModules) {
     let match = moduleListed
     if (moduleId) {
@@ -344,7 +344,7 @@ export function selectSources(surfaceListed, moduleListed, options) {
         (m) => m.module === moduleId || m.module.toLowerCase() === String(moduleId).toLowerCase(),
       )
     }
-    const surface = options.surface || process.env.CODEGENKIT_SURFACE || null
+    const surface = options.surface || process.env.FLOWGRID_SURFACE || null
     if (surface) match = match.filter((m) => m.surface === surface)
     if (!match.length) {
       const names = moduleListed.map((m) => `${m.surface}/${m.module}`).join(', ') || '(none)'
@@ -368,7 +368,7 @@ export function selectSources(surfaceListed, moduleListed, options) {
 }
 
 export function selectSurfaces(listed, options) {
-  const explicit = options.surface || process.env.CODEGENKIT_SURFACE || null
+  const explicit = options.surface || process.env.FLOWGRID_SURFACE || null
   if (explicit) {
     const match = listed.filter((s) => s.surface === explicit)
     if (!match.length) {
@@ -482,7 +482,7 @@ export function runCommonGen(opts) {
   const sources = selectSources(surfaceListed, moduleListed, opts)
   if (!sources.length) {
     throw new Error(
-      `No surfaces/<surface>/common or <CMP-*>/common under ${docsRoot}. Run Docskit split first.`,
+      `No surfaces/<surface>/common or <CMP-*>/common under ${docsRoot}. Run FlowGrid docs split first.`,
     )
   }
   const notes = []
@@ -568,8 +568,8 @@ function formatHuman(report) {
 
 export async function main(argv = process.argv.slice(2)) {
   const options = parseCommonGenArgs(argv)
-  const adapter = process.env.CODEGENKIT_ADAPTER || process.env.CODEGENKIT_FE_ADAPTER || 'nuxt4'
-  const projectRoot = process.env.CODEGENKIT_ROOT || process.cwd()
+  const adapter = process.env.FLOWGRID_ADAPTER || process.env.FLOWGRID_FE_ADAPTER || 'nuxt4'
+  const projectRoot = process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd()
   const docsRoot = resolveDocsRoot(projectRoot)
   const report = runCommonGen({
     adapter,

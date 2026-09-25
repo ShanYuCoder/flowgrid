@@ -21,14 +21,14 @@ const defaultTemplatesDir = path.resolve(__dirname, '../../../templates/shared')
 
 /**
  * Resolves a template file by name.
- * Looks in process.cwd() + '/.docskit/templates/' first,
+ * Looks in process.cwd() + '/.flowgrid/templates/' first,
  * then falls back to the package templates directory.
  * 
  * @param {string} templateName
  * @returns {string}
  */
 export function resolveTemplatePath(templateName) {
-  const localDir = path.join(process.cwd(), '.docskit', 'templates')
+  const localDir = path.join(process.cwd(), '.flowgrid', 'templates')
   const localPath = path.join(localDir, `${templateName}.ejs`)
   if (fs.existsSync(localPath)) {
     return localPath

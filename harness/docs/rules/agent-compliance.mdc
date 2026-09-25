@@ -1,5 +1,5 @@
 ---
-description: Enforce physical interlocks for all Docskit skills
+description: Enforce physical interlocks for all bộ docs skills
 alwaysApply: true
 ---
 
@@ -12,12 +12,12 @@ alwaysApply: true
 
 When executing any skill (`/spec`, `/grill`, `/grill-bqa`, etc.):
 
-1. **PRE-FLIGHT:** FIRST action is **[MANDATORY]**: invoke tool `{{DOC_SKIT_READ_TOOL}}` on the target `SKILL.md` under `{{DOC_SKIT_AGENT_DIR}}/skills/`. **[STRICTLY FORBIDDEN]** to rely on memory or previous context.
+1. **PRE-FLIGHT:** FIRST action is **[MANDATORY]**: invoke tool `{{FLOWGRID_READ_TOOL}}` on the target `SKILL.md` under `{{FLOWGRID_AGENT_DIR}}/skills/`. **[STRICTLY FORBIDDEN]** to rely on memory or previous context.
 2. **SESSION MAX-LENGTH & WORKLOAD GATE (5 / 10 RULE):** Immediately evaluate task workload/audit gaps against session token limits.
    - **Small Scope (≤5 items):** Inline chat thread checklist & single-question wizard.
    - **Buffer Scope (6–9 items):** Permitted in chat ONLY if single-turn scalar string/label fills.
    - **Large Scope (≥10 items, multi-screen/cross-repo, OR audit script with ≥10 gaps):** **[MANDATORY HARD STOP IN CHAT]**. Author host plan artifact (Antigravity `implementation_plan.md` in brain dir, Cursor Plan Mode / `plan.md`, Claude/Windsurf plan scratchpad). Partition into Phases (3–5 items/phase). Offload completed state to disk immediately at phase boundaries and reload fresh state in subsequent phases.
-3. **NO RAM CACHING:** All persistent changes **[MANDATORY]** immediately written via `{{DOC_SKIT_WRITE_TOOL}}`. Never hold uncommitted state in chat/RAM. When a grill proposal is not yet confirmed → discuss directly in chat thread. **[STRICTLY FORBIDDEN]** to create temporary `*-proposal.md` files or overwrite product SSOT prior to explicit confirmation.
+3. **NO RAM CACHING:** All persistent changes **[MANDATORY]** immediately written via `{{FLOWGRID_WRITE_TOOL}}`. Never hold uncommitted state in chat/RAM. When a grill proposal is not yet confirmed → discuss directly in chat thread. **[STRICTLY FORBIDDEN]** to create temporary `*-proposal.md` files or overwrite product SSOT prior to explicit confirmation.
 4. **ZERO BUSINESS HALLUCINATION:** Ground data strictly from (1) User prompt and (2) ArtifactGraph registry. **[STRICTLY FORBIDDEN]** to invent fields, validations, database structures, or flows. Missing information must remain empty or be tagged `#missing_info`. No unprompted guessing.
 5. **GRILL HARD GATE:** ArtifactGraph re-check → micro-scope → provide structured recommendation (`(Recommended)`) → **STOP and prompt Member**. **[STRICTLY FORBIDDEN]** to write to SSOT before explicit user confirmation.
 6. **DSL / COMMON:** Human lead decides common promotions. The agent only executes `/common`, `/common-spec`, `/docs-mark`, or confirmation post-grill. `/spec` strictly consumes common definitions. **[STRICTLY FORBIDDEN]** to invent or overwrite common libraries spontaneously.

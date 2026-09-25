@@ -9,16 +9,16 @@ Do not merge every repository into a single workspace graph (the parent folder
 must never be indexed). "Cross-repo" means a skill/rule knows how to reach the
 **correct per-repo index**, one repository at a time.
 
-**Owner:** Platform DNA. Processkit (and other toolkits) install this same
+**Owner:** Platform DNA. FlowGrid harness rules (bộ docs, bộ process, …) install this same
 filename only when DNA is absent, so a destination never carries duplicate
 `alwaysApply` routing rules under different names.
 
 Route by intent:
 
-- Need an architecture ID or C4 path -> Docskit MCP (`DOCSKIT_ROOT`). Never
+- Need an architecture ID or C4 path -> bộ docs MCP (`FLOWGRID_DOCS_ROOT`). Never
   CodeGraph for architecture Markdown.
 - Need IR / registry / generation -> the pointer kit
-  (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
+  (`FLOWGRID_DOCS_ROOT`, `FLOWGRID_DOCS_ROOT`, `FLOWGRID_TESTS_ROOT`).
 - Need a symbol or call-graph for repo `X` -> the CodeGraph MCP server for repo
   `X` (`codegraph-<key>`, whose `--project-root` is `X`'s checkout). Do not use
   the index of the repository currently open.

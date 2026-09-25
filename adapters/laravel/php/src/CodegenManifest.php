@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codegenkit\Laravel\UnitGen;
+namespace FlowGrid\Laravel\UnitGen;
 
 final class CodegenManifest
 {
@@ -14,7 +14,7 @@ final class CodegenManifest
         $manifestPath = $featureDir.DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'codegen.manifest.json';
         if (!is_file($manifestPath)) {
             throw new \RuntimeException(
-                "Missing {$manifestPath} — run codegenkit api-gen --spec ... first"
+                "Missing {$manifestPath} — run flowgrid api-gen --spec ... first"
             );
         }
 

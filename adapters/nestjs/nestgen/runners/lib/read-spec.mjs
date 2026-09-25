@@ -13,7 +13,7 @@ export function parseArgs(argv) {
     else if (arg === '--force') options.force = true
     else if (arg === '--openapi') {
       throw new Error(
-        'OpenAPI YAML is Docskit (`docskit openapi:gen --spec …/01-backend-spec.yaml`), not nest-gen --openapi',
+        'OpenAPI YAML is FlowGrid docs (`flowgrid openapi:gen --spec …/01-backend-spec.yaml`), not nest-gen --openapi',
       )
     }
     else if (arg === '--id') options.id = argv[++i]

@@ -10,7 +10,7 @@ Architecture quality concerns for this docs hub and its described systems.
 
 | Concern | Expectation |
 |---------|-------------|
-| Link integrity | Prefer docskit `validate_links` / CI later; avoid orphan `FLOW-*`/`ADR-*` |
+| Link integrity | Prefer flowgrid `validate_links` / CI later; avoid orphan `FLOW-*`/`ADR-*` |
 | ID consistency | Same keys across FE schema, API, BE when contract group exists |
 | Journey density | Core / cross-system only — quality over coverage |
 | Render UX | Mermaid readable in VitePress (`vitepress-mermaid-renderer`); no Kroki |

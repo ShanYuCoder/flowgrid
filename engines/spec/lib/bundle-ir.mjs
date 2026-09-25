@@ -61,7 +61,7 @@ export function buildBusinessSpec(meta, designSpec = {}, bundle = {}) {
 }
 
 /**
- * ir/design.yaml — tech SSOT for FE/BE/testkit (layout + ui + api + entities + codegen).
+ * ir/design.yaml — tech SSOT for FE/BE/bộ test (layout + ui + api + entities + codegen).
  */
 export function buildDesignIr(bundle, designSpec = {}, gen = {}) {
   const pageId = bundlePageId(bundle)
@@ -172,7 +172,7 @@ export async function splitBundleFile(bundlePath, options = {}) {
     )
     await writeFile(
       path.join(irDir, 'design.yaml'),
-      `# Generated from ${path.basename(bundlePath)} — pnpm spec:split (tech: FE/BE/testkit)\n${stringify(design, yamlOpts)}`,
+      `# Generated from ${path.basename(bundlePath)} — pnpm spec:split (tech: FE/BE/bộ test)\n${stringify(design, yamlOpts)}`,
       'utf8'
     )
     try {
@@ -249,7 +249,7 @@ function emitCodegenGates(bundle, design, { throwOnFail }) {
 
   if (!codegenProfileReady(gen)) {
     failOrWarn(
-      `bundle.gen.codegen.profile empty — codegenkit cannot gen (${bundlePageId(bundle)}). Fill in /grill-dev.`,
+      `bundle.gen.codegen.profile empty — flowgrid cannot gen (${bundlePageId(bundle)}). Fill in /grill-dev.`,
     )
   }
   if (!codegenEntityModuleReady(gen)) {

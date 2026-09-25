@@ -76,14 +76,14 @@ Chọn B → agent chạy `/docs-mark` trong cùng session.
 
 ```text
 /spec → bqa-grill-docs → dev-grill-docs (+ common candidates)
-     → Bộ Code (Forgekit) gen:dry → /prototype (Mo*, composables)
+     → flowgrid gen:dry → /prototype (Mo*, composables)
      → /docs-mark (promote common)
      → grill-prototype
 ```
 
 ## Codegen handoff
 
-Bộ Code (Forgekit) FE gen **không** emit Mo* — chỉ placeholder + HANDOFF cho `#needs-component` / `#needs-ui`.  
+bộ code FE — flowgrid gen **không** emit Mo* — chỉ placeholder + HANDOFF cho `#needs-component` / `#needs-ui`.  
 Sau `/prototype` implement file → re-run gen with `--force` when needed.
 
 Extracts: `.cursor/extracts/docs-mark.md`, `docs-mark-detect.md`  

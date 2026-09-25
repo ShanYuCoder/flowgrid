@@ -28,7 +28,7 @@ Shared extracts: `api-spec-sync.md`, `spec-evolution.md`, `entity-relationship.m
 
 ## Rule: ID Resolution & Folder Location
 
-- **[MANDATORY]** If an ID is provided (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`) → use `docskit_route` or glob to resolve to `…/api/<seq>/01-backend-spec.yaml`. Do NOT force user to provide full filesystem path.
+- **[MANDATORY]** If an ID is provided (e.g. `CMP-ADM-000-001`, `W-AD-AUTH-001`) → use `flowgrid_docs_route` or glob to resolve to `…/api/<seq>/01-backend-spec.yaml`. Do NOT force user to provide full filesystem path.
 - **[MANDATORY]** Trio lives under `api/<seq>/` — never adjacent to `*.bundle.yaml`.
 - Common APIs: `…/common/yaml/<slug>/01-backend-spec.yaml` (one trio per API).
 
@@ -41,7 +41,7 @@ Shared extracts: `api-spec-sync.md`, `spec-evolution.md`, `entity-relationship.m
    - Do NOT treat projected `design.api` as BE SSOT.
 2. **[MANDATORY]** Diff requirements, endpoints, acceptance vs `01-backend-spec.yaml`.
 3. **[MANDATORY]** Patch `01-backend-spec.yaml` (+ `03-mock-data.yaml` if samples change).
-4. **[MANDATORY]** Run: `docskit api:check --spec …/01-backend-spec.yaml` → `docskit openapi:gen --spec …/01-backend-spec.yaml` (writes sibling `02`).
+4. **[MANDATORY]** Run: `flowgrid check --spec …/01-backend-spec.yaml` → `flowgrid openapi_gen --spec …/01-backend-spec.yaml` (writes sibling `02`).
 5. **[MANDATORY]** Bump `feature.version` + add `changeLog` entry.
 6. **[STRICTLY FORBIDDEN]** Never hand-edit `02-openapi.yaml` as SSOT. Never write `.md` directly.
 
@@ -77,6 +77,6 @@ Shared extracts: `api-spec-sync.md`, `spec-evolution.md`, `entity-relationship.m
 
 - [ ] Target is `…/api/<seq>/01-backend-spec.yaml` (or `common/yaml/<slug>/`), not a `01` on the FE leaf.
 - [ ] `01` patched; `02` regenerated via `openapi:gen` (not hand-edited).
-- [ ] Gates passed: `docskit api:check` + `docskit openapi:gen`.
+- [ ] Gates passed: `flowgrid check` + `flowgrid openapi_gen`.
 - [ ] `changeLog` + `feature.version` bumped.
 - [ ] No `.md` written directly. No `openQuestions` in YAML.

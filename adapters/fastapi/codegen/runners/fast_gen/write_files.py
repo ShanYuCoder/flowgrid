@@ -12,9 +12,9 @@ PACKAGE_INIT = '"""Generated module package."""\n'
 
 
 def repo_root() -> Path:
-  target = os.environ.get("CODEGENKIT_ROOT")
+  target = os.environ.get("FLOWGRID_PROJECT_ROOT")
   if not target:
-    raise RuntimeError("CODEGENKIT_ROOT is required for the FastAPI adapter")
+    raise RuntimeError("FLOWGRID_PROJECT_ROOT is required for the FastAPI adapter")
   return Path(target).resolve()
 
 
@@ -33,7 +33,7 @@ def _safe_target(root: Path, relative_path: str) -> Path:
     raise ValueError(f"Unsafe generated path (absolute or traversal): {relative_path}")
   target = root / relative
   if os.path.commonpath((str(root), str(target))) != str(root):
-    raise ValueError(f"Generated path escapes CODEGENKIT_ROOT: {relative_path}")
+    raise ValueError(f"Generated path escapes FLOWGRID_PROJECT_ROOT: {relative_path}")
   _reject_symlinks(target, root)
   return target
 

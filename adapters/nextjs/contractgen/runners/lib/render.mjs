@@ -49,7 +49,7 @@ export function renderHandoffMarkdown(plan, specPath) {
     '## Manual follow-up',
     '',
     '- Confirm `kind: relation` + `persistence.type` when grill infers from columns only.',
-    '- Backend scaffold: `codegenkit api-gen` / Nest `api-gen --adapter=nestjs` as needed.',
+    '- Backend scaffold: `flowgrid api-gen` / Nest `api-gen --adapter=nestjs` as needed.',
     '',
   )
 

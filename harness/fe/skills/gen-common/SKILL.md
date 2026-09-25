@@ -1,7 +1,7 @@
 ---
 name: gen-common
 description: >-
-  /gen-common — generate shared UI from Docskit common specs before
+  /gen-common — generate shared UI from bộ docs common specs before
   /prototype. Covers surface common (surfaces/<surface>/common) and
   module common (surfaces/<surface>/CMP-*/common). Use when
   bootstrapping DataListPage, MoStatusChip, or CMP-level shared widgets.
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 # /gen-common — Shared UI before /prototype
 
-**Owner:** Codegenkit (`--type=fe`) · Adapters: `nuxt4` | `nextjs`  
+**Owner:** bộ code (`--type=fe`) · Adapters: `nuxt4` | `nextjs`  
 Not synced for `dotnet-line`.
 
 Skill is **`/gen-common`**, not `/common` — `common` is the docs folder name (and there are three of them).
@@ -30,20 +30,20 @@ Run **surface** first, then **module**, then `/prototype` for screens.
 …/common/yaml/<slug>/ir/spec.yaml     # prose only — do not gen from this
 ```
 
-Read the **entire** `ir/design.yaml`. Missing design → STOP, hand off to docs `/common-spec` + `docskit split` (do not invent yaml). Prose-only `common/processes` (FLOW) is not `/gen-common` input. Thin design is OK for tokens; do not page-gen common IRs.
+Read the **entire** `ir/design.yaml`. Missing design → STOP, hand off to docs `/common-spec` + `flowgrid split` (do not invent yaml). Prose-only `common/processes` (FLOW) is not `/gen-common` input. Thin design is OK for tokens; do not page-gen common IRs.
 
 **Docs hub is read-only.** Never Write common bundles/`ir/*` on the docs hub.
 
-Do **not** run `codegenkit gen --id common-list-page`. Page gen skips all three common trees.
+Do **not** run `flowgrid gen --id common-list-page`. Page gen skips all three common trees.
 
 ## Docs Root Resolution
 
-1. If `CODEGENKIT_DOCS_ROOT` is set (non-empty), use it as the canonical
+1. If `FLOWGRID_DOCS_ROOT` is set (non-empty), use it as the canonical
    pointer for locating common IR (`ir/design.yaml`).
-2. If `CODEGENKIT_DOCS_ROOT` is **not** set, fall back to Platform DNA
+2. If `FLOWGRID_DOCS_ROOT` is **not** set, fall back to Platform DNA
    configuration (`platform-dna`) to resolve the docs hub path.
    Platform DNA discovery is slower and more error-prone, so always prefer
-   an explicit `CODEGENKIT_DOCS_ROOT` when available.
+   an explicit `FLOWGRID_DOCS_ROOT` when available.
 
 ## Workflow
 
@@ -54,9 +54,9 @@ npm run codegen:common:dry -- --module=CMP-ADM-009 --json
 npm run codegen:common -- --module=CMP-ADM-009
 
 # Fallback:
-codegenkit gen-common:dry --adapter=nextjs --docs-root=/path/to/docs -- --surface=admin-web --json
-codegenkit gen-common --adapter=nextjs --docs-root=/path/to/docs -- --module=CMP-ADM-009
-codegenkit gen-common:dry -- --id common-status-chip --surface=admin-web
+flowgrid gen-common:dry --adapter=nextjs --docs-root=/path/to/docs -- --surface=admin-web --json
+flowgrid gen-common --adapter=nextjs --docs-root=/path/to/docs -- --module=CMP-ADM-009
+flowgrid gen-common:dry -- --id common-status-chip --surface=admin-web
 ```
 
 `common-gen` is an alias of `gen-common`.

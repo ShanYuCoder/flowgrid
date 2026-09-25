@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "package": "@platform/flowgrid-docs",
+  "bundles": {
+    "architecture-core": [
+      ".cursor/extracts/architecture-core.md",
+      ".cursor/extracts/tpl-arc42-chapter.md",
+      ".cursor/extracts/tpl-module.md",
+      ".cursor/extracts/tpl-deployment.md",
+      ".cursor/extracts/tpl-adr.md",
+      ".cursor/extracts/tpl-cross-cutting.md",
+      ".cursor/extracts/common-scope.md"
+    ],
+    "docs-hub": [
+      ".cursor/extracts/docs-phase-hooks.md",
+      ".cursor/extracts/agent-execution-protocol.md",
+      ".cursor/extracts/qa-inbox.md"
+    ],
+    "spec-requirement": [
+      ".cursor/extracts/spec-requirement.md",
+      ".cursor/extracts/agent-execution-protocol.md",
+      ".cursor/extracts/common-scope.md"
+    ],
+    "spec-core": [
+      ".cursor/extracts/spec-core.md",
+      ".cursor/extracts/common-scope.md"
+    ],
+    "bqa-grill": [
+      ".cursor/extracts/grill/validation.md",
+      ".cursor/extracts/agent-execution-protocol.md"
+    ],
+    "dev-grill": [
+      ".cursor/extracts/codegen/readiness.md",
+      ".cursor/extracts/docs-mark-detect.md"
+    ],
+    "grill-docs": [
+      ".cursor/extracts/grill-docs-reconcile.md",
+      ".cursor/extracts/grill/validation.md"
+    ],
+    "update-spec": [
+      ".cursor/extracts/update-spec-delta.md",
+      ".cursor/extracts/qa-inbox.md"
+    ]
+  }
+}

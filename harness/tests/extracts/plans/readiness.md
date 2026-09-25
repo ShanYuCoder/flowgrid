@@ -9,6 +9,6 @@
 2. [ ] `surface` → `CMP-*` (module) → `SC-*` (GWT + examples + coverage_plan)
 3. [ ] Mỗi `TC-*` dùng `coverage[]` (không `type`); refs + bridge FE đủ gen
 4. [ ] `registries/tests-index.json` cập nhật
-5. [ ] `pnpm check:plans` · `pnpm cases:render` (MD member VI)
+5. [ ] `flowgrid cases:gate --strict --docs-root $FLOWGRID_DOCS_ROOT` (schema + audit + bundle trace + SC coverage) · `pnpm cases:render` (MD member VI)
 6. [ ] Grill: không còn `spec_hole` mở; coverage_gap đã xử lý hoặc backlog có chủ
 7. [ ] Handoff FE chỉ sau grill-testcase OK

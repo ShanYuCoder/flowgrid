@@ -74,7 +74,7 @@ export default withMermaid(
         {
           text: 'AI Skills (Phase 2)',
           items: [
-            { text: '/docskit & CLI', link: '/6-reference/skills/docskit' },
+            { text: '/docs-hub & CLI', link: '/6-reference/skills/docs-hub' },
             { text: '/build-templates', link: '/6-reference/skills/build-templates' },
             { text: '/openapi', link: '/6-reference/skills/openapi' }
           ]

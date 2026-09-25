@@ -12,9 +12,9 @@
 - Phải quét qua các API dùng chung (`common/yaml/`) hoặc các api của màn hình lân cận để tìm cơ hội tái sử dụng (`#reuse-api`).
 
 ## Output (Kết quả mong đợi)
-- Nếu API là mới hoàn toàn: Tạo thư mục `api/<seq>/` và sinh file `01-backend-spec.yaml` theo đúng chuẩn (Tuân thủ nghiêm ngặt cấu trúc của [`backend-api.bundle.yaml`](file:///home/vutv/workspace/forgekit/.forgekit/templates/backend-api.bundle.yaml)).
+- Nếu API là mới hoàn toàn: Tạo thư mục `api/<seq>/` và sinh file `01-backend-spec.yaml` theo đúng chuẩn (Tuân thủ nghiêm ngặt cấu trúc của [`backend-api.bundle.yaml`](../../../../.flowgrid/templates/backend-api.bundle.yaml)).
 - Nếu API gọi lại đồ cũ: Đánh tag `#reuse-api` và tham chiếu `reuseFrom:` trên file bundle hiện tại, **KHÔNG** sinh ra bộ 3 file api mới (`01`, `02`, `03`).
-- File `02-openapi.yaml` (nếu sinh file 01 mới, thì sau đó chạy lệnh `forgekit openapi_gen`).
+- File `02-openapi.yaml` (nếu sinh file 01 mới, thì sau đó chạy lệnh `flowgrid openapi_gen`).
 
 ## Description / Ý nghĩa
 - Chuyên dùng để thiết kế hợp đồng Backend API (Backend API Contract).
@@ -28,5 +28,5 @@
 
 ## Chú ý quan trọng
 - **Luật AskQuestion Tech Debt:** Nếu thông tin truyền tải bị thiếu, Agent bắt buộc phải hỏi Member bằng Form AskQuestion và phải có tuỳ chọn `"Log as Tech Debt"`. Trả lời "Tech Debt" sẽ sinh file `QA-<feature.id>-NNNN`. Cấm để lại cờ `openQuestions` bên trong file YAML.
-- **KHÔNG SINH FILE MARKDOWN:** `api-spec` chỉ sinh YAML. Việc render ra giao diện `.md` cho người đọc là nhiệm vụ của `docskit` (`pnpm docs:render`).
-- Tác nhân (Agent) phải luôn đọc file template mẫu `.forgekit/templates/backend-api.bundle.yaml` trước khi gen YAML mới.
+- **KHÔNG SINH FILE MARKDOWN:** `api-spec` chỉ sinh YAML. Việc render ra giao diện `.md` cho người đọc là nhiệm vụ bộ docs (`flowgrid render` / `pnpm flowgrid:render`).
+- Tác nhân (Agent) phải luôn đọc file template mẫu `.flowgrid/templates/backend-api.bundle.yaml` trước khi gen YAML mới.

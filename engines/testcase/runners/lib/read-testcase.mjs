@@ -12,7 +12,7 @@ function warnDocsEnrichmentUnavailable(error) {
   const reason = String(error?.message ?? error ?? 'docs hub input is unavailable').replace(/\s+/g, ' ')
   console.warn(
     `  warn: optional docs enrichment unavailable (${reason}); testcase generation continues without docs hub ir/design.yaml context. ` +
-      'Set TESTKIT_DOCS_ROOT to a valid docs hub to enable enrichment.',
+      'Set FLOWGRID_DOCS_ROOT to a valid docs hub to enable enrichment.',
   )
 }
 
@@ -161,7 +161,7 @@ export async function readTestcaseFile(testcasePath, opts = {}) {
  * @param {string} screenId e.g. W-AD-AUTH-001
  */
 export async function listFeatureTestcases(root, screenId) {
-  const testsRoot = process.env.TESTKIT_TESTS_ROOT ? path.resolve(process.env.TESTKIT_TESTS_ROOT) : resolveProjectRoot(root, 'tests')
+  const testsRoot = process.env.FLOWGRID_TESTS_ROOT ? path.resolve(process.env.FLOWGRID_TESTS_ROOT) : resolveProjectRoot(root, 'tests')
   const screenDir = path.join(testsRoot, 'cases', screenId)
   const files = []
   let entries = []

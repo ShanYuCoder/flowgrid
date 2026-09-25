@@ -1,20 +1,20 @@
 # Laravel PHP unitgen
 
 Source of truth for the Laravel BE unit-test generator. Synced by
-`codegenkit init --type=be --adapter=laravel` into the product checkout at
-`src/.codegenkit/` (gitignored, owned by `.codegenkit/install-manifest.json`).
+`flowgrid init --type=be --adapter=laravel` into the product checkout at
+`src/.flowgrid/php/` (gitignored, owned by `.flowgrid/php/install-manifest.json`).
 
 ## Run
 
 ```bash
 cd src   # Laravel app root (artisan + composer.json)
-php .codegenkit/bin/unit-gen.php --spec <base-docs>/…/01-backend-spec.yaml [--dry-run] [--force] [--phase all]
+php .flowgrid/php/bin/unit-gen.php --spec <base-docs>/…/01-backend-spec.yaml [--dry-run] [--force] [--phase all]
 ```
 
 Or via toolkit CLI (spawns the synced engine):
 
 ```bash
-codegenkit api-unit-gen --adapter=laravel -- --spec <path>
+flowgrid api-unit-gen --adapter=laravel -- --spec <path>
 ```
 
 ## Dependency

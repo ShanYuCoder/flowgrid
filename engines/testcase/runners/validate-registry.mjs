@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 import { loadE2eTestRegistry, REGISTRY_REL, resolveBundleMatchers } from './lib/e2e-registry.mjs'
 
-const root = path.resolve(process.env.TESTKIT_ROOT || process.cwd())
+const root = path.resolve(process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd())
 
 async function pathExists(relativePath) {
   try {
@@ -66,7 +66,7 @@ async function main() {
     process.exit(1)
   }
 
-  console.log('testkit:e2e-registry OK')
+  console.log('flowgrid:e2e-registry OK')
 }
 
 main().catch((error) => {

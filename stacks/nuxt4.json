@@ -3,7 +3,7 @@
   "mode": "brownfield",
   "commands": {
     "genDry": [
-      "codegenkit",
+      "flowgrid",
       "gen:dry",
       "--adapter=nuxt4",
       "--",
@@ -11,7 +11,7 @@
       "{spec}"
     ],
     "gen": [
-      "codegenkit",
+      "flowgrid",
       "gen",
       "--adapter=nuxt4",
       "--",
@@ -19,7 +19,7 @@
       "{spec}"
     ],
     "unitGenDry": [
-      "codegenkit",
+      "flowgrid",
       "unit-gen:dry",
       "--adapter=nuxt4",
       "--",
@@ -27,7 +27,7 @@
       "{spec}"
     ],
     "unitGen": [
-      "codegenkit",
+      "flowgrid",
       "unit-gen",
       "--adapter=nuxt4",
       "--",
@@ -35,35 +35,35 @@
       "{spec}"
     ],
     "testcaseGenDry": [
-      "testkit",
+      "flowgrid",
       "testcase:gen:dry",
       "--",
       "--id",
       "{spec}"
     ],
     "testcaseGen": [
-      "testkit",
+      "flowgrid",
       "testcase:gen",
       "--",
       "--id",
       "{spec}"
     ],
     "registryValidate": [
-      "codegenkit",
+      "flowgrid",
       "registry",
       "--adapter=nuxt4"
     ],
     "unitRegistry": [
-      "codegenkit",
+      "flowgrid",
       "unit-registry",
       "--adapter=nuxt4"
     ],
     "e2eRegistry": [
-      "testkit",
+      "flowgrid",
       "e2e-registry"
     ],
     "commonRegistry": [
-      "codegenkit",
+      "flowgrid",
       "common-registry"
     ]
   },
@@ -83,7 +83,7 @@
   "templates": {
     "root": "adapters/nuxt4/codegen/templates",
     "engine": "hbs",
-    "note": "SSOT in Codegenkit; product has no root codegen/"
+    "note": "SSOT in FlowGrid bộ code; product has no root codegen/"
   },
   "dsl": {
     "ssot": "product-repo",
@@ -138,7 +138,7 @@
         ],
         "genKeys": [],
         "needsTags": [],
-        "note": "Updated by codegenkit gen; no separate lifecycle CLI"
+        "note": "Updated by flowgrid gen; no separate lifecycle CLI"
       }
     }
   },

@@ -5,10 +5,10 @@ using Scriban.Runtime;
 
 static string ProjectRoot()
 {
-    var configured = Environment.GetEnvironmentVariable("CODEGENKIT_ROOT");
+    var configured = Environment.GetEnvironmentVariable("FLOWGRID_PROJECT_ROOT");
     var root = Path.GetFullPath(string.IsNullOrWhiteSpace(configured) ? Directory.GetCurrentDirectory() : configured);
     if (!Directory.Exists(root))
-        throw new DirectoryNotFoundException($"CODEGENKIT_ROOT not found: {root}");
+        throw new DirectoryNotFoundException($"FLOWGRID_PROJECT_ROOT not found: {root}");
     return root;
 }
 
@@ -17,7 +17,7 @@ static string UnderRoot(string root, string path, string label)
     var full = Path.GetFullPath(path, root);
     var relative = Path.GetRelativePath(root, full);
     if (relative == ".." || relative.StartsWith($"..{Path.DirectorySeparatorChar}") || Path.IsPathRooted(relative))
-        throw new InvalidOperationException($"{label} must be inside CODEGENKIT_ROOT: {full}");
+        throw new InvalidOperationException($"{label} must be inside FLOWGRID_PROJECT_ROOT: {full}");
     return full;
 }
 

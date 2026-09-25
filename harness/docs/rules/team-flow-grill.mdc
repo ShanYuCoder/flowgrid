@@ -1,5 +1,5 @@
 ---
-description: Docskit grill metadata — list/form/detail profiles
+description: bộ docs grill metadata — list/form/detail profiles
 globs: surfaces/**
 alwaysApply: false
 ---
@@ -25,7 +25,7 @@ For `/grill-bqa`, `/grill-dev`, `/grill-docs` on docs-hub product bundles.
 
 - Prose → `summary`, `requirements`, `acceptance`
 - Validation copy → `ui.validationMessages` + `form.fields[].messages` — no triple duplicate
-- Delete/breadcrumb flows → read `.cursor/extracts/common-delete-flow.md`, `common-breadcrumb-flow.md` when touched
+- UI affordance gaps (delete result dialog, breadcrumb, filters, disabled reasons, …) → `flowgrid-ux-common.mdc` + `.cursor/extracts/ux-common-patterns.md` when touched; `(Recommended)` in AskQuestion must follow that rule
 - Missing validation messages → block `/prototype`
 
 Skill extract: `bqa-grill` · `dev-grill` · `grill-docs`

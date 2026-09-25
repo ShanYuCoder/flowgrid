@@ -31,13 +31,13 @@ fallbacks.
 | UI | `registries/design.registry.json` | `#needs-component:` `#needs-ui:` `#shell:` |
 | Logic | `registries/common.registry.json` | `#common:*` `#needs-common:*` |
 
-Executable registry validation is **FE Codegenkit** (or product scripts on the
+Executable registry validation is **bộ code FE** (or product scripts on the
 FE checkout). On docs hub:
 
 ```text
 if ArtifactGraph available:
   artifactgraph_allowlist_check(registryValidate|commonRegistry)
-  artifactgraph_recommend_command → hand off to FE Codegenkit
+  artifactgraph_recommend_command → hand off to bộ code FE
 else:
   note pending FE registry validate; do not invent local shell fallbacks
 ```
@@ -58,8 +58,8 @@ else:
 
 ## Handoff
 
-FE Codegenkit / product: `codegenkit gen:dry` (or repo shim) after marks change,
-when that lane is available. Missing Codegenkit is a pending handoff, not a
+bộ code FE / product: `flowgrid gen:dry` (or repo shim) after marks change,
+when that lane is available. Missing bộ code is a pending handoff, not a
 docs failure.
 
 ## Compatibility

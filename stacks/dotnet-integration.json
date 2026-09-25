@@ -3,7 +3,7 @@
   "mode": "brownfield",
   "commands": {
     "genDry": [
-      "codegenkit",
+      "flowgrid",
       "api-gen:dry",
       "--adapter=dotnet-integration",
       "--",
@@ -11,7 +11,7 @@
       "{spec}"
     ],
     "gen": [
-      "codegenkit",
+      "flowgrid",
       "api-gen",
       "--adapter=dotnet-integration",
       "--",
@@ -19,7 +19,7 @@
       "{spec}"
     ],
     "registryValidate": [
-      "codegenkit",
+      "flowgrid",
       "api-registry",
       "--adapter=dotnet-integration"
     ]
@@ -38,7 +38,7 @@
   "templates": {
     "root": "adapters/dotnet-integration/codegen",
     "engine": "scriban",
-    "note": "SSOT in Codegenkit; product has no root codegen/"
+    "note": "SSOT in FlowGrid bộ code; product has no root codegen/"
   },
   "dsl": {
     "ssot": "product-repo",
@@ -56,7 +56,7 @@
           "#needs-endpoint",
           "#needs-dto"
         ],
-        "note": "Integration BE — Codegenkit CLI; MCP indexes registries only"
+        "note": "Integration BE — FlowGrid bộ code CLI; MCP indexes registries only"
       }
     }
   },

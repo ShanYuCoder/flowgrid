@@ -3,7 +3,7 @@
   "mode": "brownfield",
   "commands": {
     "genDry": [
-      "codegenkit",
+      "flowgrid",
       "gen:dry",
       "--adapter=nuxt4",
       "--",
@@ -11,7 +11,7 @@
       "{spec}"
     ],
     "gen": [
-      "codegenkit",
+      "flowgrid",
       "gen",
       "--adapter=nuxt4",
       "--",
@@ -19,7 +19,7 @@
       "{spec}"
     ],
     "nestGenDry": [
-      "codegenkit",
+      "flowgrid",
       "api-gen:dry",
       "--adapter=nestjs",
       "--",
@@ -27,19 +27,19 @@
       "{spec}"
     ],
     "contractGenDry": [
-      "codegenkit",
+      "flowgrid",
       "contract-gen:dry",
       "--",
       "--spec",
       "{spec}"
     ],
     "registryValidate": [
-      "codegenkit",
+      "flowgrid",
       "registry",
       "--adapter=nuxt4"
     ],
     "nestRegistry": [
-      "codegenkit",
+      "flowgrid",
       "api-registry",
       "--adapter=nestjs"
     ]
@@ -60,7 +60,7 @@
   "templates": {
     "root": "adapters/nuxt4/codegen/templates",
     "engine": "hbs",
-    "note": "FE SSOT nuxt4 + BE nestjs in Codegenkit"
+    "note": "FE SSOT nuxt4 + BE nestjs in FlowGrid bộ code"
   },
   "dsl": {
     "ssot": "product-repo",

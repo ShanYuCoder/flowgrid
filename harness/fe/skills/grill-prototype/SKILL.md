@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # /grill-prototype
 
-**Owner:** Codegenkit · optional local ArtifactGraph allowlist check before dry-gen.
+**Owner:** bộ code · optional local ArtifactGraph allowlist check before dry-gen.
 
 ## Target / ID Resolution Rule
 
@@ -23,19 +23,19 @@ else: npm run codegen:dry -- --id …
 
 ## Docs Root Resolution
 
-1. If `CODEGENKIT_DOCS_ROOT` is set (non-empty), use it as the canonical
+1. If `FLOWGRID_DOCS_ROOT` is set (non-empty), use it as the canonical
    pointer for locating `ir/design.yaml`.
-2. If `CODEGENKIT_DOCS_ROOT` is **not** set, fall back to Platform DNA
+2. If `FLOWGRID_DOCS_ROOT` is **not** set, fall back to Platform DNA
    configuration (`platform-dna`) to resolve the docs hub path.
    Platform DNA discovery is slower and more error-prone, so always prefer
-   an explicit `CODEGENKIT_DOCS_ROOT` when available.
+   an explicit `FLOWGRID_DOCS_ROOT` when available.
 
-Canonical IR/registries come from `CODEGENKIT_DOCS_ROOT`; ArtifactGraph does
-not follow that pointer. Architecture IDs → Docskit (`DOCSKIT_ROOT`); symbols
+Canonical IR/registries come from `FLOWGRID_DOCS_ROOT`; ArtifactGraph does
+not follow that pointer. Architecture IDs → bộ docs (`FLOWGRID_DOCS_ROOT`); symbols
 in other repos → `codegraph-<key>` only.
 
 Missing ArtifactGraph never blocks the grill. Complete the deterministic dry
 generation fallback first, then follow
-`.cursor/rules/codegenkit-optional-integrations.mdc` for once-per-run telemetry.
+`.cursor/rules/flowgrid-code-optional-integrations.mdc` for once-per-run telemetry.
 
-Do not execute docskit scripts from the FE repo.
+Do not execute flowgrid docs scripts from the FE repo.

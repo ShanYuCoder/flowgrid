@@ -5,11 +5,11 @@ alwaysApply: true
 
 # Cross-repo index routing
 
-- Architecture IDs and Functions/W-* paths belong to Docskit through `DOCSKIT_ROOT`.
+- Architecture IDs and Functions/W-* paths belong to bộ docs through `FLOWGRID_DOCS_ROOT`.
   Never use CodeGraph as the architecture index.
-- Test plans use `TESTKIT_TESTS_ROOT`; docs evidence uses
-  `TESTKIT_DOCS_ROOT`; IR/registry/generation follows its owning pointer such as
-  `CODEGENKIT_DOCS_ROOT`.
+- Test plans use `FLOWGRID_TESTS_ROOT`; docs evidence uses
+  `FLOWGRID_DOCS_ROOT`; IR/registry/generation follows its owning pointer such as
+  `FLOWGRID_DOCS_ROOT`.
 - For symbols or call graphs in repo X, call the Platform DNA-wired
   `codegraph-<repo-key>` MCP whose `--project-root` is checkout X. Never query
   the index of the currently open repo for another repo.

@@ -9,8 +9,8 @@ const CATALOG_ROOTS = ['platform', 'product', 'docs']
 /** Skip these names when walking inside platform/ or surfaces/. */
 const SKIP_NEST = new Set(['node_modules', '.git', 'code', 'dist', 'cache', 'registries', '.cursor'])
 
-const README_MARKER = '<!-- docskit-catalog -->'
-const README_END = '<!-- /docskit-catalog -->'
+const README_MARKER = '<!-- flowgrid-catalog -->'
+const README_END = '<!-- /flowgrid-catalog -->'
 const README_BLOCK = `${README_MARKER}
 **[Danh mục tài liệu](CATALOG.md)**
 ${README_END}
@@ -108,7 +108,7 @@ export function writeGithubCatalog(root = process.cwd()) {
   const lines = [
     '# Danh mục tài liệu',
     '',
-    '_Sinh bởi `docskit publish`. Click link để mở trang Markdown. Không sửa tay._',
+    '_Sinh bởi `flowgrid publish`. Click link để mở trang Markdown. Không sửa tay._',
     '',
   ]
 
@@ -141,7 +141,7 @@ export function ensureReadmeCatalogLink(root) {
 }
 
 function stripCatalogBlock(text) {
-  const paired = /<!-- docskit-catalog -->[\s\S]*?<!-- \/docskit-catalog -->\n*/
+  const paired = /<!-- flowgrid-catalog -->[\s\S]*?<!-- \/flowgrid-catalog -->\n*/
   if (paired.test(text)) return text.replace(paired, '')
   if (text.includes(README_MARKER)) {
     return (

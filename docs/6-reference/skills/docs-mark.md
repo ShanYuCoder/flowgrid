@@ -16,7 +16,7 @@
 - Cập nhật (Upsert) registry: Ghi nhận các tag và đánh dấu (marks) chính xác vào file registry.
 - Đánh dấu trên Docs Hub: Lưu các dấu vết kỹ thuật (SSOT) vào `surfaces/common/integrations/*` hoặc `surfaces/common/data-model/derived-data.md`.
 - Kích hoạt ArtifactGraph: Gọi các lệnh như `artifactgraph_remember` hoặc `artifactgraph_allowlist_check` (nếu tools khả dụng) để lưu kiến thức vào bộ nhớ chung.
-- Bàn giao (Handoff): Đẩy các phần validate chuyên sâu sang cho FE Codegenkit (`codegenkit gen:dry`). Không tự thay thế lệnh shell nếu thiếu tool.
+- Bàn giao (Handoff): Đẩy các phần validate chuyên sâu sang cho bộ code FE (`flowgrid gen:dry`). Không tự thay thế lệnh shell nếu thiếu tool.
 
 ## Description / Ý nghĩa
 - Thuộc cụm Agent Common. Là chốt chặn đánh dấu các quyết định thiết kế kỹ thuật, mẫu thiết kế (common patterns) và các thành phần UI dùng chung.

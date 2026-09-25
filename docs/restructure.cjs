@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const docsDir = '/home/vutv/workspace/forgekit/docs';
+const docsDir = __dirname;
 
 const dirsToCreate = [
   '1-guide', '2-lifecycle', '3-artifacts', '4-contracts', '5-testing', '6-reference', '7-architecture'

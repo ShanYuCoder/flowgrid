@@ -90,7 +90,7 @@ export async function runBuildTemplateCode(args = []) {
   console.log(pc.green(`✔ Generated Template:`), tplResult.templatePath);
 
   console.log(pc.cyan(`\n✨ Custom Template and DSL Registry successfully established!`));
-  console.log(pc.gray(`Run 'forgekit split' or '/spec' to author specifications matching this custom base.\n`));
+  console.log(pc.gray(`Run 'flowgrid split' or '/spec' to author specifications matching this custom base.\n`));
 
   return { code: 0 };
 }

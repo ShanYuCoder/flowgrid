@@ -6,8 +6,8 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY PRE-FLIGHT
 > **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. STRICTLY FORBIDDEN to rely on memory.
-> **[MANDATORY]** Read template `.forgekit/templates/backend-api.bundle.yaml` BEFORE generating any YAML.
-> If missing → STOP: *"Template missing. Run `forgekit init`."*
+> **[MANDATORY]** Read template `.flowgrid/templates/backend-api.bundle.yaml` BEFORE generating any YAML.
+> If missing → STOP: *"Template missing. Run `flowgrid init`."*
 > **[MANDATORY]** Read entire `ir/design.yaml` first (actions + nested items with `apiRefs`). If `ir/` is missing, read `*.bundle.yaml`.
 
 # /api-spec — Backend API Contract
@@ -22,7 +22,7 @@ Hashtag extracts: `#call-external` → `call-external.md`; `#cross-entity-servic
 
 ## Rule: Audit Interlock
 
-- **[MANDATORY]** Always run static audit first: `node engines/spec/lib/audit-api-gaps.mjs <target-api.bundle.yaml>`.
+- **[MANDATORY]** Always run static audit first: `flowgrid audit api <target-api.bundle.yaml>`.
   - ✅ Consume JSON gap report to fix issues or trigger AskQuestion wizard (≥3 options).
   - ❌ Do not skip audit and proceed to authoring directly.
 
@@ -107,7 +107,7 @@ Hashtag extracts: `#call-external` → `call-external.md`; `#cross-entity-servic
 - **[MANDATORY]** All strings containing `:` must be double-quoted.
   - ✅ `summary: "Create: New Employee Registration"`
   - ❌ `summary: Create: New Employee Registration`
-- **[MANDATORY]** Run `docskit api:check --spec …/api/01/01-backend-spec.yaml` before handoff.
+- **[MANDATORY]** Run `flowgrid check --spec …/api/01/01-backend-spec.yaml` before handoff.
 - **[MANDATORY]** Domain tags only (`#call-external`, `#cross-entity-service`, `#err:*`). No `#gen:*` or `codegen` block from this skill.
 
 ---
@@ -119,7 +119,7 @@ Hashtag extracts: `#call-external` → `call-external.md`; `#cross-entity-servic
 3. Scan sibling + common APIs; apply reuse or create new trio.
 4. Apply explicit URI action suffixes.
 5. Apply error storming `#err:*` per endpoint nature.
-6. Run `docskit openapi:gen --spec …/api/<seq>/01-backend-spec.yaml` to generate `02-openapi.yaml`.
+6. Run `flowgrid openapi_gen --spec …/api/<seq>/01-backend-spec.yaml` to generate `02-openapi.yaml`.
 7. AskQuestion wizard for any unresolved unknowns.
 8. Update `.harness/progress.md`.
 
@@ -133,4 +133,4 @@ Hashtag extracts: `#call-external` → `call-external.md`; `#cross-entity-servic
 - [ ] All new endpoints use explicit action URI suffixes.
 - [ ] `#err:*` tags applied per endpoint nature (not-found + IDOR on `{id}`, validation on POST/PUT, etc.).
 - [ ] Strings with `:` in YAML are double-quoted. No `.md` written directly.
-- [ ] `docskit api:check` passed with zero errors.
+- [ ] `flowgrid check` passed with zero errors.

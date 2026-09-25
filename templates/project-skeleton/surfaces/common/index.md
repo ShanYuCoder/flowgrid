@@ -17,8 +17,8 @@ Same tier as feature Code — **not** C4 Context/Container.
 | MD | [`md/`](./md/) |
 
 ```bash
-docskit render
-docskit split -- <path>
+flowgrid render
+flowgrid split -- <path>
 ```
 
 ## Patterns (UI / UX policy)

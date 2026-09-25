@@ -10,7 +10,7 @@ Phase **2c API** — chạy **song song** portal scaffold (2a) và E2E prep (2b)
 
 ```mermaid
 flowchart TD
-  IN["ir/design.yaml + api/01"] --> CG["Bộ Code (Forgekit) contract-gen / api-gen"]
+  IN["ir/design.yaml + api/01"] --> CG["flowgrid contract-gen / api-gen"]
   CG --> MODELS["packages/models"]
   IN --> S1["/api-spec"]
   S1 --> BE["backend/01 · 02 · 03"]
@@ -69,7 +69,7 @@ flowchart TD
 
 Cấu trúc module CQRS: [NEST-API-STRUCTURE](https://github.com/raintr91/next_nest/blob/next_nest_v3/docs/operational/NEST-API-STRUCTURE.md) · Laravel API git: [quickstart](https://github.com/raintr91/lara12/blob/v3/docs/operational/BACKEND-API-QUICKSTART.md).
 
-> **Lưu ý:** `openapi:gen` là lệnh chung của Bộ Code (Forgekit) cho mọi BE adapter (Nest, FastAPI, …). FastAPI export OpenAPI tách biệt khỏi Nest.
+> **Lưu ý:** `openapi:gen` là lệnh chung của bộ code cho mọi BE adapter (Nest, FastAPI, …). FastAPI export OpenAPI tách biệt khỏi Nest.
 
 ---
 
@@ -302,8 +302,8 @@ Phases `api:unit-gen`: `stub` · `enriched` · `behavioral` · `all` (default).
 ## Lệnh mẫu
 
 ```bash
-Bộ Code (Forgekit) api-gen -- --spec surfaces/…/api/01/01-backend-spec.yaml
-Bộ Code (Forgekit) api-unit-gen -- --spec surfaces/…/api/01/01-backend-spec.yaml --force
+flowgrid api-gen -- --spec surfaces/…/api/01/01-backend-spec.yaml
+flowgrid api-unit-gen -- --spec surfaces/…/api/01/01-backend-spec.yaml --force
 
 cd src && php artisan test --testsuite=ModuleChain --filter=Hotel
 cd src && php artisan test --coverage --testsuite=ModuleChain

@@ -1,7 +1,7 @@
 /**
  * Resolve docs hub root (any arc42 × C4 MD tree with architecture/).
  *
- * Order: explicit tool argument → project MCP DOCSKIT_ROOT → cwd (if hub) → error.
+ * Order: explicit tool argument → FLOWGRID_DOCS_ROOT → cwd (if hub) → error.
  * The package never remembers or searches for a target repository.
  */
 import fs from 'node:fs'
@@ -27,8 +27,9 @@ export function looksLikeHub(abs: string): boolean {
 /**
  * Best-effort root for local wiring. Empty when no project root is available.
  */
-export function defaultDocskitRoot(): string {
-  if (process.env.DOCSKIT_ROOT) return path.resolve(process.env.DOCSKIT_ROOT)
+export function defaultDocsRoot(): string {
+  const fromEnv = process.env.FLOWGRID_DOCS_ROOT
+  if (fromEnv) return path.resolve(fromEnv)
   if (looksLikeHub(process.cwd())) return process.cwd()
   return ''
 }
@@ -42,18 +43,19 @@ export function resolveDocsRoot(explicit?: string): string {
     }
     return abs
   }
-  if (process.env.DOCSKIT_ROOT) {
-    const abs = path.resolve(process.env.DOCSKIT_ROOT)
-    if (!fs.existsSync(abs)) throw new Error(`DOCSKIT_ROOT not found: ${abs}`)
+  const envRoot = process.env.FLOWGRID_DOCS_ROOT
+  if (envRoot) {
+    const abs = path.resolve(envRoot)
+    if (!fs.existsSync(abs)) throw new Error(`FLOWGRID_DOCS_ROOT not found: ${abs}`)
     if (!looksLikeHub(abs)) {
-      throw new Error(`DOCSKIT_ROOT missing architecture/: ${abs}`)
+      throw new Error(`FLOWGRID_DOCS_ROOT missing architecture/: ${abs}`)
     }
     return abs
   }
   if (looksLikeHub(process.cwd())) return process.cwd()
   throw new Error(
-    'Cannot resolve docs root. Pass docsRoot to the tool, configure a project-local DOCSKIT_ROOT, ' +
-      'or cd into a docs hub (must contain architecture/). Setup: docskit init',
+    'Cannot resolve docs root. Pass docsRoot to the tool, set FLOWGRID_DOCS_ROOT in MCP env, ' +
+      'or cd into a docs hub (must contain architecture/). Setup: flowgrid init',
   )
 }
 

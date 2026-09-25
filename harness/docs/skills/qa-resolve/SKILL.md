@@ -1,6 +1,6 @@
 ---
 name: qa-resolve
-extractBundle: docskit
+extractBundle: docs-hub
 description: EXCLUSIVE /qa-resolve — close one qa/open file. Prompt is QA id + solution. Do not use for full-screen grill or first-time /spec.
 disable-model-invocation: true
 ---
@@ -27,7 +27,7 @@ disable-model-invocation: true
 |---|---|---|
 | `qa/open/<id>.yaml` | Patch `target.path` only | Read generated `*.md` as SSOT |
 | Target bundle **or** `01-backend-spec.yaml` (entire file) | Delete QA file after patch | Author `openQuestions` |
-| `ir/design.yaml` — ONLY to locate field if `at` is a design pointer | `docskit split` after patch | Full-screen rewrite (use `/spec`) |
+| `ir/design.yaml` — ONLY to locate field if `at` is a design pointer | `flowgrid split` after patch | Full-screen rewrite (use `/spec`) |
 
 ---
 
@@ -55,14 +55,14 @@ disable-model-invocation: true
   | `target.path` | Patch Action |
   |---|---|
   | `*.bundle.yaml` | Patch `target.at` field only. Never patch `spec.api`. |
-  | `…/api/<seq>/01-backend-spec.yaml` or `common/yaml/<slug>/01-backend-spec.yaml` | Patch that `01`. Drop `pendingTechDebt[]` row for this QA id. Regenerate `02` via `docskit openapi:gen --spec <01>`. |
+  | `…/api/<seq>/01-backend-spec.yaml` or `common/yaml/<slug>/01-backend-spec.yaml` | Patch that `01`. Drop `pendingTechDebt[]` row for this QA id. Regenerate `02` via `flowgrid openapi_gen --spec <01>`. |
   | Missing / invalid path | **STOP** — do not invent a fallback path. |
 
 - **[MANDATORY]** Post-patch execution:
   1. Write solution into field at `target.at` (replacing `#missing_info` / empty / placeholder).
   2. Remove this ID from `#missing_info QA-…`, `#tech-debt:QA-…`, and all tag lists.
   3. **Delete** `qa/open/<id>.yaml`.
-  4. Run `docskit split` / `pnpm docs:split` so `ir/spec.yaml` Q&A removes this ID.
+  4. Run `flowgrid split` / `pnpm docs:split` so `ir/spec.yaml` Q&A removes this ID.
 - **[MANDATORY]** Preserve existing error matrices (`onSuccess` / `onCommonError` / `onSpecificError`, `#err:*`) unless solution specifically alters those fields.
 
 ---
@@ -87,5 +87,5 @@ disable-model-invocation: true
 - [ ] Read `qa/open/<id>.yaml`; patched only `target.path` field.
 - [ ] Solution sourced strictly from user prompt (or single AskQuestion turn).
 - [ ] QA file deleted; `pendingTechDebt` + `#missing_info` references removed for this ID.
-- [ ] `docskit split` executed; `ir/spec.yaml` Q&A reflects closed status.
+- [ ] `flowgrid split` executed; `ir/spec.yaml` Q&A reflects closed status.
 - [ ] Did not author `openQuestions` or `bundle.spec.api`.

@@ -27,7 +27,7 @@
 ## Các Skill liên quan
 - **Trước đó:** Nhận đầu vào từ `/grill-bqa` (hoặc `/spec`).
 - **Sau đó:** 
-  - Chuyển giao sang `FE Codegenkit` để sinh code prototype (`/prototype`).
+  - Chuyển giao sang `bộ code FE` để sinh code prototype (`/prototype`).
   - Nếu xung đột giữa Code và Business -> Gọi `/grill-docs`.
   - Nếu thông tin Legacy bị thiếu -> Gọi `/update-spec-legacy`.
 

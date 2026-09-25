@@ -178,8 +178,8 @@ export function resolveHubId(repoRoot, id, mode = 'testcase') {
   let docs
   let tests
   const getDocsRoot = () =>
-    process.env.TESTKIT_DOCS_ROOT || process.env.CODEGENKIT_DOCS_ROOT
-      ? path.resolve(process.env.TESTKIT_DOCS_ROOT || process.env.CODEGENKIT_DOCS_ROOT)
+    process.env.FLOWGRID_DOCS_ROOT
+      ? path.resolve(process.env.FLOWGRID_DOCS_ROOT)
       : resolveProjectRoot(repoRoot, 'docs')
   const getDocs = () => {
     if (!docs) {
@@ -190,8 +190,8 @@ export function resolveHubId(repoRoot, id, mode = 'testcase') {
   }
   const getTests = () => {
     if (!tests) {
-      const root = process.env.TESTKIT_TESTS_ROOT
-        ? path.resolve(process.env.TESTKIT_TESTS_ROOT)
+      const root = process.env.FLOWGRID_TESTS_ROOT
+        ? path.resolve(process.env.FLOWGRID_TESTS_ROOT)
         : resolveProjectRoot(repoRoot, 'tests')
       tests = { root, index: loadTestsIndex(root) }
     }

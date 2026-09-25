@@ -3,7 +3,7 @@
   "mode": "brownfield",
   "commands": {
     "genDry": [
-      "codegenkit",
+      "flowgrid",
       "api-gen:dry",
       "--adapter=laravel",
       "--",
@@ -11,7 +11,7 @@
       "{spec}"
     ],
     "gen": [
-      "codegenkit",
+      "flowgrid",
       "api-gen",
       "--adapter=laravel",
       "--",
@@ -19,7 +19,7 @@
       "{spec}"
     ],
     "unitGenDry": [
-      "codegenkit",
+      "flowgrid",
       "api-unit-gen:dry",
       "--adapter=laravel",
       "--",
@@ -27,7 +27,7 @@
       "{spec}"
     ],
     "unitGen": [
-      "codegenkit",
+      "flowgrid",
       "api-unit-gen",
       "--adapter=laravel",
       "--",
@@ -35,7 +35,7 @@
       "{spec}"
     ],
     "registryValidate": [
-      "codegenkit",
+      "flowgrid",
       "api-registry",
       "--adapter=laravel"
     ]
@@ -53,7 +53,7 @@
   "templates": {
     "root": "adapters/laravel",
     "engine": "mixed",
-    "note": "api-gen Node-in-kit; unitgen PHP synced to src/.codegenkit/"
+    "note": "api-gen Node-in-kit; unitgen PHP synced to src/.flowgrid/php/"
   },
   "dsl": {
     "ssot": "product-repo",
@@ -70,7 +70,7 @@
           "#needs-endpoint",
           "#needs-dto"
         ],
-        "note": "Registries at product root; engines in Codegenkit"
+        "note": "Registries at product root; engines in FlowGrid bộ code"
       },
       "unit": {
         "registries": [

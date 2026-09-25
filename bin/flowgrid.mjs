@@ -3,10 +3,20 @@
 import { stdin as input, stdout as output } from 'node:process';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { intro, outro, select, multiselect, text, confirm as confirmPrompt, isCancel, cancel } from '@clack/prompts';
 import pc from 'picocolors';
+import {
+  FLOWGRID_PROJECT_IGNORES,
+  appendFlowgridProjectIgnores,
+  removeFlowgridProjectIgnores,
+} from './lib/project-gitignore.mjs';
+import { runAuditCommand, resolveAuditInvocation } from './lib/audit-run.mjs';
+import { syncAgentHarness, runHarnessSync, createCopyRecursive } from './lib/harness-sync.mjs';
+import { writeRootAgentsMd } from './lib/harness-overlay.mjs';
+import { runDoctor, printDoctorReport } from './lib/doctor.mjs';
 
-async function main() {
+export async function main() {
   const args = process.argv.slice(2);
   if (args.includes('version') || args.includes('-v') || args.includes('--version')) {
     const pkgPath = path.resolve(new URL(import.meta.url).pathname, '../../package.json');
@@ -31,7 +41,7 @@ async function main() {
     }
   }
 
-  const testCommands = ['cases:render', 'cases:check', 'cases:coverage', 'tests:publish', 'testcase:gen', 'testcase:gen:dry', 'testcase:gen:all', 'e2e-registry'];
+  const testCommands = ['cases:render', 'cases:check', 'cases:coverage', 'cases:gate', 'tests:publish', 'testcase:gen', 'testcase:gen:dry', 'testcase:gen:all', 'e2e-registry'];
   if (testCommands.includes(command)) {
     try {
       const { runEngine } = await import('../dist/test/engines/run.js');
@@ -42,6 +52,7 @@ async function main() {
       if (command === 'cases:render') engineRel = ['cases', 'render-cases.mjs'];
       if (command === 'cases:check') engineRel = ['cases', 'check-plans.mjs'];
       if (command === 'cases:coverage') engineRel = ['cases', 'check-coverage.mjs'];
+      if (command === 'cases:gate') engineRel = ['cases', 'gate.mjs'];
       if (command === 'tests:publish') engineRel = ['cases', 'publish.mjs'];
       if (command.startsWith('testcase:gen')) {
         engineRel = ['testcase', 'runners', 'generate.mjs'];
@@ -153,13 +164,13 @@ async function main() {
     const webAdapters = new Set(['nuxt4', 'nextjs']);
     if (docsRoot && webAdapters.has(feAdapter)) {
       const resolvedDocsRoot = path.resolve(docsRoot);
-      const forgekitRoot = path.resolve(new URL(import.meta.url).pathname, '../..');
-      const commonEngine = path.join(forgekitRoot, 'adapters', 'shared', 'common-gen.mjs');
+      const packageRoot = path.resolve(new URL(import.meta.url).pathname, '../..');
+      const commonEngine = path.join(packageRoot, 'adapters', 'shared', 'common-gen.mjs');
       const env = {
         ...process.env,
-        CODEGENKIT_ROOT: projectRoot,
-        CODEGENKIT_ADAPTER: feAdapter,
-        CODEGENKIT_DOCS_ROOT: resolvedDocsRoot,
+        FLOWGRID_PROJECT_ROOT: projectRoot,
+        FLOWGRID_ADAPTER: feAdapter,
+        FLOWGRID_DOCS_ROOT: resolvedDocsRoot,
       };
       const res = spawnSync(process.execPath, [commonEngine, '--all-surfaces', '--all-modules'], {
         cwd: projectRoot,
@@ -290,7 +301,7 @@ async function main() {
         if (pkg.scripts) {
           let modified = false;
           for (const key of Object.keys(pkg.scripts)) {
-            if (key.startsWith('forge:') || key.startsWith('flowgrid:')) {
+            if (key.startsWith('flowgrid:') || key.startsWith('flow:')) {
               delete pkg.scripts[key];
               modified = true;
             }
@@ -307,19 +318,13 @@ async function main() {
     if (fs.existsSync(gitignorePath)) {
       let gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
       const ignoresToRemove = [];
-      if (!keepAgents) ignoresToRemove.push('.flowgrid', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo');
-      
-      let modifiedIgnore = false;
-      for (const ignore of ignoresToRemove) {
-        const regex = new RegExp(`^\\/?${ignore}\\/?$(\\r?\\n)?`, 'gm');
-        if (regex.test(gitignoreContent)) {
-          gitignoreContent = gitignoreContent.replace(regex, '');
-          modifiedIgnore = true;
-        }
+      if (!keepAgents) {
+        ignoresToRemove.push(...FLOWGRID_PROJECT_IGNORES);
       }
-      if (modifiedIgnore) {
-        fs.writeFileSync(gitignorePath, gitignoreContent);
-        console.log('  - Đã dọn dẹp các thư mục liên quan khỏi .gitignore');
+      const { content, modified } = removeFlowgridProjectIgnores(gitignoreContent, ignoresToRemove);
+      if (modified) {
+        fs.writeFileSync(gitignorePath, content);
+        console.log('  - Đã dọn dẹp các mục FlowGrid khỏi .gitignore');
       }
     }
 
@@ -327,9 +332,47 @@ async function main() {
     process.exit(0);
   }
 
+  if (command === 'doctor') {
+    try {
+      const packageRoot = path.resolve(new URL(import.meta.url).pathname, '../../');
+      const fix = args.includes('--fix');
+      const report = runDoctor({
+        projectRoot: process.cwd(),
+        packageRoot,
+        fix,
+      });
+      printDoctorReport(report);
+      process.exit(report.ok ? 0 : 1);
+    } catch (e) {
+      console.error(pc.red(e.message));
+      process.exit(1);
+    }
+  }
+
+  if (command === 'harness' && args[1] === 'sync') {
+    try {
+      const packageRoot = path.resolve(new URL(import.meta.url).pathname, '../../');
+      runHarnessSync(args.slice(2), { packageRoot });
+      process.exit(0);
+    } catch (e) {
+      console.error(pc.red(e.message));
+      process.exit(1);
+    }
+  }
+
+  try {
+    const audit = resolveAuditInvocation(args);
+    if (audit) {
+      process.exit(runAuditCommand(audit.command, audit.argv));
+    }
+  } catch (e) {
+    console.error(pc.red(e.message));
+    process.exit(1);
+  }
+
   if (command && command !== 'init') {
     console.error(pc.red(`Lệnh không hợp lệ: ${command}`));
-    console.log(`Chạy 'flowgrid init' để bắt đầu hoặc xem tài liệu README.`);
+    console.log(`Chạy 'flowgrid init', 'flowgrid doctor', 'flowgrid harness sync', hoặc 'flowgrid audit'.`);
     process.exit(1);
   }
 
@@ -448,15 +491,18 @@ async function main() {
       if (isCancel(testRootAns)) { cancel('Cancelled.'); process.exit(0); }
       feTestRoot = testRootAns;
     }
-  } else {
-    const docRootAns = await text({
-      message: 'Enter the root directory for documentation:',
-      placeholder: 'docs',
-      defaultValue: 'docs'
-    });
-    if (isCancel(docRootAns)) { cancel('Cancelled.'); process.exit(0); }
-    feDocRoot = docRootAns;
+
+    if (selectedType === 'Test') {
+      const testRootAns = await text({
+        message: 'Enter the root directory for test plans / cases (VitePress cases hub):',
+        placeholder: 'tests',
+        defaultValue: 'tests'
+      });
+      if (isCancel(testRootAns)) { cancel('Cancelled.'); process.exit(0); }
+      feTestRoot = testRootAns;
+    }
   }
+  // Document hub: repo cwd is the docs SSOT — no docsRoot pointer in config or MCP env.
 
   let defaultLanguage = undefined;
   let supportedLanguages = undefined;
@@ -484,16 +530,24 @@ async function main() {
 
   console.log(pc.magenta("\n=== Installation Plan ==="));
   console.log(`- Project Type: ${selectedType}`);
-  if (selectedType !== 'Document') {
+  if (selectedType === 'Document') {
+    console.log(`- Docs hub: repository root (không cấu hình docsRoot / FLOWGRID_DOCS_ROOT)`);
+    if (supportedLanguages?.length) {
+      console.log(`- Languages: ${supportedLanguages.join(', ')} (default: ${defaultLanguage ?? '—'})`);
+    }
+  } else {
     console.log(`- Base Profile: ${baseProfile}${goldenSample ? ` (Sample: ${goldenSample})` : ''}`);
+    if (feDocRoot) {
+      console.log(`- Docs SSOT pointer: ${feDocRoot} (consumer → external docs hub)`);
+    }
+    if (feTestRoot) {
+      console.log(`- Tests root: ${feTestRoot}`);
+    }
     if (feAdapter) {
       console.log(`- Frontend Adapter: ${feAdapter}`);
-      console.log(`  * Docs Root: ${feDocRoot}`);
-      console.log(`  * Tests Root: ${feTestRoot}`);
     }
     if (beAdapter) {
       console.log(`- Backend Adapter: ${beAdapter}`);
-      if (!feAdapter) console.log(`  * Docs Root: ${feDocRoot}`);
     }
   }
   console.log(`- Setup Agents: ${selectedAgents.length > 0 ? selectedAgents.join(', ') : 'No'}`);
@@ -516,6 +570,7 @@ async function main() {
 
   const projectConfig = {
     type: selectedType,
+    agents: selectedAgents,
     baseProfile,
     goldenSample: goldenSample || undefined,
     languages: supportedLanguages,
@@ -533,7 +588,7 @@ async function main() {
   fs.writeFileSync(path.join(targetDir, 'config.json'), JSON.stringify(projectConfig, null, 2));
   console.log("  + Wrote config.json");
 
-  const forgekitRoot = path.resolve(new URL(import.meta.url).pathname, '../../');
+  const packageRoot = path.resolve(new URL(import.meta.url).pathname, '../../');
   
   const copyRecursive = (srcDir, destDir, log = false) => {
     if (!fs.existsSync(srcDir)) return;
@@ -556,14 +611,14 @@ async function main() {
 
   if (feAdapter) {
     console.log(pc.blue(`[INFO] Syncing Frontend adapter (${feAdapter})...`));
-    copyRecursive(path.join(forgekitRoot, 'adapters', feAdapter), targetDir);
+    copyRecursive(path.join(packageRoot, 'adapters', feAdapter), targetDir);
   }
   if (beAdapter) {
     console.log(pc.blue(`[INFO] Syncing Backend adapter (${beAdapter})...`));
-    copyRecursive(path.join(forgekitRoot, 'adapters', beAdapter), targetDir);
+    copyRecursive(path.join(packageRoot, 'adapters', beAdapter), targetDir);
   }
 
-  const vitepressDocsSource = path.join(forgekitRoot, 'engines', 'docs', 'vitepress');
+  const vitepressDocsSource = path.join(packageRoot, 'engines', 'docs', 'vitepress');
   if (fs.existsSync(vitepressDocsSource)) {
     let destDocVp;
     let destDocsRoot;
@@ -578,7 +633,7 @@ async function main() {
        console.log(pc.blue(`  + Syncing .vitepress configs to ${path.relative(process.cwd(), destDocVp) || '.vitepress'}...`));
        copyRecursive(vitepressDocsSource, destDocVp);
        
-       const baseDocsSource = path.join(forgekitRoot, 'templates', 'project-skeleton');
+       const baseDocsSource = path.join(packageRoot, 'templates', 'project-skeleton');
        if (fs.existsSync(baseDocsSource)) {
           console.log(pc.blue(`  + Initializing Base Docs Structure to ${path.relative(process.cwd(), destDocsRoot) || '.'}...`));
           if (!fs.existsSync(destDocsRoot)) fs.mkdirSync(destDocsRoot, { recursive: true });
@@ -599,7 +654,7 @@ async function main() {
     }
   }
 
-  const vitepressCasesSource = path.join(forgekitRoot, 'engines', 'cases', 'vitepress');
+  const vitepressCasesSource = path.join(packageRoot, 'engines', 'cases', 'vitepress');
   if (fs.existsSync(vitepressCasesSource)) {
     let destCasesVp;
     if (selectedType === 'Test') {
@@ -614,7 +669,7 @@ async function main() {
   }
 
   console.log(pc.blue(`[INFO] Syncing global templates & schemas...`));
-  const tplSrc = path.join(forgekitRoot, 'templates');
+  const tplSrc = path.join(packageRoot, 'templates');
   const tplDest = path.join(targetDir, 'templates');
   if (fs.existsSync(path.join(tplSrc, 'shared'))) {
     copyRecursive(path.join(tplSrc, 'shared'), tplDest);
@@ -625,142 +680,27 @@ async function main() {
       copyRecursive(path.join(tplSrc, t), path.join(tplDest, t));
     }
   }
-  copyRecursive(path.join(forgekitRoot, 'schemas'), path.join(targetDir, 'schemas'));
+  copyRecursive(path.join(packageRoot, 'schemas'), path.join(targetDir, 'schemas'));
   
+  const harnessCopy = createCopyRecursive();
   if (selectedAgents.length > 0) {
-    console.log(pc.blue("[INFO] Initializing Agent Harnesses..."));
-    
+    console.log(pc.blue('[INFO] Initializing Agent Harnesses...'));
     for (const agent of selectedAgents) {
-      let agentDir;
-      if (agent === 'gemini_antigravity') {
-        agentDir = path.join(process.cwd(), '.agents');
-      } else {
-        agentDir = path.join(process.cwd(), `.${agent}`);
-      }
-
-      if (!fs.existsSync(agentDir)) {
-        fs.mkdirSync(agentDir, { recursive: true });
-      }
-      
       console.log(`  + Syncing Skills for ${agent}...`);
-      
-      copyRecursive(path.join(forgekitRoot, 'harness', 'common'), agentDir);
-      copyRecursive(path.join(forgekitRoot, 'harness', 'shared'), agentDir);
-
-      if (selectedType === 'Document') {
-        copyRecursive(path.join(forgekitRoot, 'harness', 'docs'), agentDir);
-      }
-
-      if (selectedType === 'Test') {
-        copyRecursive(path.join(forgekitRoot, 'harness', 'tests'), agentDir);
-      }
-
-      if (selectedType === 'Frontend' || selectedType === 'Fullstack') {
-        const feHarness = path.join(forgekitRoot, 'harness', 'fe');
-        if (fs.existsSync(feHarness)) {
-          const items = fs.readdirSync(feHarness, { withFileTypes: true });
-          for (const item of items) {
-            if (item.name !== 'adapters') {
-              copyRecursive(path.join(feHarness, item.name), path.join(agentDir, item.name));
-            }
-          }
-        }
-        if (feAdapter) {
-          copyRecursive(path.join(feHarness, 'adapters', feAdapter), agentDir);
-        }
-      }
-
-      if (selectedType === 'Backend' || selectedType === 'Fullstack') {
-        const beHarness = path.join(forgekitRoot, 'harness', 'be');
-        if (fs.existsSync(beHarness)) {
-          const items = fs.readdirSync(beHarness, { withFileTypes: true });
-          for (const item of items) {
-            if (item.name !== 'adapters') {
-              copyRecursive(path.join(beHarness, item.name), path.join(agentDir, item.name));
-            }
-          }
-        }
-        if (beAdapter) {
-          copyRecursive(path.join(beHarness, 'adapters', beAdapter), agentDir);
-        }
-      }
-
-      if (agent === 'gemini_antigravity') {
-        const env = {};
-        if (selectedType !== 'Document') {
-          if (feDocRoot) {
-            env.DOCSKIT_ROOT = path.resolve(feDocRoot);
-            env.CODEGENKIT_DOCS_ROOT = path.resolve(feDocRoot);
-            env.TESTKIT_DOCS_ROOT = path.resolve(feDocRoot);
-          }
-          if (feTestRoot) {
-            env.TESTKIT_TESTS_ROOT = path.resolve(feTestRoot);
-          }
-        }
-        if (feAdapter) {
-          env.CODEGENKIT_ADAPTER = feAdapter;
-          env.CODEGENKIT_TYPE = 'fe';
-        }
-        if (beAdapter) {
-          env.CODEGENKIT_BE_ADAPTER = beAdapter;
-          if (!feAdapter) {
-             env.CODEGENKIT_ADAPTER = beAdapter;
-             env.CODEGENKIT_TYPE = 'be';
-          }
-        }
-
-        if (defaultLanguage) {
-          env.DOCSKIT_DEFAULT_LANG = defaultLanguage;
-        }
-
-        const mcpConfig = {
-          mcpServers: {
-            flowgrid: {
-              command: "node",
-              args: [path.join(forgekitRoot, 'bin', 'flowgrid-mcp.mjs')],
-              env: Object.keys(env).length > 0 ? env : undefined
-            }
-          }
-        };
-        fs.writeFileSync(
-          path.join(agentDir, 'mcp_config.json'), 
-          JSON.stringify(mcpConfig, null, 2)
-        );
-        console.log(`  + Wrote mcp_config.json for ${agent}`);
-      }
-
-      const agentPrefix = agent === 'gemini_antigravity' ? '.agents' : `.${agent}`;
-      const searchAndRewrite = (dir) => {
-        if (!fs.existsSync(dir)) return;
-        const items = fs.readdirSync(dir, { withFileTypes: true });
-        for (const item of items) {
-          const p = path.join(dir, item.name);
-          if (item.isDirectory()) {
-            searchAndRewrite(p);
-          } else if (item.name.includes('extract-registry') && item.name.endsWith('.json')) {
-            try {
-              const content = JSON.parse(fs.readFileSync(p, 'utf8'));
-              if (content.bundles) {
-                let modified = false;
-                for (const [key, paths] of Object.entries(content.bundles)) {
-                  content.bundles[key] = paths.map(fp => {
-                    if (fp.startsWith('.cursor/')) {
-                      modified = true;
-                      return fp.replace('.cursor', agentPrefix);
-                    }
-                    return fp;
-                  });
-                }
-                if (modified) {
-                  fs.writeFileSync(p, JSON.stringify(content, null, 2) + '\n');
-                }
-              }
-            } catch (e) {}
-          }
-        }
-      };
-      searchAndRewrite(agentDir);
+      const { agentDir, profile } = syncAgentHarness({
+        packageRoot,
+        projectRoot: process.cwd(),
+        agent,
+        config: projectConfig,
+        copyRecursive: harnessCopy,
+      });
+      const mcpConfigPath = path.join(agentDir, profile.mcpFile);
+      console.log(
+        pc.gray(`  + Wrote MCP config: ${path.relative(process.cwd(), mcpConfigPath) || mcpConfigPath}`)
+      );
     }
+    writeRootAgentsMd(process.cwd(), selectedAgents);
+    console.log(pc.gray('  + Wrote root AGENTS.md'));
   }
 
   const pkgPath = path.join(process.cwd(), 'package.json');
@@ -781,6 +721,17 @@ async function main() {
         pkg.devDependencies['cytoscape-cose-bilkent'] = '^4.1.0';
         pkg.devDependencies['@braintree/sanitize-url'] = '^7.1.0';
       }
+
+      pkg.scripts['flowgrid:audit'] = 'flowgrid audit';
+      pkg.scripts['flowgrid:audit:spec'] = 'flowgrid audit spec';
+      pkg.scripts['flowgrid:audit:flow'] = 'flowgrid audit flow';
+      pkg.scripts['flowgrid:audit:api'] = 'flowgrid audit api';
+      pkg.scripts['flowgrid:audit:testcase'] = 'flowgrid audit testcase';
+      pkg.scripts['flowgrid:audit:legacy'] = 'flowgrid audit legacy';
+      pkg.scripts['flowgrid:harness-sync'] = 'flowgrid harness sync';
+      pkg.scripts['flowgrid:harness-sync:full-docs'] = 'flowgrid harness sync --full-docs';
+      pkg.scripts['flowgrid:doctor'] = 'flowgrid doctor';
+      pkg.scripts['flowgrid:doctor:fix'] = 'flowgrid doctor --fix';
 
       if (selectedType === 'Document') {
         pkg.scripts['flowgrid:split'] = 'flowgrid split';
@@ -816,6 +767,7 @@ async function main() {
         pkg.scripts['flowgrid:cases'] = 'flowgrid cases:render';
         pkg.scripts['flowgrid:cases-check'] = 'flowgrid cases:check';
         pkg.scripts['flowgrid:cases-cov'] = 'flowgrid cases:coverage';
+        pkg.scripts['flowgrid:cases-gate'] = 'flowgrid cases:gate';
         pkg.scripts['flowgrid:e2e-gen'] = 'flowgrid testcase:gen';
         pkg.scripts['flowgrid:e2e-reg'] = 'flowgrid e2e-registry';
       }
@@ -859,7 +811,7 @@ async function main() {
   const destLexicon = path.join(dslBackupDir, 'lexicon');
   if (!fs.existsSync(destLexicon)) {
     fs.mkdirSync(destLexicon, { recursive: true });
-    const srcLexicon = path.join(forgekitRoot, 'lexicon');
+    const srcLexicon = path.join(packageRoot, 'lexicon');
     if (fs.existsSync(srcLexicon)) {
       copyRecursive(srcLexicon, destLexicon);
       console.log(pc.blue('  + Đã mồi (seed) lexicon mặc định vào artifactgraph/lexicon/'));
@@ -891,28 +843,29 @@ async function main() {
   }
 
   const gitignorePath = path.join(process.cwd(), '.gitignore');
-  const ignores = ['.flowgrid', '.agents', '.gemini', '.cursor', '.claude', '.codex', '.opencode', '.hermes', '.kiro', '.kilo'];
   let gitignoreContent = '';
   if (fs.existsSync(gitignorePath)) {
     gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
   }
-  let appended = [];
-  for (const ignore of ignores) {
-    const regex = new RegExp(`^\\/?${ignore}\\/?$`, 'm');
-    if (!regex.test(gitignoreContent)) {
-      gitignoreContent += (gitignoreContent && !gitignoreContent.endsWith('\n') ? '\n' : '') + ignore + '\n';
-      appended.push(ignore);
-    }
-  }
+  const { content: nextGitignore, appended } = appendFlowgridProjectIgnores(
+    gitignoreContent,
+    FLOWGRID_PROJECT_IGNORES,
+  );
   if (appended.length > 0) {
-    fs.writeFileSync(gitignorePath, gitignoreContent);
+    fs.writeFileSync(gitignorePath, nextGitignore);
     console.log(pc.blue(`\n[INFO] Cập nhật .gitignore: đã thêm ${appended.join(', ')}`));
   }
 
   outro(pc.green("Success! FlowGrid is initialized for your project."));
 }
 
-main().catch(err => {
-  console.error(pc.red(err.message));
-  process.exit(1);
-});
+const isDirectCli =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isDirectCli) {
+  main().catch((err) => {
+    console.error(pc.red(err.message));
+    process.exit(1);
+  });
+}

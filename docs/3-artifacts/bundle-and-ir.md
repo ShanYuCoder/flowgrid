@@ -33,9 +33,10 @@ Không còn `ir/legacy.yaml`. Stub `legacy:` rỗng trên bundle bị bỏ lúc 
 
 | File | Độc giả |
 |------|---------|
-| `ir/design.yaml` | **Bộ Code FE** (`/prototype`, `--spec ir/design.yaml`), **Bộ Test** E2E; `api` chiếu slim từ 01 local |
-| `ir/spec.yaml` | Business SSOT (VitePress / GitHub spec MD) — không id/hashtag component |
-| `ir/generated/<slug>.md` | Site + `forgekit publish` — chứa bảng Data Dictionary Table, State & Permission Matrix, Action Flows (không raw YAML dump) |
+| `ir/design.yaml` | **Bộ Code FE** (`/prototype`, codegen); `api` chiếu slim từ 01 local |
+| `ir/spec.yaml` | Business prose (VitePress / publish) — split từ bundle |
+| `*.bundle.yaml` | **Authoring SSOT**; **bộ test** `/testcase` đọc **cả bundle** (không tách spec+design IR) |
+| `ir/generated/<slug>.md` | Site + `flowgrid publish` — chứa bảng Data Dictionary Table, State & Permission Matrix, Action Flows (không raw YAML dump) |
 | `api/<seq>/01-backend-spec.yaml` | **Bộ Code BE** (`/api`) — không đọc `ir/*` |
 
 ## Quy tắc edit
@@ -45,12 +46,12 @@ Không còn `ir/legacy.yaml`. Stub `legacy:` rỗng trên bundle bị bỏ lúc 
 - Split **ghi đè** `ir/design.yaml` + `ir/spec.yaml`.
 - Grill ghi bundle / 01 rồi split. Merge đẩy `gen`/layout về bundle khi cần.
 
-## Forgekit Docs aliases
+## FlowGrid Docs aliases
 
 | Lệnh | Mục đích |
 |------|----------|
-| `pnpm spec:split -- <bundle.yaml>` · `forgekit split` | bundle → `ir/design.yaml` + `ir/spec.yaml` (+ MD `ir/generated`) |
-| `pnpm spec:merge -- <bundle.yaml>` · `forgekit merge` | `ir/*` → bundle |
-| `pnpm spec:split:check` · `forgekit check` | CI: ir sync bundle; common yaml **bắt buộc** có `ir/design.yaml` |
-| `pnpm forge:render` · `forgekit render` | `ir/spec.yaml` → `ir/generated/*.md`; luôn ghi `qa/index.md` |
-| `pnpm forge:publish` · `forgekit publish` | `CATALOG.md` + link đầu README (không render lại spec) |
+| `pnpm spec:split -- <bundle.yaml>` · `flowgrid split` | bundle → `ir/design.yaml` + `ir/spec.yaml` (+ MD `ir/generated`) |
+| `pnpm spec:merge -- <bundle.yaml>` · `flowgrid merge` | `ir/*` → bundle |
+| `pnpm spec:split:check` · `flowgrid check` | CI: ir sync bundle; common yaml **bắt buộc** có `ir/design.yaml` |
+| `pnpm flowgrid:render` · `flowgrid render` | `ir/spec.yaml` → `ir/generated/*.md`; luôn ghi `qa/index.md` |
+| `pnpm flowgrid:publish` · `flowgrid publish` | `CATALOG.md` + link đầu README (không render lại spec) |

@@ -16,7 +16,7 @@ extractBundle: architecture-core
 
 ## Rule: Audit Interlock
 
-- **[MANDATORY]** Always run static audit first: `node engines/spec/lib/audit-flow-gaps.mjs <target-flow.md>`.
+- **[MANDATORY]** Always run static audit first: `flowgrid audit flow <target-flow.md>`.
   - ✅ Consume JSON gap report to fix issues or trigger AskQuestion wizard (≥3 options).
   - ❌ Do not skip audit and proceed to authoring directly.
 
@@ -89,7 +89,7 @@ extractBundle: architecture-core
 
 ## Modifier: `/legacy`
 
-- **[MANDATORY]** If `adoption-inventory.md` does NOT exist at workspace root → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** If `adoption-inventory.md` does NOT exist at workspace root → STOP: *"Run `/docs-hub /adopt` first."*
 - **[MANDATORY]** If file exists: look up `FLOW-*` candidates and map legacy module/screens. Write with `legacy-` prefix (e.g. `legacy-FLOW-checkout.md`).
 - **[MANDATORY - CROSS-FLOW LEGACY AUDIT]**: When analyzing legacy business processes (`/legacy /business-process`), Agent **MUST PROACTIVELY AUDIT END-TO-END FLOW GAPS**:
   - Compare Data Output at Step $N$ (e.g., Screen 1 / API 1) with Input expectations at Step $N+1$ (e.g., Screen 2 / API 2) to identify schema or status misalignments.

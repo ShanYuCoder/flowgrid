@@ -1,3 +1,4 @@
+schemaVersion: 2
 id: TC-EXAMPLE-VALID
 title: Example flow with valid input should succeed
 summary: Ví dụ — luồng hợp lệ đi đến trạng thái thành công.
@@ -11,7 +12,7 @@ refs:
   scenario: SC-EXAMPLE
   example: EX-EXAMPLE-01
   screen: W-AD-AUTH-001
-coverage: [happy, boundary, validation, concurrency]
+coverage: [happy, boundary, validation, concurrency, exception]
 priority: high
 automation: automated
 tags: [smoke, e2e, ui, unit]
@@ -116,3 +117,11 @@ testIds:
     - "fld_record_code"
     - "fld_record_name"
     - "btn_save_record"
+
+# Fill when bundle is available (required for `flowgrid cases:gate --strict`).
+traceability:
+  bundleScreen: W-AD-AUTH-001
+  bundleScenarios: []
+  acceptanceRefs: []
+  actionRefs:
+    - btn_save_record

@@ -17,7 +17,7 @@ extractBundle: architecture-core
 - **[MANDATORY]** Path: `architecture/09-decisions/ADR-{NNN}-{slug}.md` + index table entry.
 - **[MANDATORY]** Template: `.cursor/extracts/tpl-adr.md`.
 - **[MANDATORY]** Link related entities: `CMP-*` / `CTR-*` / `FLOW-*` as needed.
-- **[MANDATORY]** Use `docskit_list_ids kind:ADR` + `docskit_validate_links` after creating a new ADR.
+- **[MANDATORY]** Use `flowgrid_docs_list_ids kind:ADR` + `flowgrid_docs_validate_links` after creating a new ADR.
 
 ---
 

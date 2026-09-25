@@ -37,9 +37,9 @@ Progressive read only the needed `projects.<id>.root` — no full JSON dump.
 
 CodeGraph and other MCP accelerators are optional. Continue with targeted local
 search/read. For each run/optional pair, emit one
-`processkit.missing-optional` event after fallback completes. Measure successful
+`flowgrid.missing-optional` event (`@platform/flowgrid-process`) after fallback completes. Measure successful
 file reads and exact raw context bytes; deduplicate retries and do not estimate
-tokens. Contract: `.cursor/schemas/processkit/missing-optional-event.schema.json`.
+tokens. Contract: `.cursor/schemas/flowgrid-process/missing-optional-event.schema.json`.
 
 ## Example shape (verify in code)
 

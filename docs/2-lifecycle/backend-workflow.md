@@ -10,7 +10,7 @@ Session mới: đọc `.harness/progress.md` trước khi tiếp tục cùng fea
 flowchart TD
   PS["ir/design.yaml actions + 01"] --> S1["/api-spec"]
   S1 --> O1["01 · 02-openapi · 03-mock YAML"]
-  O1 --> DR["pnpm forge:render"]
+  O1 --> DR["pnpm flowgrid:render"]
   DR --> S2["/grill-api-spec\napi:gen:dry · openapi:render"]
   S2 --> APR["approval approved"]
   APR --> C["/api-code\npnpm api:gen"]
@@ -61,7 +61,7 @@ Harness: `.harness/progress.md` · `feature_list.json` · `portalRefs` · `pendi
 |---------|---------|
 | AI (xanh lá) | `/api-spec`, `/api-update-spec`, `/grill-api-spec`, HANDOFF trong `/api-code` |
 | Gate (vàng) | `api:gen:dry`, `openapi:lint` — bắt buộc trước `/api-code` |
-| Script (xanh dương) | `pnpm forge:render`, `pnpm api:gen` |
+| Script (xanh dương) | `pnpm flowgrid:render`, `pnpm api:gen` |
 | Artifact (tím) | YAML trio, `codegen.commands`, `HANDOFF.md`; `generated/*.md` |
 | Decision (cam) | `/api` router, `approval.status` |
 | `pendingTechDebt` | Portal spec đã có, BE chưa merge — track trong YAML |
@@ -73,7 +73,7 @@ Alias ngắn — skill giữ tên đầy đủ; integration spec ở repo [integ
 Chi tiết sync: `.cursor/extracts/api-spec-sync.md`
 Chi tiết integration: `.cursor/extracts/api-integration-spec.md`
 Chi tiết hashtag: `.cursor/extracts/codegen/tags.md` (docs hub) · BE codegen tags live in the BE checkout.
-Scripts: `scripts/docs/` · `codegen/runners/` · `pnpm forge:render` · `pnpm api:gen` / `pnpm api:gen:dry`
+Scripts: `scripts/docs/` · `codegen/runners/` · `pnpm flowgrid:render` · `pnpm api:gen` / `pnpm api:gen:dry`
 
 ## Commands
 
@@ -177,11 +177,11 @@ PHPUnit (rule riêng — không testcase):
 ## Docs render + Codegen (repo root)
 
 ```bash
-pnpm forge:render
-pnpm forge:publish
+pnpm flowgrid:render
+pnpm flowgrid:publish
 pnpm docs:dev
-Bộ Code (Forgekit) api-gen:dry -- --spec surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
-Bộ Code (Forgekit) api-gen -- --spec surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
+flowgrid api-gen:dry -- --spec surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
+flowgrid api-gen -- --spec surfaces/…/CMP-*/NN…/api/01/01-backend-spec.yaml
 ```
 
 ## OpenAPI tooling

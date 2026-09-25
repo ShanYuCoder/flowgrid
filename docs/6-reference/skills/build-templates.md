@@ -16,12 +16,12 @@
 - Các file Component dùng chung (Breadcrumb, Layout, Form, Table) trong mã nguồn Frontend.
 
 ## Output (Kết quả mong đợi)
-- Sinh ra các file giao diện EJS (`.ejs`) bên trong thư mục `.forgekit/templates/` (ví dụ: `default-layout.ejs`).
+- Sinh ra các file giao diện EJS (`.ejs`) bên trong thư mục `.flowgrid/templates/` (ví dụ: `default-layout.ejs`).
 - Tự động sinh hoặc cập nhật các file đặc tả YAML dùng chung (`surfaces/common/yaml/`).
 
 ## Description / Ý nghĩa
-- Để hệ thống có thể tự động sinh code (gencode) cho cả Frontend, Backend, và Test E2E, Forgekit hiện đang cần gắn liền với một bộ base có sẵn của các công nghệ như Nuxt4, Next.js, Python FastAPI, Laravel... với các cấu trúc thư mục, file mẫu, và common code định sẵn.
-- **Vấn đề đặt ra:** Khi áp dụng vào các dự án có sẵn, đôi khi dự án đó không tuân thủ đúng base tiêu chuẩn của công nghệ, hoặc dùng chung công nghệ nhưng lại khác cấu trúc layout, thư viện dùng chung. Ví dụ: base FE mặc định của Forgekit dùng `shadcn-ui`, nhưng một dự án khác lại dùng `vuetify`.
+- Để hệ thống có thể tự động sinh code (gencode) cho cả Frontend, Backend, và Test E2E, FlowGrid hiện đang cần gắn liền với một bộ base có sẵn của các công nghệ như Nuxt4, Next.js, Python FastAPI, Laravel... với các cấu trúc thư mục, file mẫu, và common code định sẵn.
+- **Vấn đề đặt ra:** Khi áp dụng vào các dự án có sẵn, đôi khi dự án đó không tuân thủ đúng base tiêu chuẩn của công nghệ, hoặc dùng chung công nghệ nhưng lại khác cấu trúc layout, thư viện dùng chung. Ví dụ: base FE mặc định của FlowGrid dùng `shadcn-ui`, nhưng một dự án khác lại dùng `vuetify`.
 - **Giải pháp của `/build-templates`:** Kỹ năng này sẽ làm nhiệm vụ "đọc vị" base code thực tế của dự án đích. Sau đó, nó tự động build lại toàn bộ các template (`.ejs`, v.v.) để cung cấp đầu vào chuẩn xác cho các script sinh code (codegen, testgen). Nhờ đó, tính năng sinh code sẽ "nhập gia tùy tục" và tuân thủ đúng chuẩn của dự án hiện tại thay vì ép buộc dùng base mặc định.
 
 ## Các Skill liên quan
@@ -30,4 +30,4 @@
 
 ## Chú ý quan trọng
 - **Không tự ý ghi đè:** Nếu các file template EJS đã tồn tại và có dấu hiệu chỉnh sửa bằng tay của con người, Agent phải hỏi ý kiến User trước khi ghi đè, hoặc chỉ vá phần chênh lệch.
-- Không được phép thay đổi hoặc xóa các thẻ neo HTML Comment (Ví dụ: `<!-- docskit-anchor: ... -->`) trong file EJS vì hệ thống Docskit dựa vào đó để nhét nội dung động vào.
+- Không được phép thay đổi hoặc xóa các thẻ neo HTML Comment (Ví dụ: `<!-- flowgrid-anchor: ... -->`) trong file EJS vì hệ thống bộ docs dựa vào đó để nhét nội dung động vào.

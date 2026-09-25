@@ -279,7 +279,7 @@ function buildHandoffItems(spec, parsedTags, useCustomShell, slotBindings, compo
           name: binding.component,
           detail:
             `Slot #${binding.slot} — implement \`${binding.component}\` in /prototype (spec tag already names it). ` +
-            'Re-run codegenkit gen after the file exists. Common widget → update registry per DESIGN-REGISTRY-PROMOTION.md.'
+            'Re-run flowgrid gen after the file exists. Common widget → update registry per DESIGN-REGISTRY-PROMOTION.md.'
         })
       }
       continue
@@ -288,7 +288,7 @@ function buildHandoffItems(spec, parsedTags, useCustomShell, slotBindings, compo
     items.push({
       type: 'custom-slot',
       name: binding.slot,
-      detail: `Add #needs-component: ${binding.slot}:MoYourComponent:prop in spec (/grill-with-docs), implement in /prototype, then re-run codegenkit gen.`
+      detail: `Add #needs-component: ${binding.slot}:MoYourComponent:prop in spec (/grill-with-docs), implement in /prototype, then re-run flowgrid gen.`
     })
   }
 
@@ -297,7 +297,7 @@ function buildHandoffItems(spec, parsedTags, useCustomShell, slotBindings, compo
       type: 'needs-ui',
       name: widget,
       detail:
-        `Registry widget \`${widget}\` is planned — implement molecule in /prototype, promote registry if reusable, then re-run codegenkit gen.`
+        `Registry widget \`${widget}\` is planned — implement molecule in /prototype, promote registry if reusable, then re-run flowgrid gen.`
     })
   }
 
@@ -320,7 +320,7 @@ function buildHandoffItems(spec, parsedTags, useCustomShell, slotBindings, compo
   items.push({
     type: 'contract-gen',
     detail:
-      'Run `codegenkit contract-gen --spec <ir/design.yaml>` before codegenkit gen if @portal/models entity package is missing.'
+      'Run `flowgrid contract-gen --spec <ir/design.yaml>` before flowgrid gen if @portal/models entity package is missing.'
   })
 
   return items

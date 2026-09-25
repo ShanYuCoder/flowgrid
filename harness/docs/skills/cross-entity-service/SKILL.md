@@ -10,13 +10,13 @@ disable-model-invocation: true
 
 # #cross-entity-service — Cross-Aggregate Orchestration Tag
 
-Used from: `/api-spec`, `/grill-api-spec`, and Codegenkit BE `/api` when this hashtag is present.
+Used from: `/api-spec`, `/grill-api-spec`, and bộ code BE `/api` when this hashtag is present.
 
 ---
 
 ## Rule: ID Resolution
 
-- **[MANDATORY]** Use `docskit_route` or `docskit_get_element` (or glob) to locate `…/api/<seq>/01-backend-spec.yaml` (or `common/yaml`). NEVER treat `ir/design.yaml` as the BE contract.
+- **[MANDATORY]** Use `flowgrid_docs_route` or `flowgrid_docs_get_element` (or glob) to locate `…/api/<seq>/01-backend-spec.yaml` (or `common/yaml`). NEVER treat `ir/design.yaml` as the BE contract.
 
 ---
 

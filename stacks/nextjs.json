@@ -3,7 +3,7 @@
   "mode": "brownfield",
   "commands": {
     "genDry": [
-      "codegenkit",
+      "flowgrid",
       "gen:dry",
       "--adapter=nextjs",
       "--",
@@ -11,7 +11,7 @@
       "{spec}"
     ],
     "gen": [
-      "codegenkit",
+      "flowgrid",
       "gen",
       "--adapter=nextjs",
       "--",
@@ -19,7 +19,7 @@
       "{spec}"
     ],
     "unitGenDry": [
-      "codegenkit",
+      "flowgrid",
       "unit-gen:dry",
       "--adapter=nextjs",
       "--",
@@ -27,7 +27,7 @@
       "{spec}"
     ],
     "unitGen": [
-      "codegenkit",
+      "flowgrid",
       "unit-gen",
       "--adapter=nextjs",
       "--",
@@ -35,33 +35,33 @@
       "{spec}"
     ],
     "testcaseGenDry": [
-      "testkit",
+      "flowgrid",
       "testcase:gen:dry",
       "--",
       "--id",
       "{spec}"
     ],
     "testcaseGen": [
-      "testkit",
+      "flowgrid",
       "testcase:gen",
       "--",
       "--id",
       "{spec}"
     ],
     "contractGenDry": [
-      "codegenkit",
+      "flowgrid",
       "contract-gen:dry",
       "--",
       "--spec",
       "{spec}"
     ],
     "registryValidate": [
-      "codegenkit",
+      "flowgrid",
       "registry",
       "--adapter=nextjs"
     ],
     "contractRegistry": [
-      "codegenkit",
+      "flowgrid",
       "contract-registry"
     ]
   },
@@ -80,7 +80,7 @@
   "templates": {
     "root": "adapters/nextjs/codegen/templates",
     "engine": "hbs",
-    "note": "SSOT in Codegenkit; product has no root codegen/"
+    "note": "SSOT in FlowGrid bộ code; product has no root codegen/"
   },
   "dsl": {
     "ssot": "product-repo",

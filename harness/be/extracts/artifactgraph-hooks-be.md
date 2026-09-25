@@ -10,10 +10,10 @@
   Use `#cross-service` / `#cross-entity-service` for multi-aggregate orchestration.
   Use `#derived-data` for computed fields not stored on the entity.
 - Run BE dry generation before write generation when both keys exist.
-- **Code size discipline:** Enforce `platform-code-size.mdc` (~200 lines/file, ~20 lines/func). Automatically split services, DTOs, and handlers during Codegenkit generation.
+- **Code size discipline:** Enforce `platform-code-size.mdc` (~200 lines/file, ~20 lines/func). Automatically split services, DTOs, and handlers during bộ code generation.
 - Full product registry remains in docs; ArtifactGraph does not infer or follow
   a docs checkout.
-- Architecture ID / C4 lookups go to Docskit (`DOCSKIT_ROOT`). Symbol /
+- Architecture ID / C4 lookups go to bộ docs (`FLOWGRID_DOCS_ROOT`). Symbol /
   call-graph lookups go to the target repo's `codegraph-<key>` MCP — Platform
   DNA owns that auto-wire, not ArtifactGraph.
 - Promote canonical registry changes in docs; keep only BE-local

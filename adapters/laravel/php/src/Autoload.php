@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 spl_autoload_register(static function (string $class): void {
-    $prefix = 'Codegenkit\\Laravel\\UnitGen\\';
+    $prefix = 'FlowGrid\\Laravel\\UnitGen\\';
     if (!str_starts_with($class, $prefix)) {
         return;
     }

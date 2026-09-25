@@ -14,14 +14,14 @@ import { resolveProjectRoot } from './lib/resolve-hub-id.mjs'
 import { isSurfaceCommonPath } from '../../../shared/surface-common.mjs'
 import { mergeI18nFlat } from '../../../shared/i18n-merge.mjs'
 
-const root = path.resolve(process.env.CODEGENKIT_ROOT || process.cwd())
+const root = path.resolve(process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd())
 const yamlRootFlag = process.argv.includes('--yaml-root')
   ? process.argv[process.argv.indexOf('--yaml-root') + 1]
   : null
 function resolveDocsSurfacesRoot() {
-  const env = process.env.CODEGENKIT_DOCS_ROOT || process.env.DOCSKIT_ROOT
+  const env = process.env.FLOWGRID_DOCS_ROOT
   if (env) return path.join(path.resolve(env), 'surfaces')
-  if (process.env.CODEGENKIT_YAML_ROOT) return path.resolve(process.env.CODEGENKIT_YAML_ROOT)
+  if (process.env.FLOWGRID_YAML_ROOT) return path.resolve(process.env.FLOWGRID_YAML_ROOT)
   try {
     return path.join(resolveProjectRoot(root, 'docs'), 'surfaces')
   } catch {
@@ -29,7 +29,7 @@ function resolveDocsSurfacesRoot() {
       return path.join(resolveProjectRoot(root, 'base-docs'), 'surfaces')
     } catch {
       throw new Error(
-        'Set CODEGENKIT_DOCS_ROOT or pass --yaml-root; no sibling docs hub is assumed',
+        'Set FLOWGRID_DOCS_ROOT or pass --yaml-root; no sibling docs hub is assumed',
       )
     }
   }
@@ -102,7 +102,7 @@ async function resolveSpecPaths(options) {
   const discovered = await listIrDesignFiles(IR_SPEC_GLOB_ROOT)
   if (!discovered.length) {
     throw new Error(
-      'No ir/design.yaml. Prefer: codegenkit gen --id … or --spec <ir/design.yaml> after pnpm spec:split.',
+      'No ir/design.yaml. Prefer: flowgrid gen --id … or --spec <ir/design.yaml> after pnpm spec:split.',
     )
   }
   return discovered
@@ -225,9 +225,9 @@ async function main() {
   process.exit(failed > 0 ? 1 : 0)
 }
 
-/** Docs markdown render stays on the docs hub / Docskit — never assume sibling checkout. */
+/** Docs markdown render stays on the docs hub / FlowGrid docs — never assume sibling checkout. */
 function runDocsRender() {
-  console.log('  docs:render: handoff to docs hub / Docskit (not executed from Codegenkit)')
+  console.log('  docs:render: handoff to docs hub / FlowGrid docs (not executed from FlowGrid)')
 }
 
 main().catch((error) => {

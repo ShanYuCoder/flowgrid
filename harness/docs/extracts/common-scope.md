@@ -48,7 +48,7 @@ Same walk for `patterns/` Markdown.
 
 | Scope of the flow | File |
 |-------------------|------|
-| Org / cross-surface / “hero” catalog | `architecture/03-business-process/FLOW-*.md` (MCP `docskit_business_processes`) |
+| Org / cross-surface / “hero” catalog | `architecture/03-business-process/FLOW-*.md` (MCP `flowgrid_docs_business_processes`) |
 | Many modules, one surface | `surfaces/<surface>/common/processes/FLOW-*.md` |
 | Whole module, several clusters | `surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` |
 | One cluster / submodule only | `surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md` |

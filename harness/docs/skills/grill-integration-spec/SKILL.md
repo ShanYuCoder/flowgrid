@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 # /grill-integration-spec — Integration Contract Audit
 
-After `/api-integration`. Before Codegenkit BE `/api`. No code on docs hub.
+After `/api-integration`. Before bộ code BE `/api`. No code on docs hub.
 
 Shared extracts: `api-integration-spec.md`, `api-codegen-readiness.md`, `api-codegen-tags.md`, `call-external.md`, `entity-relationship.md`, `agent-discipline.md`, `verify-gate.md`
 
@@ -19,7 +19,7 @@ Shared extracts: `api-integration-spec.md`, `api-codegen-readiness.md`, `api-cod
 
 - **[MANDATORY]** Contract must be sufficient to implement webhook and partner APIs.
 - **[MANDATORY]** OpenAPI `securitySchemes` and mock definitions must match `01-backend-spec.yaml`.
-- **[MANDATORY]** Codegen-ready: `docskit api:check` + `docskit openapi:gen` / `openapi:render` must pass.
+- **[MANDATORY]** Codegen-ready: `flowgrid check` + `flowgrid openapi_gen` / `openapi:render` must pass.
 - **[STRICTLY FORBIDDEN]** Do NOT use `ir/design.yaml` as BE input (integrations usually have no FE IR).
 - **[STRICTLY FORBIDDEN]** No BQA reports, no framework code snippets, no writing `ir/*`.
 
@@ -31,9 +31,9 @@ Shared extracts: `api-integration-spec.md`, `api-codegen-readiness.md`, `api-cod
 - **[MANDATORY]** Step 2: Audit authentication, `securitySchemes`, idempotency keys, retry policies, and non-CRUD actions.
 - **[MANDATORY]** Step 3: Enrich `01` with codegen tags (`#gen:*`, `#manual-service`, `#call-external`), `codegen.profile|entity|module`, and `endpoints[].action`.
 - **[MANDATORY]** Step 4: Run gates:
-  - `docskit api:check --spec surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`
-  - `docskit openapi:gen --spec …/01-backend-spec.yaml`
-  - `docskit openapi:render`
+  - `flowgrid check --spec surfaces/integrations/<provider>/<slug>/api/<seq>/01-backend-spec.yaml`
+  - `flowgrid openapi_gen --spec …/01-backend-spec.yaml`
+  - `flowgrid openapi_render`
 - **[MANDATORY]** Step 5: Set `approval.status: reviewed` (or `approved`) in YAML.
 
 ---
@@ -48,4 +48,4 @@ Shared extracts: `api-integration-spec.md`, `api-codegen-readiness.md`, `api-cod
 
 ## Handoff
 
-- `approval.status: approved` → Codegenkit `--type=be` `/api` with `--spec …/01-backend-spec.yaml`
+- `approval.status: approved` → bộ code `--type=be` `/api` with `--spec …/01-backend-spec.yaml`

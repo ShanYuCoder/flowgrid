@@ -17,7 +17,7 @@
 ## Description / Ý nghĩa
 - Dành riêng cho việc đánh dấu các API có thực hiện **Gọi ra bên ngoài hệ thống (Third-party integrations)**.
 - Ví dụ: API Thanh toán có gọi sang Cổng Stripe, hoặc API Gửi Email có gọi sang SendGrid. Hành động này tiềm ẩn rủi ro về Network Timeout, Lỗi kết nối, do đó bắt buộc phải cắm cờ `#call-external`.
-- Hệ thống Codegenkit Backend khi nhìn thấy cờ này sẽ tự động sinh code bổ sung thêm các cơ chế chịu lỗi (Fault tolerance) như Retry, Timeout, Circuit Breaker.
+- hệ thống bộ code Backend khi nhìn thấy cờ này sẽ tự động sinh code bổ sung thêm các cơ chế chịu lỗi (Fault tolerance) như Retry, Timeout, Circuit Breaker.
 
 ## Chú ý quan trọng
 - **Tuyệt đối cấm:** Kỹ năng này chỉ được phép ghi thêm tag vào file `01-backend-spec.yaml`. Không được quyền can thiệp vào file `ir/design.yaml`, và tuyệt đối không xuất ra các file Markdown report giả mạo.

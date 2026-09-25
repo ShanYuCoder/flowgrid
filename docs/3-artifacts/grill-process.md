@@ -8,7 +8,7 @@ flowchart TD
   BQA["/grill-bqa\nStep A fact-lock\nStep B AskQuestion"]
   DEV["/grill-dev\nbundle.gen + 01 action"]
   DOCS["/grill-docs\noptional reconcile"]
-  DRY["Bộ Code (Forgekit) gen:dry\nir/design.yaml"]
+  DRY["flowgrid gen:dry\nir/design.yaml"]
   PROTO["/prototype"]
   IN --> BQA
   BQA --> DEV

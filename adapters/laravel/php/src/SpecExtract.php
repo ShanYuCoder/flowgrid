@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codegenkit\Laravel\UnitGen;
+namespace FlowGrid\Laravel\UnitGen;
 
 final class SpecExtract
 {

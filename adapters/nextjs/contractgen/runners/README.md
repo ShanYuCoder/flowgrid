@@ -8,8 +8,8 @@ IR `…/ir/design.yaml` with `entities[].fields[]` (`kind`, `scopes`, `contract`
 `persistence`). Discovery order when `--spec` is omitted:
 
 1. `--yaml-root <path>`
-2. `CODEGENKIT_DOCS_ROOT` (and `…/product`, `…/docs/features/yaml`)
-3. `$CODEGENKIT_ROOT/docs/features/yaml`
+2. `FLOWGRID_DOCS_ROOT` (and `…/product`, `…/docs/features/yaml`)
+3. `$FLOWGRID_PROJECT_ROOT/docs/features/yaml`
 
 When `entities` is empty, infers scalar/relation fields from `ui.columns`
 (pilot fallback).
@@ -17,10 +17,10 @@ When `entities` is empty, infers scalar/relation fields from `ui.columns`
 ## Commands
 
 ```bash
-codegenkit contract-registry
-codegenkit contract-gen:dry -- --spec path/to/ir/design.yaml
-codegenkit contract-gen -- --spec path/to/ir/design.yaml
-codegenkit contract-gen -- --spec … --force
+flowgrid contract-registry
+flowgrid contract-gen:dry -- --spec path/to/ir/design.yaml
+flowgrid contract-gen -- --spec path/to/ir/design.yaml
+flowgrid contract-gen -- --spec … --force
 ```
 
 ## Registry ownership
@@ -41,7 +41,7 @@ Validator resolves **product first**, then adapter default.
 | `packages/models/src/{entity}/*.relationships.meta.ts` | ORM-agnostic relation meta |
 | `{function}/generated/contract.manifest.json` | Plan + written paths |
 
-`codegenkit gen` does **not** emit models — run `codegenkit contract-gen` first.
+`flowgrid gen` does **not** emit models — run `flowgrid contract-gen` first.
 
-Stale product-root `contractgen/` trees are reported by `codegenkit status` and
-removed by `codegenkit prune --yes` when present.
+Stale product-root `contractgen/` trees are reported by `flowgrid status` and
+removed by `flowgrid prune --yes` when present.

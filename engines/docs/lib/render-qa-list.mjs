@@ -25,7 +25,7 @@ export function writeQaList(root = process.cwd()) {
   const openDir = path.join(qaDir, 'open')
   mkdirSync(qaDir, { recursive: true })
 
-  const lines = ['# QA', '', '_Sinh bởi `docskit render`. Đóng bằng `/qa-resolve`._', '']
+  const lines = ['# QA', '', '_Sinh bởi `flowgrid render`. Đóng bằng `/qa-resolve`._', '']
   const files = listOpenYaml(openDir)
   if (!files.length) {
     lines.push('_Không có câu hỏi mở._', '')

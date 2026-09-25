@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Design vocabulary
 
-SSOT: `registries/design.registry.json` · validate with `codegenkit registry`.
+SSOT: `registries/design.registry.json` · validate with `flowgrid registry`.
 
 ## Hashtags (grill → `tags:`)
 

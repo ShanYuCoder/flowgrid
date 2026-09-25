@@ -6,9 +6,7 @@
   "main": "./dist/index.js",
   "bin": {
     "flowgrid": "./bin/flowgrid.mjs",
-    "flowgrid-mcp": "./bin/flowgrid-mcp.mjs",
-    "forgekit": "./bin/flowgrid.mjs",
-    "forgekit-mcp": "./bin/flowgrid-mcp.mjs"
+    "flowgrid-mcp": "./bin/flowgrid-mcp.mjs"
   },
   "repository": {
     "type": "git",
@@ -18,6 +16,12 @@
     "bin",
     "dist",
     "adapters",
+    "engines",
+    "harness",
+    "templates",
+    "schemas",
+    "stacks",
+    "lexicon",
     "README.md"
   ],
   "scripts": {
@@ -25,6 +29,8 @@
     "build": "tsc",
     "prepare": "pnpm run build",
     "test": "pnpm run build && node --test test/*.test.mjs",
+    "check:branding": "node scripts/check-flowgrid-branding.mjs",
+    "check:pack": "npm pack --dry-run",
     "mcp": "node bin/flowgrid-mcp.mjs",
     "cli": "node bin/flowgrid.mjs",
     "audit:spec": "node engines/spec/lib/audit-bundle-gaps.mjs",

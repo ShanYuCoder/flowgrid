@@ -15,7 +15,7 @@
 ## Output (Kết quả mong đợi)
 - File `*.bundle.yaml` đã được vá lỗi xung đột, xóa bỏ mâu thuẫn giữa Business và Technical.
 - File QA Tech Debt (`qa/open/QA-…`) nếu có vấn đề không thể tự dung hòa.
-- Chạy lệnh `forgekit split` để sinh lại Intermediate Representation (IR).
+- Chạy lệnh `flowgrid split` để sinh lại Intermediate Representation (IR).
 
 ## Description / Ý nghĩa
 - Kỹ năng mang tính chất **hòa giải (Reconcile)**: Xóa bỏ các mâu thuẫn (conflicts) giữa góc nhìn Nghiệp vụ (BQA) và góc nhìn Lập trình (Dev/Tech).
@@ -27,7 +27,7 @@
 
 ## Các Skill liên quan
 - **Trước đó:** Nhận đầu vào từ `/grill-bqa` và `/grill-dev`.
-- **Sau đó:** Chuyển giao thông tin sang cho `FE Codegenkit` để chạy prototype (Sinh code giao diện giả lập).
+- **Sau đó:** Chuyển giao thông tin sang cho `bộ code FE` để chạy prototype (Sinh code giao diện giả lập).
 
 ## Chú ý quan trọng
 - **Cấm đoán (Out of scope):** Không được tạo mới kho UI (page inventory) từ đầu, không đọc lại source code legacy, không triển khai viết code FE hay API.

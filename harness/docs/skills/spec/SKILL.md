@@ -7,8 +7,8 @@ disable-model-invocation: true
 
 > [!CRITICAL] MANDATORY PRE-FLIGHT
 > **[MANDATORY]** Re-read this entire `SKILL.md` via file-read tool. **STRICTLY FORBIDDEN** to rely on memory.
-> **[MANDATORY]** Read `.forgekit/templates/feature.bundle.yaml` + `.forgekit/templates/bundle-authoring.md` BEFORE generating any YAML.
-> If templates are missing → STOP: *"Template missing. Run `forgekit init` to generate templates."*
+> **[MANDATORY]** Read `.flowgrid/templates/feature.bundle.yaml` + `.flowgrid/templates/bundle-authoring.md` BEFORE generating any YAML.
+> If templates are missing → STOP: *"Template missing. Run `flowgrid init` to generate templates."*
 > Physical interlocks: `AGENTS.md` + `SSOT_AGENT_PROTOCOL.md` (Laws 1–7). Chat-only done = **FAILED**.
 
 # /spec — Function detail (design)
@@ -46,11 +46,12 @@ disable-model-invocation: true
 
 ## Rule: Audit Interlock
 
-- **[MANDATORY]** If bundle file already exists: run `node engines/spec/lib/audit-bundle-gaps.mjs <path-to-bundle.yaml> --type <pageType>` first.
+- **[MANDATORY]** If bundle file already exists: run `flowgrid audit spec <path-to-bundle.yaml> --type <pageType>` first.
   - `<pageType>` = page type đã xác định ở bước trên (list | create | detail | admin-crud | auth | ...).
-  - Script output 2 loại:
-    - `gaps[]` → required fields bị thiếu → Agent bổ sung trực tiếp.
-    - `confirms[]` → optional fields cần hỏi member → Agent dùng AskQuestion wizard.
+  - Script output:
+    - `gaps[]` → required fields missing → Agent patches bundle directly.
+    - `confirms[]` → optional / UX (`category: ux`, codes `UX_*`, `CONFIRM_UX_*`) → AskQuestion; `(Recommended)` must match audit option text or `flowgrid-ux-common` checklist proposals.
+    - Summary fields: `uxAffordanceGaps`, `uxAffordanceConfirms`.
   - **Threshold Interlock (Law 2):** If audit script outputs ≥10 gaps + confirms, HALT chat wizard immediately → create an implementation plan / Plan Mode document partitioned into sequential phases.
   - ❌ Do not skip audit and proceed to authoring directly.
   - ❌ Do not run audit without `--type` parameter.
@@ -88,7 +89,7 @@ disable-model-invocation: true
 
 1. Confirm `CMP-*` exists and `CTR-*` is identified — otherwise stop for lead/owner.
 2. Detect page type from prompt or existing bundle's `codegen.profile`.
-3. Run audit: `node engines/spec/lib/audit-bundle-gaps.mjs <bundle> --type <pageType>` (if bundle exists).
+3. Run audit: `flowgrid audit spec <bundle> --type <pageType>` (if bundle exists).
 4. Process audit output: fill `gaps[]` directly; ask member about `confirms[]` via wizard.
 5. **Zone-based multi-turn authoring** (see rule below): chia page thành zones, phân tích từng zone trong turn riêng.
 6. Write/update `*.bundle.yaml` with `specOrigin: requirement`.
@@ -99,30 +100,33 @@ disable-model-invocation: true
 
 ---
 
-## Rule: Zone-Based Multi-Turn Analysis (chống Lost-in-Middle)
+## Rule: Zone-Based Multi-Turn Analysis (anti lost-in-middle)
 
-- **[MANDATORY]** KHÔNG phân tích và ghi toàn bộ page trong 1 turn duy nhất.
-- **[MANDATORY]** Chia page thành **zones linh động theo nội dung thực** của spec/bundle repo đích, KHÔNG theo template cố định. Ví dụ gợi ý:
-  - **Zone HEADER**: title, page-id, breadcrumb, summary, userStories.primary
-  - **Zone CONTENT part 1, 2, ...**: tùy thuộc vào page thực tế — search/toolbar, data table, form fields group, direct attributes, relationships...
-  - **Zone FOOTER/ACTIONS**: pagination, stateMatrix, action outcomes
-- **[MANDATORY]** Nếu 1 zone quá lớn (>5 fields, >3 sections, >2 relationships) → chia nhỏ tiếp thành sub-zones.
-- **[MANDATORY]** Mỗi turn:
-  1. Agent nêu rõ: "Đang phân tích Zone X: [tên zone]"
-  2. **Check chất**: mô tả chuẩn, hợp logic, gaps giữa các field (Script chỉ check lượng — Agent check chất)
-  3. Brainstorm đề xuất, phát hiện gaps logic, đề xuất options
-  4. Hỏi member nếu có open question hoặc confirm từ audit output
-  5. Ghi output vào bundle YAML cho zone đó
-  6. Chuyển sang zone tiếp theo
-- **[STRICTLY FORBIDDEN]** Gửi all-in-one rồi bỏ sót giữa (lost-in-middle).
-- **Lưu ý:** Cách chia zone phụ thuộc vào spec thực tế — page list khác page detail khác page form. Agent tự xác định zones phù hợp.
+- **[MANDATORY]** Do not analyze and write the full page in a single turn.
+- **[MANDATORY]** Split the page into **dynamic zones** from the real bundle content (not a fixed template). Examples: HEADER (title, breadcrumb, summary), CONTENT slices (toolbar, table, form groups), FOOTER/ACTIONS (pagination, stateMatrix, outcomes).
+- **[MANDATORY]** If one zone is too large (>5 fields, >3 sections, >2 relationships) → split into sub-zones.
+
+### Per-zone pipeline (DSL first, then UX gaps)
+
+Each zone turn — **in order**:
+
+1. Announce zone name (e.g. `Zone CONTENT: toolbar + table`).
+2. **DSL / registry pass:** Match controls to `design.registry.json` (when present), common catalog, `#shell:`, `#pattern:`, `#ui:`, `#widget:`. Write matched structure into `*.bundle.yaml` for this zone.
+3. **Unmapped structure:** Shadcn primitive → `#ui: <Primitive>`. ≥2 domain structural blocks → `#needs-component: MoBlockName`. Unknown widget → `#needs-ui:` (never invent primitive names). See **Common Pattern Resolution** below.
+4. **Affordance gaps** (still unmapped or thin spec): apply **`flowgrid-ux-common.mdc`** + `.cursor/extracts/ux-common-patterns.md` — only **Recognize / Propose** checklist items that apply; use the rule’s proposal output format. No open-ended UX brainstorming.
+5. **Member decisions:** `confirms[]` from audit + any checklist-derived proposals → `AskQuestion` wizard — one question at a time, ≥3 options: `(Recommended)` = top structured proposal from steps 3–4, Alternative, `Log as Tech Debt (Pending)` (Law 2).
+6. Persist zone YAML; update matching **`userStories.scenarios` steps** and **`acceptanceCriteria`** (Vietnamese business prose) for the same affordance — see `bundle-authoring.md` § UX affordance ↔ userStories.
+7. Proceed to next zone.
+
+- **[STRICTLY FORBIDDEN]** All-in-one zone dumps. Redundant YAML for patterns already covered by DSL. AskQuestion options not grounded in DSL mapping, audit output, or UX checklists. **Tech-only `design` patches without `userStories` sync before split.**
 
 ---
 
 ## Rule: Content Requirements per Section
 
 ### Rule: User Stories (`userStories`)
-- **[MANDATORY]** Generate complete `primary` (asA, iWant, soThat), `contextAndHandoff`, `scenarios` (5 scenarios), `acceptanceCriteria`.
+- **[MANDATORY]** Generate complete `primary` (asA, iWant, soThat), `contextAndHandoff`, `scenarios` (5 core + **6th “Affordances UX”** when delete/filter/breadcrumb/disabled/import apply), `acceptanceCriteria` (include UX AC lines from template when applicable).
+- **[MANDATORY]** After resolving audit `UX_*` gaps or `CONFIRM_UX_*` answers: mirror behavior in `userStories` (use `suggestedStoryPatch` from audit JSON when present).
 - **[MANDATORY]** `contextAndHandoff.screenAccess` MUST be one of: `directRoute` | `sidebarMenu` | `contextualAction`.
 - **[MANDATORY]** 5 scenarios: (1) Initial data load, (2) Input entry & Form validation errors, (3) Successful submission, (4) Exception handling / UI error states, (5) Background operations (if applicable). All descriptive texts generated for user consumption MUST be in clear Vietnamese.
 
@@ -145,7 +149,7 @@ disable-model-invocation: true
     3. **Color & Surface Palette**: Exact token hierarchy — `backgroundToken`, `borderToken`, `accentToken`, `hoverStateColor`, `activeStateColor`, and dark/light contrast semantics.
     4. **Typography & Text Metrics**: Header hierarchy (`h1`-`h6`), font-weight, line-height, text truncation behavior (`truncate`, `line-clamp-2`).
     5. **Micro-Interactions & States**: Loading skeleton structure, empty/error state UI, hover transition curves, and disabled visual opacity.
-- **[PROACTIVE AI BRAINSTORMING]**: If the user asks for a new UI block without specifying dimensions/colors, the Agent MUST propose 2–3 concrete visual design specifications (using Design System semantic tokens) via the Wizard with `(Recommended)` instead of asking open-ended questions.
+- **[PROACTIVE OPTIONS ONLY]**: Novel custom blocks without dimensions/colors → propose 2–3 concrete specs (design tokens) via `AskQuestion`; `(Recommended)` must be one of those specs — not vague “how should this look?” prompts. Affordance gaps (breadcrumb, delete feedback, disabled reason, …) → `flowgrid-ux-common.mdc` checklists, not ad-hoc UX ideas.
 
 ### Rule: Dynamic 5-Tier Validation & Messages
 - **[MANDATORY]** Never accept superficial `validation: { required: true }`. The Agent **MUST proactively brainstorm and specify** the full 5-tier validation profile for all form fields:
@@ -177,15 +181,15 @@ disable-model-invocation: true
 
 ---
 
-## Rule: Common Pattern Resolution
+## Rule: Common Pattern Resolution (DSL consume)
 
-- **[MANDATORY]** Before authoring: scan upward `common/yaml/` (function → module → cluster → surface → global); read `templates/shared/patterns/*.pattern.yaml`.
-- **[MANDATORY]** Tag patterns from structural cues only (never invented business fields):
-  - `>8 columns` → `#split-hook:columns`; `>3 filters` → `#split-hook:filters`; export button → `#split-hook:export`; complex form (>6 fields) → `#split-hook:form-sections`
+- **[MANDATORY]** Before authoring each zone: scan upward `common/yaml/` (function → module → cluster → surface → global); read `templates/shared/patterns/*.pattern.yaml`; match `design.registry.json` when the FE checkout pointer exists.
+- **[MANDATORY]** Tag from structural cues only (never invented business fields):
+  - `>8 columns` → `#split-hook:columns`; `>3 filters` → `#split-hook:filters`; export → `#split-hook:export`; form >6 fields → `#split-hook:form-sections`
   - `≥2 domain structural blocks` → `#needs-component: MoBlockName` (NOT shadcn primitives)
-  - Delete button → `#pattern: delete-flow`; list/table → `#pattern: CRUD`; confirm/overwrite → `common-confirm-dialog`
-- **[MANDATORY]** Inject into `design.patterns[]` in bundle YAML.
-- **[STRICTLY FORBIDDEN]** Do NOT tag shadcn primitives (`Button`, `Dialog`, `Table`) as `#needs-component`. Use `#ui: <ShadcnPrimitive>` instead.
+  - Delete → `#pattern: delete-flow`; list/table → `#pattern: CRUD`; confirm/overwrite → `common-confirm-dialog`
+- **[MANDATORY]** Inject resolved patterns into `design.patterns[]` and zone `items[]` with `#ui:` / `#widget:` as applicable.
+- **[STRICTLY FORBIDDEN]** Tag shadcn primitives as `#needs-component`. Duplicate full common IR into the screen bundle when DSL already covers the widget.
 
 ---
 
@@ -202,7 +206,7 @@ disable-model-invocation: true
 ## Modifiers
 
 ### `/legacy` modifier
-- **[MANDATORY]** Lookup `adoption-inventory.md` at workspace root. If missing → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** Lookup `adoption-inventory.md` at workspace root. If missing → STOP: *"Run `/docs-hub /adopt` first."*
 - **[MANDATORY]** Set `specOrigin: legacy`; use legacy source path from inventory mapping.
 - **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield (non-legacy) commands.
 
@@ -210,8 +214,8 @@ disable-model-invocation: true
 
 ## Tools
 
-- `docskit_bundle_split` / `docskit split -- <bundle>` (prefer MCP when installed)
-- `docs_render` / `docskit render …`
+- `flowgrid_docs_bundle_split` / `flowgrid split -- <bundle>` (prefer MCP when installed)
+- `docs_render` / `flowgrid render …`
 - Local fallback: `pnpm docs:split` · `pnpm docs:render`
 
 ---
@@ -228,7 +232,9 @@ disable-model-invocation: true
 - [ ] `stateMatrix` defined: Record Status ↔ Fields State ↔ Visible Buttons ↔ RBAC Overrides.
 - [ ] 6-Block Action Flows specified: Preconditions, Interaction Lock (Double-submit), Payload Transform, API Contract, 4-Tier Outcomes Matrix (Success, 422/409, 401/403, 500/504/Offline).
 - [ ] Custom UI Blocks: Dimensions, Palette semantic tokens, Typography, and Micro-interactions defined if novel.
-- [ ] Common patterns tagged in `design.patterns[]`; no invented low-level CSS.
+- [ ] Common patterns tagged in `design.patterns[]`; DSL-mapped zones written; `#needs-component` / `#needs-ui` only where registry/common does not cover.
+- [ ] UX gap questions used checklist-backed `(Recommended)` options (`flowgrid-ux-common.mdc`), not open brainstorming.
+- [ ] `userStories` scenarios/AC reflect UX affordances patched in `design` (incl. audit `suggestedStoryPatch`).
 - [ ] YAML strings with `:` or `[]` are double-quoted. No `.md` written by hand.
 - [ ] `pnpm docs:split` + `pnpm docs:render` run with zero errors; rendered `spec.md` verified clean of raw YAML dumps.
 - [ ] Handoff → `/testcase` created.

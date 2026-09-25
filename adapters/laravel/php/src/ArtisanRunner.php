@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codegenkit\Laravel\UnitGen;
+namespace FlowGrid\Laravel\UnitGen;
 
 final class ArtisanRunner
 {
@@ -17,7 +17,7 @@ final class ArtisanRunner
             return ['code' => 0, 'stdout' => "[dry-run] php artisan {$line}", 'stderr' => ''];
         }
 
-        $php = getenv('CODEGENKIT_PHP') ?: 'php';
+        $php = getenv('FLOWGRID_PHP') ?: 'php';
         $args = self::splitCommand($line);
         $command = array_merge([$php, 'artisan'], $args);
 

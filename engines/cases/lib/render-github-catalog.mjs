@@ -5,8 +5,8 @@ const CATALOG_ROOTS = ['cases', 'scenarios', 'plans']
 
 const SKIP_NEST = new Set(['node_modules', '.git', 'code', 'dist', 'cache', 'registries', '.cursor'])
 
-const README_MARKER = '<!-- testkit-catalog -->'
-const README_END = '<!-- /testkit-catalog -->'
+const README_MARKER = '<!-- flowgrid-test-catalog -->'
+const README_END = '<!-- /flowgrid-test-catalog -->'
 const README_BLOCK = `${README_MARKER}
 **[Danh mục Testcase](CATALOG.md)**
 ${README_END}
@@ -98,7 +98,7 @@ export function writeGithubCatalog(root = process.cwd()) {
   const lines = [
     '# Danh mục Testcase & Scenario',
     '',
-    '_Sinh bởi `testkit tests:publish`. Click link để mở tài liệu. Không sửa tay._',
+    '_Sinh bởi `flowgrid tests:publish`. Click link để mở tài liệu. Không sửa tay._',
     '',
   ]
 
@@ -129,7 +129,7 @@ export function ensureReadmeCatalogLink(root) {
 }
 
 function stripCatalogBlock(text) {
-  const paired = /<!-- testkit-catalog -->[\s\S]*?<!-- \/testkit-catalog -->\n*/
+  const paired = /<!-- flowgrid-test-catalog -->[\s\S]*?<!-- \/flowgrid-test-catalog -->\n*/
   if (paired.test(text)) return text.replace(paired, '')
   if (text.includes(README_MARKER)) {
     return (

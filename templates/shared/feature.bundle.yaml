@@ -72,7 +72,17 @@ userStories:
       steps:
         - "Người dùng nhấn nút thực thi chính (Primary Action Button)."
         - "Hệ thống khóa nút và hiển thị loading để chống bấm đúp (double submit prevention)."
-        - "Lưu dữ liệu thành công, hiển thị Toast thông báo và điều hướng sang màn hình tiếp theo theo Handoff."
+        - "Lưu dữ liệu thành công (không phải xóa): Toast hoặc inline alert; điều hướng theo Handoff. Thao tác xóa — xem scenario UX affordances bên dưới."
+
+    # Thêm scenario này khi màn có delete/breadcrumb/filter/disabled reason / import CSV (sau audit UX_* hoặc DSL gap).
+    - name: "Affordances UX chuẩn portal (UX — khi áp dụng)"
+      steps:
+        - "Breadcrumb / ngữ cảnh: Người dùng luôn biết đang ở module và bản ghi nào (trail hoặc back + title rõ)."
+        - "Danh sách: Tìm kiếm/lọc (nếu có) và phân trang; empty state khác 'không có kết quả filter'."
+        - "Cột trạng thái: Hiển thị chip/badge có chữ, không chỉ màu."
+        - "Hành động trên dòng bị khóa: Có lý do hiển thị (tooltip/badge/chip), không chỉ nút disabled im lặng."
+        - "Xóa / xóa hàng loạt: Hộp thoại xác nhận chặn → gọi API → hộp thoại kết quả (thành công/lỗi) bắt người dùng xác nhận — không chỉ toast."
+        - "Import CSV (nếu có): Chọn file → kiểm tra → xác nhận → báo kết quả; lỗi theo dòng có thể tải log."
 
     - name: "Xử lý Ngoại lệ & Lỗi Giao diện (Exceptions & Edge Cases)"
       steps:
@@ -88,7 +98,10 @@ userStories:
   acceptanceCriteria:
     - "[ ] Người dùng có quyền truy cập xem được toàn bộ thông tin hợp lệ."
     - "[ ] Form chặn nộp khi thiếu các trường bắt buộc và thông báo lỗi rõ ràng."
-    - "[ ] Khi nộp thành công, dữ liệu được lưu đúng và chuyển trang mượt mà."
+    - "[ ] Khi nộp thành công (không phải delete), dữ liệu được lưu đúng và chuyển trang mượt mà."
+    - "[ ] (Khi có delete) Confirm trước xóa và result dialog sau API — không toast-only."
+    - "[ ] (Khi có action disabled theo rule) Người dùng hiểu lý do bị khóa (copy/badge/tooltip)."
+    - "[ ] (Khi list/detail drill-down) Breadcrumb hoặc ngữ cảnh điều hướng đủ cho deep link."
 
 specOrigin: requirement # requirement | legacy
 
@@ -166,8 +179,8 @@ spec:
         message: "Trang chi tiết này chưa được thiết lập nội dung."
   acceptance: []
 
-# Dev-grill / portal:gen — /grill-dev MUST fill codegen.profile (codegenkit reads ir/design.yaml).
-# Empty profile = grill incomplete; codegenkit gen MUST fail.
+# Dev-grill / portal:gen — /grill-dev MUST fill codegen.profile (flowgrid reads ir/design.yaml).
+# Empty profile = grill incomplete; flowgrid gen MUST fail.
 gen:
   codegen:
     profile: "admin-crud" # REQUIRED: auth | change-password | public | not-found | error | list | create | admin-crud

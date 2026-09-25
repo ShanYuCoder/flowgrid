@@ -10,7 +10,7 @@ import { resolveSemanticPlan } from './lib/semantic-plan.mjs'
 import { writeOutputs } from './lib/write-files.mjs'
 import { resolveHubId, resolveProjectRoot, loadTestsIndex } from './lib/resolve-hub-id.mjs'
 
-const root = path.resolve(process.env.TESTKIT_ROOT || process.cwd())
+const root = path.resolve(process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd())
 
 Handlebars.registerHelper('eq', (a, b) => a === b)
 Handlebars.registerHelper('and', (a, b) => a && b)
@@ -100,8 +100,8 @@ async function main() {
   const options = parseArgs(process.argv.slice(2))
 
   if (options.all) {
-    const testsRoot = process.env.TESTKIT_TESTS_ROOT
-      ? path.resolve(process.env.TESTKIT_TESTS_ROOT)
+    const testsRoot = process.env.FLOWGRID_TESTS_ROOT
+      ? path.resolve(process.env.FLOWGRID_TESTS_ROOT)
       : resolveProjectRoot(root, 'tests')
     const index = loadTestsIndex(testsRoot)
     const paths = []

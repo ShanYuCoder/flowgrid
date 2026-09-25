@@ -1,11 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/raintr91/Testkit/main/schemas/testcase.schema.json",
-  "title": "Testkit testcase YAML",
+  "$id": "https://platform.local/schemas/flowgrid-test/testcase.schema.json",
+  "title": "FlowGrid bộ test testcase YAML",
   "type": "object",
   "required": ["id", "title", "coverage", "refs", "genType", "feature", "route", "testIds"],
   "additionalProperties": true,
   "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "enum": [1, 2],
+      "description": "Use 2 for release gate (testMatrix + steps required)."
+    },
     "id": { "type": "string", "pattern": "^TC-[A-Z0-9-]+$" },
     "title": { "type": "string", "minLength": 1 },
     "summary": { "type": "string" },
@@ -50,7 +55,7 @@
         "scenario": { "type": "string", "pattern": "^SC-.*$" },
         "example": { "type": "string" },
         "screen": { "type": "string", "pattern": "^(W|API|UI)-.*$" },
-        "target": { 
+        "target": {
           "type": "string",
           "not": { "pattern": "^CTR-" }
         },
@@ -70,8 +75,58 @@
     "testIds": {
       "type": "object",
       "properties": {
-        "required": { "type": "array", "items": { "type": "string" } }
+        "required": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
       }
+    },
+    "testMatrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["facet"],
+        "properties": {
+          "caseId": { "type": "string" },
+          "facet": {
+            "type": "string",
+            "enum": [
+              "positive_boundary",
+              "negative_length",
+              "negative_format",
+              "negative_duplicate",
+              "concurrency_double_submit",
+              "network_interruption"
+            ]
+          },
+          "description": { "type": "string", "minLength": 1 },
+          "input": { "type": "object" },
+          "action": { "type": "string" },
+          "expected": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "description": "Phase 3 bundle cross-refs (optional until gate strict).",
+      "properties": {
+        "bundleScreen": { "type": "string", "pattern": "^(W|API|UI)-.*$" },
+        "bundleScenarios": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "acceptanceRefs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "actionRefs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false
     },
     "a11y": {
       "type": "object",
@@ -87,20 +142,40 @@
     "tags": { "type": "array", "items": { "type": "string" } },
     "preconditions": { "type": "array" },
     "testData": { "type": "object" },
-    "steps": { "type": "array" },
+    "steps": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
     "expected": {},
     "postcondition": { "type": "array" },
     "dimensions": { "type": "object" },
     "scenario": { "type": "string" },
     "category": { "type": "string" }
   },
-  "if": {
-    "properties": {
-      "coverage": {
-        "type": "array",
-        "contains": { "const": "accessibility" }
+  "allOf": [
+    {
+      "if": {
+        "properties": { "schemaVersion": { "const": 2 } },
+        "required": ["schemaVersion"]
+      },
+      "then": {
+        "required": ["testMatrix", "steps"],
+        "properties": {
+          "testMatrix": { "type": "array", "minItems": 1 },
+          "steps": { "type": "array", "minItems": 1 }
+        }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "coverage": {
+            "type": "array",
+            "contains": { "const": "accessibility" }
+          }
+        }
+      },
+      "then": { "required": ["a11y"] }
     }
-  },
-  "then": { "required": ["a11y"] }
+  ]
 }

@@ -266,7 +266,7 @@ export default () => {
           {
             name: 'watch-common-gen',
             configureServer(server) {
-              const adapter = process.env.CODEGENKIT_ADAPTER || 'nextjs'
+              const adapter = process.env.FLOWGRID_ADAPTER || 'nextjs'
               const webAdapters = new Set(['nuxt4', 'nextjs'])
               if (!webAdapters.has(adapter)) return
 
@@ -301,15 +301,15 @@ export default () => {
                 return commonDirs.some(d => norm.startsWith(d.split(path.sep).join('/')))
               }
 
-              const forgekitRoot = path.resolve(__dirname, '..', '..', '..')
-              const commonEngine = path.join(forgekitRoot, 'adapters', 'shared', 'common-gen.mjs')
+              const flowgridRoot = path.resolve(__dirname, '..', '..', '..')
+              const commonEngine = path.join(flowgridRoot, 'adapters', 'shared', 'common-gen.mjs')
 
               const runGenCommon = () => {
                 const env = {
                   ...process.env,
-                  CODEGENKIT_ROOT: projectRoot,
-                  CODEGENKIT_ADAPTER: adapter,
-                  CODEGENKIT_DOCS_ROOT: projectRoot,
+                  FLOWGRID_PROJECT_ROOT: projectRoot,
+                  FLOWGRID_ADAPTER: adapter,
+                  FLOWGRID_DOCS_ROOT: projectRoot,
                 }
                 const res = spawnSync(process.execPath, [commonEngine, '--all-surfaces', '--all-modules'], {
                   cwd: projectRoot,

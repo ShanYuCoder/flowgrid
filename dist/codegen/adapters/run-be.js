@@ -10,7 +10,7 @@ function resultOf(result) {
     };
 }
 function pythonExecutables(projectRoot) {
-    const configured = process.env.CODEGENKIT_PYTHON;
+    const configured = process.env.FLOWGRID_PYTHON;
     return [
         ...(configured ? [configured] : []),
         path.join(projectRoot, '.venv', 'bin', 'python'),
@@ -28,9 +28,9 @@ export function runBeEngine(opts) {
     }
     const env = {
         ...process.env,
-        CODEGENKIT_ROOT: opts.projectRoot,
-        CODEGENKIT_TYPE: 'be',
-        CODEGENKIT_BE_ADAPTER: opts.adapter,
+        FLOWGRID_PROJECT_ROOT: opts.projectRoot,
+        FLOWGRID_CODE_ROLE: 'be',
+        FLOWGRID_BE_ADAPTER: opts.adapter,
     };
     if (opts.adapter === 'dotnet-integration') {
         if (kind === 'unitgen' || kind === 'unit-registry') {
@@ -46,13 +46,13 @@ export function runBeEngine(opts) {
             normalized.shift();
         }
         const project = path.join(packageRoot(), 'adapters', 'dotnet-integration', 'codegen', 'runners', 'IntegrationGen', 'IntegrationGen.csproj');
-        const executable = process.env.CODEGENKIT_DOTNET || 'dotnet';
+        const executable = process.env.FLOWGRID_DOTNET || 'dotnet';
         const result = spawnSync(executable, ['run', '--project', project, '--', command, ...normalized], { cwd: opts.projectRoot, encoding: 'utf8', env });
         if (result.error?.code === 'ENOENT') {
             return {
                 status: 1,
                 stdout: '',
-                stderr: 'No .NET runtime found; set CODEGENKIT_DOTNET or install dotnet (.NET 8 SDK required).\n',
+                stderr: 'No .NET runtime found; set FLOWGRID_DOTNET or install dotnet (.NET 8 SDK required).\n',
             };
         }
         return resultOf(result);
@@ -97,7 +97,7 @@ export function runBeEngine(opts) {
         return {
             status: 1,
             stdout: '',
-            stderr: 'No Python runtime found; set CODEGENKIT_PYTHON or create target .venv',
+            stderr: 'No Python runtime found; set FLOWGRID_PYTHON or create target .venv',
         };
     }
     if (opts.adapter === 'nestjs') {
@@ -112,7 +112,7 @@ export function runBeEngine(opts) {
             env,
         }));
     }
-    // Laravel unitgen / unit-registry: PHP engine synced into src/.codegenkit/
+    // Laravel unitgen / unit-registry: PHP engine synced into src/.flowgrid/php/
     if (kind === 'unitgen' || kind === 'unit-registry') {
         return runLaravelPhpUnitgen({
             projectRoot: opts.projectRoot,
@@ -140,7 +140,7 @@ function resolveLaravelAppRoot(projectRoot) {
 }
 function resolveLaravelPhpEngine(projectRoot) {
     const laravelRoot = resolveLaravelAppRoot(projectRoot);
-    const synced = path.join(projectRoot, 'src', '.codegenkit', 'bin');
+    const synced = path.join(projectRoot, 'src', '.flowgrid', 'php', 'bin');
     const kitFallback = path.join(packageRoot(), 'adapters', 'laravel', 'php', 'bin');
     const binDir = existsSync(path.join(synced, 'unit-gen.php'))
         ? synced
@@ -160,7 +160,7 @@ function runLaravelPhpUnitgen(opts) {
         return {
             status: 1,
             stdout: '',
-            stderr: 'Laravel PHP unitgen not found. Run `codegenkit init --type=be --adapter=laravel` to sync src/.codegenkit/, or ensure adapters/laravel/php exists in the toolkit.\n',
+            stderr: 'Laravel PHP unitgen not found. Run `flowgrid init` (BE, laravel) to sync src/.flowgrid/php/, or ensure adapters/laravel/php exists in FlowGrid.\n',
         };
     }
     const scriptName = opts.kind === 'unit-registry' ? 'validate-registry.php' : 'unit-gen.php';
@@ -172,7 +172,7 @@ function runLaravelPhpUnitgen(opts) {
             stderr: `Missing PHP unitgen entry: ${script}\n`,
         };
     }
-    const php = process.env.CODEGENKIT_PHP || 'php';
+    const php = process.env.FLOWGRID_PHP || 'php';
     const result = spawnSync(php, [script, ...opts.argv], {
         cwd: opts.projectRoot,
         encoding: 'utf8',
@@ -182,7 +182,7 @@ function runLaravelPhpUnitgen(opts) {
         return {
             status: 1,
             stdout: '',
-            stderr: 'No PHP runtime found; set CODEGENKIT_PHP or install php on PATH.\n',
+            stderr: 'No PHP runtime found; set FLOWGRID_PHP or install php on PATH.\n',
         };
     }
     return resultOf(result);

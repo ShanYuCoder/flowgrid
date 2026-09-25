@@ -21,7 +21,7 @@ Constraints that shape how we write and structure architecture docs (and what we
 |------------|-------------|
 | Stub-first §07 | No invented prod topology — `DEP-*` only when placement matters |
 | Curated journeys (~10–20%) | `/journey` refuses backlog-dump sequences |
-| AI author + human review | Skills + optional docskit MCP validate IDs; humans own ADRs |
+| AI author + human review | Skills + optional flowgrid MCP validate IDs; humans own ADRs |
 
 ## Legal / security (docs)
 

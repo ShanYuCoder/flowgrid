@@ -34,7 +34,7 @@ export type GapKind =
    */
   | 'duplicate-api-route'
   /**
-   * Docskit business-fact gap (`#missing_info`). Do not invent fills — grill / member confirm
+   * Docs hub business-fact gap (`#missing_info`). Do not invent fills — grill / member confirm
    * before writing product SSOT.
    */
   | 'missing-info'

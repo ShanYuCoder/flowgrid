@@ -55,7 +55,7 @@ surfaces/<owner-surface>/CMP-*/
 ├─ common?/                          # yaml/ + processes/FLOW-* (optional)
 └─ <NN>/<NN>/…/                      # cluster số, ví dụ 01/01/01
    ├─ <slug>.bundle.yaml
-   ├─ ir/design.yaml                 # FE + Testkit
+   ├─ ir/design.yaml                 # FE + bộ test
    ├─ ir/spec.yaml                   # business
    ├─ ir/generated/<slug>.md
    └─ api/<seq>/                     # 01-backend-spec · 02-openapi · 03-mock

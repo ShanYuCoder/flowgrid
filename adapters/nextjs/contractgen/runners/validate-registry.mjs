@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const productRoot = path.resolve(process.env.CODEGENKIT_ROOT ?? process.cwd())
+const productRoot = path.resolve(process.env.FLOWGRID_PROJECT_ROOT ?? process.cwd())
 const adapterRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
 async function resolveRegistryPath() {
@@ -18,7 +18,7 @@ async function resolveRegistryPath() {
     }
   }
   throw new Error(
-    `Missing ${name} — sync via codegenkit init --adapter=nextjs or keep a product copy`,
+    `Missing ${name} — sync via flowgrid init --adapter=nextjs or keep a product copy`,
   )
 }
 

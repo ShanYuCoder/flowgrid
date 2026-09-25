@@ -16,7 +16,7 @@ extractBundle: architecture-core
 
 ## Rule: Target Resolution
 
-- **[MANDATORY]** Use `docskit_route` or `docskit_get_element` (or glob) to resolve the target surface directory under `surfaces/[Surface Name]/`.
+- **[MANDATORY]** Use `flowgrid_docs_route` or `flowgrid_docs_get_element` (or glob) to resolve the target surface directory under `surfaces/[Surface Name]/`.
 - **[STRICTLY FORBIDDEN]** Do NOT confuse an API with a surface. APIs belong to architecture containers or function-level API contracts.
 
 ---
@@ -39,7 +39,7 @@ extractBundle: architecture-core
 
 ## Modifier: `/legacy`
 
-- **[MANDATORY]** If `adoption-inventory.md` is missing at workspace root → STOP: *"Run `@docskit /adopt` first."*
+- **[MANDATORY]** If `adoption-inventory.md` is missing at workspace root → STOP: *"Run `/docs-hub /adopt` first."*
 - **[MANDATORY]** If file exists: look up surface ID → get legacy app/repo path → write `surfaces/[Surface]/legacy-surface.md`.
 - **[STRICTLY FORBIDDEN]** Do NOT read `adoption-inventory.md` for Greenfield commands.
 

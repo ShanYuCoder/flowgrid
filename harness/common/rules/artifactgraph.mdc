@@ -14,10 +14,10 @@ alwaysApply: false
 
 ## Cross-repo routing
 
-- Architecture ID / C4 → Docskit (`DOCSKIT_ROOT`), not CodeGraph and not
+- Architecture ID / C4 → bộ docs (`FLOWGRID_DOCS_ROOT`), not CodeGraph and not
   ArtifactGraph.
-- IR / registry / generation → Codegenkit / Testkit pointers
-  (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
+- IR / registry / generation → bộ code / bộ test pointers
+  (`FLOWGRID_DOCS_ROOT`, `FLOWGRID_DOCS_ROOT`, `FLOWGRID_TESTS_ROOT`).
 - Symbol / call-graph of repo X → `codegraph-<key>` MCP for checkout X.
 - ArtifactGraph is local-only: never follow those pointers, never read repo
   maps, never scan a workspace parent, never wire CodeGraph MCP itself.

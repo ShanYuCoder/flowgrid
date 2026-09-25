@@ -22,6 +22,39 @@ Các lệnh thao tác với tài liệu, chia tách Spec và kết xuất giao d
 
 *(Ví dụ chạy: `flowgrid split_all`)*
 
+### Audit & Harness (PR workflow)
+
+| Lệnh | Chức năng |
+|------|-----------|
+| `flowgrid audit` | In help các loại audit (`spec`, `flow`, `api`, `testcase`, `legacy`). |
+| `flowgrid audit spec <bundle.yaml> [--type …]` | Gap audit bundle UI/spec + UX affordance (`UX_*`, `CONFIRM_UX_*`, `uxAffordanceGaps`). JSON stdout. Legacy: `flowgrid audit:spec`. |
+| `flowgrid audit api …` | Audit API contract YAML. |
+| `flowgrid audit flow …` | Audit `FLOW-*.md`. |
+| `flowgrid audit testcase …` | Audit test plan YAML (`--bundle` = cross-ref `*.bundle.yaml`). |
+| `flowgrid audit fe-be …` | Bundle `apiRef` vs `01-backend-spec.yaml`. |
+| `flowgrid audit scenario …` | Cross-flow SC `screens[]` vs `cases/**` TC (`--tests-root`). |
+| `flowgrid audit legacy <target-id>` | Audit legacy adoption index. |
+| `flowgrid harness sync` | Đồng bộ lại skills/rules/MCP từ `.flowgrid/config.json` (`agents[]`). |
+| `flowgrid harness sync --full-docs` | Trên FE/BE repo: sync **toàn bộ** bộ docs harness (mặc định chỉ consumer subset). |
+| `flowgrid harness sync --agent=cursor` | Chỉ sync một agent đã khai báo lúc init. |
+| `flowgrid doctor` | Kiểm tra `.flowgrid/config.json`, MCP `flowgrid`, `FLOWGRID_DOCS_ROOT`, skills, placeholder `{{FLOWGRID_*}}`, file toolkit trong package. |
+| `flowgrid doctor --fix` | Chạy `harness sync` (+ tạo `AGENTS.md` nếu thiếu) rồi kiểm tra lại. |
+
+Sau `flowgrid init`, repo có `AGENTS.md` ở root; overlay agent render sẵn `{{FLOWGRID_*}}` → tool/path thật. Script npm: `flowgrid:doctor`, `flowgrid:doctor:fix`.
+
+### Harness layout (common + per-agent)
+
+| Layer | Nguồn | Đích |
+|-------|--------|------|
+| **Common** | `harness/common`, `shared`, `docs`/`fe`/`be`/`tests` (theo project type) | `.flowgrid/harness/staging/<cache>/bundle` (build **một lần** / config) |
+| **Materialize** | staging bundle | `.cursor/`, `.claude/`, `.agents/`, … |
+| **Agent overlay** | `harness/agents/<agent>/` (rules/skills bổ sung) | merge vào thư mục agent tương ứng |
+| **MCP** | `agent-profiles` | Cursor/Claude/Kiro → `mcp.json`; Antigravity → `.agents/mcp_config.json` |
+
+Chọn nhiều agent lúc init: không đọc lại toàn bộ package N lần — lần 2+ dùng staging cache. Sync một agent: `flowgrid harness sync --agent=cursor`.
+
+**JSON Schema (harness):** chỉ thư mục `flowgrid-*` — ví dụ `schemas/flowgrid-docs/`, `schemas/flowgrid-process/` (bộ code: `harness/shared/schemas/flowgrid-code/`).
+
 ### Bộ Test (Kiểm thử & Testcase)
 FlowGrid chịu trách nhiệm phân tích kịch bản kiểm thử định dạng YAML để kết xuất ra Markdown hoặc soi chiếu Coverage.
 
@@ -29,6 +62,7 @@ FlowGrid chịu trách nhiệm phân tích kịch bản kiểm thử định d�
 |---------------|-----------|
 | `flowgrid cases:render` | Dịch toàn bộ Testplan YAML sang Markdown để đọc trên Docs Hub. |
 | `flowgrid cases:check` | Kiểm tra cú pháp YAML của Testplan. |
+| `flowgrid cases:gate` | Cổng release: schema v2 + audit TC + bundle trace (`--strict`, `--docs-root`, `--json`). |
 | `flowgrid cases:coverage` | Quét Coverage để phát hiện các specs chưa có Testplan. |
 | `flowgrid testcase:gen` | Tự động sinh mã nguồn Playwright E2E từ YAML. |
 | `flowgrid e2e-registry` | Kiểm tra/Xác thực registry của Playwright Test. |
@@ -66,8 +100,8 @@ Dùng để sinh mã nguồn API và Unit Test Backend.
 - **Review (Grill):** `grill-api`, `grill-api-unit`, `business-impact-review`.
 
 ### 3. Docs Skills (`harness/docs/`)
-Khối óc trung tâm (Docskit SSOT). Nơi diễn ra 90% việc phân tích hệ thống, thiết kế kiến trúc và luồng dữ liệu trước khi code.
-- **Kiến trúc & Sơ đồ:** `architecture`, `architecture-grill`, `docskit`, `business-process`, `background-logic`, `business-process-trace`, `cross-cutting`, `deployment`, `surfaces`, `db-erd`, `flow-trace`.
+Khối óc trung tâm (bộ docs (SSOT)). Nơi diễn ra 90% việc phân tích hệ thống, thiết kế kiến trúc và luồng dữ liệu trước khi code.
+- **Kiến trúc & Sơ đồ:** `architecture`, `architecture-grill`, `docs-hub`, `business-process`, `background-logic`, `business-process-trace`, `cross-cutting`, `deployment`, `surfaces`, `db-erd`, `flow-trace`.
 - **Thiết kế API & Specs:** `api`, `api-integration`, `api-spec`, `api-update`, `cross-entity-service`, `cross-service`, `openapi`, `module`, `spec`, `update-spec`, `common-spec`.
 - **Quản lý & Review:** `decision`, `overview`, `qa-resolve`, `platform-ai`, `build-templates`, `call-external`.
 - **Soi chiếu (Grill):** `grill`, `grill-api`, `grill-api-spec`, `grill-bqa`, `grill-common-spec`, `grill-dev`, `grill-docs`, `grill-integration-spec`.
@@ -86,39 +120,39 @@ Kỹ năng dùng chung bắt buộc cho mọi Agent.
 
 ## 🛠 Hướng Dẫn Sử Dụng MCP Tools (Model Context Protocol)
 
-Forgekit phơi bày toàn bộ khả năng xử lý thông qua máy chủ MCP duy nhất: **`forgekit`** (`bin/forgekit-mcp.mjs`). AI Agent (Cursor, Antigravity, Claude Desktop) tự động nhận diện và sử dụng cấu hình từ `.agents/mcp_config.json` hoặc `.cursor/mcp.json`.
+FlowGrid phơi bày toàn bộ khả năng xử lý thông qua máy chủ MCP duy nhất: **`flowgrid`** (`bin/flowgrid-mcp.mjs`). AI Agent (Cursor, Antigravity, Claude Desktop) tự động nhận diện và sử dụng cấu hình từ `.agents/mcp_config.json` hoặc `.cursor/mcp.json`.
 
 ```json
 {
   "mcpServers": {
-    "forgekit": {
+    "flowgrid": {
       "command": "node",
-      "args": ["/path/to/forgekit/bin/forgekit-mcp.mjs"],
+      "args": ["/path/to/flowgrid/bin/flowgrid-mcp.mjs"],
       "env": {
-        "DOCSKIT_ROOT": "/absolute/path/to/docs-hub",
-        "CODEGENKIT_ADAPTER": "nextjs"
+        "FLOWGRID_DOCS_ROOT": "/absolute/path/to/docs-hub",
+        "FLOWGRID_ADAPTER": "nextjs"
       }
     }
   }
 }
 ```
 
-### 1. Nhóm Công Cụ Tài Liệu (`docskit_*`)
+### 1. Nhóm Công Cụ Tài Liệu (`flowgrid_docs_*`)
 | Tên Tool MCP | Tham số chính | Chức năng chi tiết |
 |---|---|---|
-| `docskit_list_ids` | `docsRoot`, `kind`, `prefix` | Quét và liệt kê danh sách toàn bộ ID kiến trúc (`CMP-*`, `FLOW-*`, `W-*`, `API-*`, `DEP-*`, `ADR-*`). |
-| `docskit_route` | `topic`, `docsRoot` | Điều hướng chủ đề nghiệp vụ tới đúng file tài liệu tương ứng trong docs hub. |
-| `docskit_get_element` | `id`, `docsRoot` | Lấy chi tiết thông tin và nội dung của một phần tử kiến trúc theo ID. |
-| `docskit_deps_of` | `id`, `docsRoot` | Truy vết tất cả các dependency mà ID này phụ thuộc vào. |
-| `docskit_dependents_of` | `id`, `docsRoot` | Tìm kiếm tất cả các ID khác đang phụ thuộc vào phần tử này. |
-| `docskit_orphans` | `docsRoot` | Phát hiện các file mồ côi hoặc ID chưa được liên kết vào chương mục arc42. |
-| `docskit_validate_links` | `docsRoot` | Rà soát toàn bộ các liên kết markdown bị gãy trong docs hub. |
-| `docskit_bundle_split` | `paths`, `projectRoot` | Chia tách `*.bundle.yaml` ra `ir/design.yaml`, `ir/spec.yaml` và sinh `ir/generated/<slug>.md`. |
-| `docskit_bundle_merge` | `paths`, `projectRoot` | Gộp dữ liệu từ `ir/*` ngược trở lại file `*.bundle.yaml`. |
-| `docskit_bundle_check` | `paths`, `projectRoot` | Kiểm tra tính đồng bộ giữa bundle và ir files trên CI. |
-| `docskit_bundle_split_all` | `projectRoot` | Quét và cắt nhỏ toàn bộ bundle YAML trong toàn bộ repo. |
-| `docskit_docs_render` | `projectRoot`, `yamlRoot`, `mdRoot` | Render lại toàn bộ UI Design Specs sang Markdown (chuẩn Data Dictionary & State Matrix, không rác YAML). |
-| `docskit_docs_publish` | `projectRoot` | Tổng hợp và xuất file `CATALOG.md` cùng liên kết đầu trang `README.md`. |
+| `flowgrid_docs_list_ids` | `docsRoot`, `kind`, `prefix` | Quét và liệt kê danh sách toàn bộ ID kiến trúc (`CMP-*`, `FLOW-*`, `W-*`, `API-*`, `DEP-*`, `ADR-*`). |
+| `flowgrid_docs_route` | `topic`, `docsRoot` | Điều hướng chủ đề nghiệp vụ tới đúng file tài liệu tương ứng trong docs hub. |
+| `flowgrid_docs_get_element` | `id`, `docsRoot` | Lấy chi tiết thông tin và nội dung của một phần tử kiến trúc theo ID. |
+| `flowgrid_docs_deps_of` | `id`, `docsRoot` | Truy vết tất cả các dependency mà ID này phụ thuộc vào. |
+| `flowgrid_docs_dependents_of` | `id`, `docsRoot` | Tìm kiếm tất cả các ID khác đang phụ thuộc vào phần tử này. |
+| `flowgrid_docs_orphans` | `docsRoot` | Phát hiện các file mồ côi hoặc ID chưa được liên kết vào chương mục arc42. |
+| `flowgrid_docs_validate_links` | `docsRoot` | Rà soát toàn bộ các liên kết markdown bị gãy trong docs hub. |
+| `flowgrid_docs_bundle_split` | `paths`, `projectRoot` | Chia tách `*.bundle.yaml` ra `ir/design.yaml`, `ir/spec.yaml` và sinh `ir/generated/<slug>.md`. |
+| `flowgrid_docs_bundle_merge` | `paths`, `projectRoot` | Gộp dữ liệu từ `ir/*` ngược trở lại file `*.bundle.yaml`. |
+| `flowgrid_docs_bundle_check` | `paths`, `projectRoot` | Kiểm tra tính đồng bộ giữa bundle và ir files trên CI. |
+| `flowgrid_docs_bundle_split_all` | `projectRoot` | Quét và cắt nhỏ toàn bộ bundle YAML trong toàn bộ repo. |
+| `flowgrid_docs_docs_render` | `projectRoot`, `yamlRoot`, `mdRoot` | Render lại toàn bộ UI Design Specs sang Markdown (chuẩn Data Dictionary & State Matrix, không rác YAML). |
+| `flowgrid_docs_docs_publish` | `projectRoot` | Tổng hợp và xuất file `CATALOG.md` cùng liên kết đầu trang `README.md`. |
 
 ### 2. Nhóm Công Cụ Sinh Mã Nguồn Frontend (`codegen_*`, `common_*`, `unit_*`)
 | Tên Tool MCP | Tham số chính | Chức năng chi tiết |
@@ -164,7 +198,7 @@ Forgekit phơi bày toàn bộ khả năng xử lý thông qua máy chủ MCP du
 
 # Feature Artifact — Lệnh Script Thực Thi
 
-> Sau khi chạy `forgekit init`: Mọi lệnh thực thi quản lý tài liệu được gọi qua CLI `forgekit <command>`.
+> Sau khi chạy `flowgrid init`: Mọi lệnh thực thi quản lý tài liệu được gọi qua CLI `flowgrid <command>`.
 
 ---
 
@@ -172,13 +206,13 @@ Forgekit phơi bày toàn bộ khả năng xử lý thông qua máy chủ MCP du
 
 | Lệnh | Input | Output |
 |------|--------|--------|
-| `forgekit split -- <bundle.yaml>` · `pnpm spec:split` | Bundle | `ir/design.yaml`, `ir/spec.yaml`, `ir/generated/<slug>.md` |
-| `forgekit merge -- <bundle.yaml>` · `pnpm spec:merge` | `ir/*` | Bundle |
-| `forgekit check -- <bundle.yaml>` · `pnpm spec:split:check` | Bundle + ir | Fail nếu lệch / common thiếu design |
-| `forgekit split_all` · `pnpm spec:split:all` | Mọi `*.bundle.yaml` dưới surfaces | Split từng file |
-| `forgekit render` · `pnpm forge:render` | `ir/spec.yaml` (skip màn chưa split) | `ir/generated/*.md` + **`qa/index.md`** (bảng Data Dictionary chuẩn) |
-| `forgekit publish` · `pnpm forge:publish` | MD đã có + OpenAPI | **`CATALOG.md`** + link **đầu** README |
-| `forgekit dev` · `pnpm docs:dev` | VitePress | Sidebar: surfaces (kèm `ir/generated`) + **QA** cuối |
+| `flowgrid split -- <bundle.yaml>` · `pnpm spec:split` | Bundle | `ir/design.yaml`, `ir/spec.yaml`, `ir/generated/<slug>.md` |
+| `flowgrid merge -- <bundle.yaml>` · `pnpm spec:merge` | `ir/*` | Bundle |
+| `flowgrid check -- <bundle.yaml>` · `pnpm spec:split:check` | Bundle + ir | Fail nếu lệch / common thiếu design |
+| `flowgrid split_all` · `pnpm spec:split:all` | Mọi `*.bundle.yaml` dưới surfaces | Split từng file |
+| `flowgrid render` · `pnpm flowgrid:render` | `ir/spec.yaml` (skip màn chưa split) | `ir/generated/*.md` + **`qa/index.md`** (bảng Data Dictionary chuẩn) |
+| `flowgrid publish` · `pnpm flowgrid:publish` | MD đã có + OpenAPI | **`CATALOG.md`** + link **đầu** README |
+| `flowgrid dev` · `pnpm docs:dev` | VitePress | Sidebar: surfaces (kèm `ir/generated`) + **QA** cuối |
 
 GitHub: README → `CATALOG.md` (platform / product / QA) → click mở trang MD. Không lục YAML.
 
@@ -188,46 +222,46 @@ GitHub: README → `CATALOG.md` (platform / product / QA) → click mở trang M
 
 | Lệnh | Mục đích |
 |------|----------|
-| `forgekit render --yaml-root surfaces/common/yaml` | Render common UI design MD dưới surfaces/common. |
-| `forgekit gen-common` rồi `forgekit gen` | Sinh mã nguồn FE molecules trước khi sinh full screen. |
+| `flowgrid render --yaml-root surfaces/common/yaml` | Render common UI design MD dưới surfaces/common. |
+| `flowgrid gen-common` rồi `flowgrid gen` | Sinh mã nguồn FE molecules trước khi sinh full screen. |
 
 ## API (Cùng leaf với FE)
 
 | Lệnh | Mục đích |
 |------|----------|
 | `/api-spec` | Inventory từ **`ir/design.yaml` actions** (`apiRefs` / `#reuse-api` + `reuseFrom`). Unique → `api/<seq>/` trio. Toàn reuse → **zero** `api/` |
-| `forgekit openapi_gen --spec …/01-backend-spec.yaml` | Ghi sibling `02-openapi.yaml` |
-| `forgekit openapi_render` | Gộp toàn bộ OpenAPI specs thành `docs/openapi/api.yaml`. |
+| `flowgrid openapi_gen --spec …/01-backend-spec.yaml` | Ghi sibling `02-openapi.yaml` |
+| `flowgrid openapi_render` | Gộp toàn bộ OpenAPI specs thành `docs/openapi/api.yaml`. |
 | `/qa-resolve QA-…` | Đóng một file `qa/open`, patch bundle/01, split |
 
-## Codegen — Frontend (`forgekit gen`)
+## Codegen — Frontend (`flowgrid gen`)
 
 **Input:** `ir/design.yaml` (`--id` hoặc `--spec`). **Không** `ir/spec.yaml`.
 
 | Lệnh | Mục đích |
 |------|----------|
-| `forgekit gen:dry -- --id W-*` / `--spec …/ir/design.yaml` | Gate sau `/grill-dev` |
-| `forgekit gen` | Scaffold FE component vào repo |
-| `forgekit contract-gen` | Sinh FE models từ **design** |
+| `flowgrid gen:dry -- --id W-*` / `--spec …/ir/design.yaml` | Gate sau `/grill-dev` |
+| `flowgrid gen` | Scaffold FE component vào repo |
+| `flowgrid contract-gen` | Sinh FE models từ **design** |
 
-## Codegen — Backend (`forgekit api-gen`)
+## Codegen — Backend (`flowgrid api-gen`)
 
 **Input:** `…/api/<seq>/01-backend-spec.yaml` only. `--id CMP-*` glob mọi 01 dưới module.
 
 | Lệnh | Mục đích |
 |------|----------|
-| `forgekit api-gen:dry -- --spec …/api/01/01-backend-spec.yaml` | Gate sau `/grill-api-spec` |
-| `forgekit api-gen` | Scaffold Backend API controller/route/service |
-| `forgekit api-unit-gen` | Sinh Unit Test cho Backend API |
+| `flowgrid api-gen:dry -- --spec …/api/01/01-backend-spec.yaml` | Gate sau `/grill-api-spec` |
+| `flowgrid api-gen` | Scaffold Backend API controller/route/service |
+| `flowgrid api-unit-gen` | Sinh Unit Test cho Backend API |
 
 ## Unit & E2E Testing
 
 | Lệnh | Input |
 |------|--------|
-| `forgekit unit-gen` | Sinh Unit Test Frontend từ `ir/design.yaml` |
-| `forgekit api-unit-gen` | Sinh Unit Test Backend từ `01-backend-spec.yaml` |
-| `forgekit testcase:gen --id …` | Sinh kịch bản Playwright E2E từ Testplan SSOT |
-| `forgekit cases:render` | Render kịch bản Testplan YAML sang Markdown |
+| `flowgrid unit-gen` | Sinh Unit Test Frontend từ `ir/design.yaml` |
+| `flowgrid api-unit-gen` | Sinh Unit Test Backend từ `01-backend-spec.yaml` |
+| `flowgrid testcase:gen --id …` | Sinh kịch bản Playwright E2E từ Testplan SSOT |
+| `flowgrid cases:render` | Render kịch bản Testplan YAML sang Markdown |
 
 ---
 
@@ -235,18 +269,18 @@ GitHub: README → `CATALOG.md` (platform / product / QA) → click mở trang M
 
 ```bash
 # Phân tách và render tài liệu specs
-forgekit split -- surfaces/admin/CMP-01/01/01/01/<slug>.bundle.yaml
-forgekit render
-forgekit publish
-forgekit dev
+flowgrid split -- surfaces/admin/CMP-01/01/01/01/<slug>.bundle.yaml
+flowgrid render
+flowgrid publish
+flowgrid dev
 
 # Sinh mã nguồn Frontend
-forgekit gen:dry --docs-root ~/workspace/base-docs -- --spec …/ir/design.yaml
-forgekit gen
+flowgrid gen:dry --docs-root ~/workspace/base-docs -- --spec …/ir/design.yaml
+flowgrid gen
 
 # Sinh mã nguồn Backend
-forgekit api-gen:dry -- --spec …/api/01/01-backend-spec.yaml
-forgekit api-gen
+flowgrid api-gen:dry -- --spec …/api/01/01-backend-spec.yaml
+flowgrid api-gen
 ```
 
 Thứ tự phối hợp trong team: [DESIGN-PHASE-DIAGRAM](../2-lifecycle/overview.md)

@@ -5,19 +5,19 @@
 
 ## Cách dùng (Command/Trigger)
 - Gọi qua slash command: `/spec <module-id/slug/draft-id>`
-- Kích hoạt bằng `@forgekit` (hoặc tên bot tương ứng) khi cần tạo bản đặc tả ban đầu (design bundle).
+- Kích hoạt bằng `@flowgrid` (hoặc tên bot tương ứng) khi cần tạo bản đặc tả ban đầu (design bundle).
 - Khi có thêm cờ `/legacy`: Đọc source cũ và ghi `specOrigin: legacy`.
 
 ## Input (Dữ liệu đầu vào)
 - User Prompt (mô tả yêu cầu bằng text).
 - Draft ID (ví dụ: `1-1-1`, `2-1-2`) hoặc Slug, Module ID (ví dụ: `CMP-ADM-002`).
 - File requirement dạng Markdown (nếu có) được tạo sẵn trong thư mục ứng với ID (ví dụ: `01/01/02.md`).
-- File template gốc tại `.forgekit/templates/feature.bundle.yaml`.
+- File template gốc tại `.flowgrid/templates/feature.bundle.yaml`.
 
 ## Output (Kết quả mong đợi)
-- File `*.bundle.yaml` chứa thông tin chức năng tại thư mục `surfaces/<surface>/CMP-*/<numeric-path>/`. (Tuân thủ nghiêm ngặt cấu trúc của [feature.bundle.yaml](file:///home/vutv/workspace/forgekit/.forgekit/templates/feature.bundle.yaml)).
+- File `*.bundle.yaml` chứa thông tin chức năng tại thư mục `surfaces/<surface>/CMP-*/<numeric-path>/`. (Tuân thủ nghiêm ngặt cấu trúc của [feature.bundle.yaml](../../../../.flowgrid/templates/feature.bundle.yaml) sau `flowgrid init`).
 - Thư mục được tự động sinh dựa trên số của Draft ID.
-- Quá trình chạy tool `forgekit split` sẽ sinh ra các file trung gian trong `ir/` và `forgekit render` sinh ra `ir/generated/spec.md`.
+- Quá trình chạy tool `flowgrid split` sẽ sinh ra các file trung gian trong `ir/` và `flowgrid render` sinh ra `ir/generated/spec.md`.
 
 ## Description / Ý nghĩa
 - Chuyên dùng để khởi tạo hoặc viết đặc tả chi tiết cho một chức năng/màn hình cụ thể (Function Detail).
@@ -26,7 +26,7 @@
   - **Kỹ thuật:** Phân định rõ ràng trên từng element giữa `meaning` (**Ý nghĩa nghiệp vụ**) và `purpose` (**Mục đích thao tác**).
 - Mọi rule validation bắt buộc đi kèm trường `messages` tiếng Việt cụ thể.
 - Mọi hành động tương tác (Actions) phải định nghĩa rõ: `validateFormBeforeSubmit`, `feedback` (loadingText, disableWhileSubmitting), `apiRefs`, `onSuccess` (toast, navigation handoff, backgroundTrigger), `onSpecificError` (map lỗi 422, 409 conflict, 403), `onCommonError`.
-- **Tuyệt đối không** sinh nội dung ra file `.md` bằng tay, mà phải luôn ghi vào YAML và để engine `forgekit split` lo việc chuyển đổi sang `ir/spec.yaml` và `ir/generated/spec.md`.
+- **Tuyệt đối không** sinh nội dung ra file `.md` bằng tay, mà phải luôn ghi vào YAML và để engine `flowgrid split` lo việc chuyển đổi sang `ir/spec.yaml` và `ir/generated/spec.md`.
 
 ## Các Skill liên quan
 - **Trước đó:** Không có bắt buộc, thường được gọi trực tiếp đầu tiên khi có yêu cầu (hoặc sau khi chốt `business-process`).

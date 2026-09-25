@@ -17,7 +17,7 @@ extractBundle: architecture-core
 - **[MANDATORY]** Path: `architecture/08-cross-cutting/` — topic section or `{topic}.md`.
 - **[MANDATORY]** Template: `.cursor/extracts/tpl-cross-cutting.md`.
 - **[MANDATORY]** MUST include: Intent + Owner (or TBD) + Approach stub. No AI waffle.
-- **[MANDATORY]** Use `docskit_route` for §08 topics; `docskit_validate_links` after adding a new section.
+- **[MANDATORY]** Use `flowgrid_docs_route` for §08 topics; `flowgrid_docs_validate_links` after adding a new section.
 
 ## Topics (seed)
 

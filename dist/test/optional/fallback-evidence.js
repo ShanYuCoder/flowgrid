@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 export const OPTIONAL_FALLBACK_SCHEMA_VERSION = '1.0.0';
-export const OPTIONAL_FALLBACK_EVENT = 'testkit.missing-optional';
-export const TESTKIT_PACKAGE = '@platform/testkit';
+export const OPTIONAL_FALLBACK_EVENT = 'flowgrid.missing-optional';
+export const FLOWGRID_TEST_PACKAGE = '@platform/flowgrid-test';
 function isNonNegativeInteger(value) {
     return Number.isInteger(value) && Number(value) >= 0;
 }
@@ -31,8 +31,8 @@ export function validateMissingOptionalEvent(value) {
     if (event.event !== OPTIONAL_FALLBACK_EVENT) {
         errors.push(`event must be ${OPTIONAL_FALLBACK_EVENT}`);
     }
-    if (event.package !== TESTKIT_PACKAGE) {
-        errors.push(`package must be ${TESTKIT_PACKAGE}`);
+    if (event.package !== FLOWGRID_TEST_PACKAGE) {
+        errors.push(`package must be ${FLOWGRID_TEST_PACKAGE}`);
     }
     if (typeof event.runId !== 'string' || event.runId.length === 0) {
         errors.push('runId must be a non-empty string');
@@ -89,7 +89,7 @@ export class MissingOptionalEventEmitter {
         const event = {
             schemaVersion: OPTIONAL_FALLBACK_SCHEMA_VERSION,
             event: OPTIONAL_FALLBACK_EVENT,
-            package: TESTKIT_PACKAGE,
+            package: FLOWGRID_TEST_PACKAGE,
             ...input,
             metrics: { ...input.metrics },
         };

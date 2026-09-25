@@ -9,7 +9,7 @@
 
 ## Input (Dữ liệu đầu vào)
 - Member sẽ nhập vào một khu vực kiến trúc (Operational Area), hoặc một Module (CMP ID), hoặc đơn giản là một nhu cầu chung về kiến trúc.
-- Agent tự động quét và phân giải (Resolve ID) sử dụng các lệnh nội bộ (`docskit_route`, `docskit_list_ids`).
+- Agent tự động quét và phân giải (Resolve ID) sử dụng các lệnh nội bộ (`flowgrid_docs_route`, `flowgrid_docs_list_ids`).
 
 ## Output (Kết quả mong đợi)
 - Không trực tiếp sửa file, mà sẽ **điều hướng** sang một trong các Skill con chuyên sâu.

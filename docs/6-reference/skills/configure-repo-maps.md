@@ -18,5 +18,5 @@
 - Hướng dẫn member chạy lệnh `platform-dna codegraph:wire` hoặc `codegraph init` ở các repo chưa có cấu hình.
 
 ## Description / Ý nghĩa
-- Đóng vai trò là cầu nối giúp hệ thống Forgekit (thông qua Platform DNA) biết được mã nguồn của các module/repo thành phần đang nằm ở đâu trên máy tính (Local Workspace) của lập trình viên.
+- Đóng vai trò là cầu nối giúp hệ thống FlowGrid (thông qua Platform DNA) biết được mã nguồn của các module/repo thành phần đang nằm ở đâu trên máy tính (Local Workspace) của lập trình viên.
 - Rất cần thiết khi bắt đầu thiết lập môi trường (setup environment) để các Agent có thể thực hiện nhảy cross-repo (đọc file từ Docs Hub sang FE/BE và ngược lại) một cách chính xác.

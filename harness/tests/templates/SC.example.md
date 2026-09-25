@@ -3,6 +3,8 @@ id: SC-EXAMPLE
 module: CMP-01-auth
 surface: admin
 screen: W-AD-AUTH-001
+screens:
+  - W-AD-AUTH-001
 rules:
   - RUL-00-example
 coverage_plan:

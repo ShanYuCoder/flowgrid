@@ -6,27 +6,27 @@ disable-model-invocation: true
 
 # /grill-unit
 
-**Owner:** Codegenkit · audit gate before BE unit test generation.
+**Owner:** bộ code · audit gate before BE unit test generation.
 
-Run after `npm run codegen:api:unit:dry` / `codegenkit api-unit-gen:dry` and
+Run after `npm run codegen:api:unit:dry` / `flowgrid api-unit-gen:dry` and
 before committing generated test code.
 
 ## Target / ID Resolution Rule
 
 - User prompt MAY specify a function ID, API slug, or short name (e.g. `API-AUTH-001`, `login`, `CMP-ADM-009`).
-- Agent MUST resolve **`…/api/<seq>/01-backend-spec.yaml`** via `CODEGENKIT_DOCS_ROOT` or `docskit_route`.
+- Agent MUST resolve **`…/api/<seq>/01-backend-spec.yaml`** via `FLOWGRID_DOCS_ROOT` or `flowgrid_docs_route`.
 - **Read the entire `01-backend-spec.yaml`**. Do **not** use `ir/design.yaml` or `ir/spec.yaml` as BE contract.
 - Compare generated unit tests against that 01 file. Missing 01 → STOP, hand off to docs `/grill-api-spec`.
 - Do NOT demand full filesystem paths from the user if an ID is given.
 
 ## Docs Root Resolution
 
-1. If `CODEGENKIT_DOCS_ROOT` is set (non-empty), use it as the canonical
+1. If `FLOWGRID_DOCS_ROOT` is set (non-empty), use it as the canonical
    pointer for locating `01-backend-spec.yaml`.
-2. If `CODEGENKIT_DOCS_ROOT` is **not** set, fall back to Platform DNA
+2. If `FLOWGRID_DOCS_ROOT` is **not** set, fall back to Platform DNA
    configuration (`platform-dna`) to resolve the docs hub path.
    Platform DNA discovery is slower and more error-prone, so always prefer
-   an explicit `CODEGENKIT_DOCS_ROOT` when available.
+   an explicit `FLOWGRID_DOCS_ROOT` when available.
 
 ## Check
 
@@ -50,7 +50,7 @@ else: scoped spec-to-test comparison
 if codegraph-<repo-key> for this checkout: callers/routes/existing test patterns
 else: targeted repository search
 
-architecture IDs / C4 → Docskit (DOCSKIT_ROOT), never CodeGraph
+architecture IDs / C4 → bộ docs (FLOWGRID_DOCS_ROOT), never CodeGraph
 ```
 
 Missing accelerators never block the grill. Complete each scoped model or

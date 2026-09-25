@@ -8,8 +8,8 @@ export const adapterRoot = path.resolve(
 )
 
 export function targetRoot() {
-  const configured = process.env.CODEGENKIT_ROOT
-  if (!configured) throw new Error('CODEGENKIT_ROOT is required for Laravel generation')
+  const configured = process.env.FLOWGRID_PROJECT_ROOT
+  if (!configured) throw new Error('FLOWGRID_PROJECT_ROOT is required for Laravel generation')
   return path.resolve(configured)
 }
 

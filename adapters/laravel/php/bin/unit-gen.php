@@ -6,18 +6,18 @@ declare(strict_types=1);
 $engineRoot = dirname(__DIR__);
 require_once $engineRoot.'/src/Autoload.php';
 
-use Codegenkit\Laravel\UnitGen\ArtisanRunner;
-use Codegenkit\Laravel\UnitGen\CodegenManifest;
-use Codegenkit\Laravel\UnitGen\ProjectResolver;
-use Codegenkit\Laravel\UnitGen\SpecReader;
-use Codegenkit\Laravel\UnitGen\UnitPlanner;
-use Codegenkit\Laravel\UnitGen\UnitRegistry;
-use Codegenkit\Laravel\UnitGen\WriteFiles;
+use FlowGrid\Laravel\UnitGen\ArtisanRunner;
+use FlowGrid\Laravel\UnitGen\CodegenManifest;
+use FlowGrid\Laravel\UnitGen\ProjectResolver;
+use FlowGrid\Laravel\UnitGen\SpecReader;
+use FlowGrid\Laravel\UnitGen\UnitPlanner;
+use FlowGrid\Laravel\UnitGen\UnitRegistry;
+use FlowGrid\Laravel\UnitGen\WriteFiles;
 
 function bootstrapVendor(): void
 {
     $roots = [];
-    $ck = getenv('CODEGENKIT_ROOT') ?: '';
+    $ck = getenv('FLOWGRID_PROJECT_ROOT') ?: '';
     if ($ck !== '') {
         $roots[] = $ck;
         $roots[] = $ck.'/src';

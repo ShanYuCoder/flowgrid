@@ -24,9 +24,9 @@ Grill lanes ask first; member confirms → apply mark in same session.
 
 | kind | Tag | Spec / gen |
 |------|-----|------------|
-| needs-component | `#needs-component: {slot}:MoXxx[:prop]` | `tags:` — Codegenkit HANDOFF until Mo* exists |
+| needs-component | `#needs-component: {slot}:MoXxx[:prop]` | `tags:` — bộ code HANDOFF until Mo* exists |
 | needs-ui | `#needs-ui: {Widget}` | `tags:` — widget `planned` in design registry |
-| common-ui | Mo* in design registry `implemented` | promote after `/prototype`; re-run Codegenkit gen |
+| common-ui | Mo* in design registry `implemented` | promote after `/prototype`; re-run flowgrid gen |
 
 ## Spec block — `marks[]` (`ir/spec.yaml`)
 
@@ -43,7 +43,7 @@ marks:
 ## Registry — common / design
 
 - `status`: `planned` | `implemented`
-- Validate via FE Codegenkit / product registry scripts (not docs-hub shell)
+- Validate via bộ code FE / product registry scripts (not docs-hub shell)
 
 ## Workflow (each `/docs-mark` session)
 

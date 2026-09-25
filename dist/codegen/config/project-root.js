@@ -2,6 +2,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+function envFirst(...keys) {
+    for (const key of keys) {
+        const value = process.env[key];
+        if (value)
+            return value;
+    }
+    return undefined;
+}
 export function packageRoot() {
     return pkgRoot;
 }
@@ -10,22 +18,21 @@ export function packageVersion() {
         .version ?? '0.0.0';
 }
 export function resolveProjectRoot(explicit) {
-    const root = path.resolve(explicit ?? process.env.CODEGENKIT_ROOT ?? process.cwd());
+    const root = path.resolve(explicit ?? envFirst('FLOWGRID_PROJECT_ROOT') ?? process.cwd());
     if (!existsSync(root))
-        throw new Error(`Codegenkit project root not found: ${root}`);
+        throw new Error(`FlowGrid code project root not found: ${root}`);
     return root;
 }
 export function resolveType(type) {
-    const value = type ?? process.env.CODEGENKIT_TYPE ?? 'fe';
+    const value = type ?? envFirst('FLOWGRID_CODE_ROLE') ?? 'fe';
     if (!['fe', 'be', 'fullstack'].includes(value)) {
-        throw new Error('--type must be fe | be | fullstack (OpenAPI YAML is Docskit on the docs hub)');
+        throw new Error('--type must be fe | be | fullstack (OpenAPI YAML lives on the docs hub)');
     }
     return value;
 }
 export function resolveFeAdapter(adapter) {
     const id = (adapter ??
-        process.env.CODEGENKIT_FE_ADAPTER ??
-        process.env.CODEGENKIT_ADAPTER ??
+        envFirst('FLOWGRID_FE_ADAPTER', 'FLOWGRID_ADAPTER') ??
         'nuxt4');
     if (id !== 'nuxt4' && id !== 'nextjs' && id !== 'dotnet-line') {
         throw new Error('--fe-adapter/--adapter must be nuxt4 | nextjs | dotnet-line');
@@ -37,8 +44,7 @@ export function resolveFeAdapter(adapter) {
 }
 export function resolveBeAdapter(adapter) {
     const id = (adapter ??
-        process.env.CODEGENKIT_BE_ADAPTER ??
-        process.env.CODEGENKIT_ADAPTER ??
+        envFirst('FLOWGRID_BE_ADAPTER', 'FLOWGRID_ADAPTER') ??
         'fastapi');
     if (id !== 'fastapi' && id !== 'laravel' && id !== 'dotnet-integration' && id !== 'nestjs') {
         throw new Error('--be-adapter/--adapter must be fastapi | laravel | dotnet-integration | nestjs');

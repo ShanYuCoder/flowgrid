@@ -1,5 +1,5 @@
 ---
-description: Docskit docs spec/grill/update workflow
+description: bộ docs docs spec/grill/update workflow
 globs: surfaces/**, legacy-dynamics/**
 alwaysApply: false
 ---
@@ -21,16 +21,16 @@ Active commands: `/spec`, `/grill-bqa`, `/grill-dev`, `/grill-docs`, `/update-sp
 | `/update-spec-legacy` | `.cursor/skills/update-spec-legacy/SKILL.md` |
 | Grill metadata rules | `.cursor/rules/team-flow-grill.mdc` |
 
-Shared: resolve skill `extractBundle` → `.cursor/extracts/extract-registry.json` (e.g. `bqa-grill`, `dev-grill`, `grill-docs`).
+Shared: resolve skill `extractBundle` → `.cursor/extracts/extract-registry.docs.json` (e.g. `bqa-grill`, `dev-grill`, `grill-docs`).
 
 ## Pipeline
 
-1. **`/spec`** — `*.bundle.yaml` design v1 + testcase round 1. No `gen` / `codegen`.
+1. **`/spec`** — `*.bundle.yaml` design v1 + testcase round 1. Per-zone: DSL/registry → bundle; gaps → `#needs-component` / `#needs-ui` + `flowgrid-ux-common` proposals → `AskQuestion`. No `gen` / `codegen`.
 2. **`/grill-bqa`** — UI, acceptance, breadcrumb, delete rules.
-3. **`/grill-dev`** — codegen-ready bundle + `tags`; emit FE Codegenkit dry-run handoff.
+3. **`/grill-dev`** — codegen-ready bundle + `tags`; emit bộ code FE dry-run handoff.
 4. **`/grill-docs`** — optional reconcile when BQA↔Dev contradict.
 5. **`/update-spec`** / **`/update-spec-legacy`** — controlled delta + `#update:*` (not full rewrite).
-6. **`/prototype`** — FE-lane handoff only after Codegenkit dry-run passes.
+6. **`/prototype`** — FE-lane handoff only after bộ code dry-run passes.
 
-- Render: `docs_render` / `docskit render` (pnpm fallback during transition)
+- Render: `docs_render` / `flowgrid render` (pnpm fallback during transition)
 - **[STRICTLY FORBIDDEN]** Do NOT build UI prototypes, backend implementations, live APIs, or full E2E/unit tests during the spec/grill phase.

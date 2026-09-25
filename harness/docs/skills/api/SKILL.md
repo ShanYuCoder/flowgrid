@@ -23,7 +23,7 @@ disable-model-invocation: true
   | Portal specs changed / merge deferred child functions | `/api-update` |
   | BE-only requirement (no FE contract change) | `/api-update --be-only` |
   | Spec exists but not codegen-ready / `approval.status` not `approved` | `/grill-api-spec` or `/grill-integration-spec` (per `source.kind`) |
-  | `approval.status: approved` + explicit implement request | Codegenkit BE `/api` (switch to BE repo skill — NOT this skill) |
+  | `approval.status: approved` + explicit implement request | bộ code BE `/api` (switch to BE repo skill — NOT this skill) |
 
 - **[MANDATORY]** Locate `01-backend-spec.yaml` under: `…/api/<seq>/` (screen leaf), `…/common/yaml/<slug>/`, or `…/integrations/…/api/<seq>/`.
 - **[STRICTLY FORBIDDEN]** Do NOT skip `/grill-api-spec` for new features, cross-portal, or legacy-derived contracts.
@@ -36,5 +36,5 @@ Doc: `docs/operational/TEAM-AI-BACKEND-WORKFLOW.md`
 ## Verification Checklist
 
 - [ ] Checked `01-backend-spec.yaml` presence, `approval.status`, and `feature.source.kind`.
-- [ ] Correctly routed to contract skills vs Codegenkit BE `/api`.
+- [ ] Correctly routed to contract skills vs bộ code BE `/api`.
 - [ ] Did NOT generate any content from this routing skill.

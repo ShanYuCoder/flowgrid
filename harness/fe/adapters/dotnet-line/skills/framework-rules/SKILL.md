@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 **Owner:** Platform DNA (`--type=fe|monolith --fe-adapter=dotnet-line`)
 
-WinForms Line client · Codegenkit grill/gen first when applicable.  
+WinForms Line client · bộ code grill/gen first when applicable.  
 Not Nuxt/Next — do not apply web FE layer rules here.
 
 ## Gen trước (code)

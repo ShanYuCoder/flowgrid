@@ -26,20 +26,20 @@ export interface InspectCommandResult {
   knownKeys: string[]
   argv?: string[]
   cwd: string
-  executableOwner: 'product-repo' | 'codegenkit' | 'testkit' | 'docskit' | 'unknown'
+  executableOwner: 'product-repo' | 'flowgrid-code' | 'flowgrid-test' | 'flowgrid-docs' | 'unknown'
   recommendation: string
 }
 
 function commandOwner(commandKey: string): InspectCommandResult['executableOwner'] {
   if (['docsRender', 'specSplit', 'specMerge', 'legacyValidate'].includes(commandKey)) {
-    return 'docskit'
+    return 'flowgrid-docs'
   }
   if (
     ['testcaseGen', 'testcaseGenDry', 'casesRender', 'testE2e', 'e2eRegistry'].includes(
       commandKey,
     )
   ) {
-    return 'testkit'
+    return 'flowgrid-test'
   }
   if (
     [
@@ -58,7 +58,7 @@ function commandOwner(commandKey: string): InspectCommandResult['executableOwner
       'nestRegistry',
     ].includes(commandKey)
   ) {
-    return 'codegenkit'
+    return 'flowgrid-code'
   }
   return 'unknown'
 }

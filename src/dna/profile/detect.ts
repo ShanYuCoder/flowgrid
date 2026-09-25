@@ -128,7 +128,7 @@ function validateBeAdapter(root: string, adapter: string, force?: boolean): void
       }
       if (!dependencies['nwidart/laravel-modules']) {
         throw new Error(
-          'Codegenkit laravel adapter requires nwidart/laravel-modules (modules-v1)',
+          'FlowGrid Laravel adapter requires nwidart/laravel-modules (modules-v1)',
         )
       }
     }

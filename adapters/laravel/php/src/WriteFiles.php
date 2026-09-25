@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Codegenkit\Laravel\UnitGen;
+namespace FlowGrid\Laravel\UnitGen;
 
 final class WriteFiles
 {
@@ -98,7 +98,7 @@ final class WriteFiles
             '',
             'Generated from `'.basename((string) $ctx['specFile']).'` (profile: **'.$ctx['profile'].'**, phase: **'.$ctx['phase'].'**).',
             '',
-            'Prerequisite: `codegenkit api-gen` + `generated/codegen.manifest.json`.',
+            'Prerequisite: `flowgrid api-gen` + `generated/codegen.manifest.json`.',
             '',
             '## Commands (stub layer)',
             '',

@@ -1,0 +1,39 @@
+---
+description: UX gap analysis and proposals after DSL/spec policy (always-on)
+alwaysApply: true
+---
+
+# UX proposals (global)
+
+**DSL and bundle SSOT:** `/spec`, `/update-spec`, `design.registry.json`, `gen-common`. Do not replace spec authoring with the checklist extract.
+
+## When this applies
+
+Prompt analysis, UI proposals, affordance review. **Primary:** `/spec` per-zone pipeline (DSL → `#needs-component` / `#needs-ui` → checklist gaps → `AskQuestion`). Also `/grill-bqa` Step B. Explicit: `/ui-proposal`.
+
+## Flow
+
+1. Map DSL/registry first (`#shell:`, `#pattern:`, `#ui:`, `#widget:`, generated CMN).
+2. On match → codegen/wire only; no redundant YAML/spec.
+3. Unmapped, missing DSL, or UI not recognized as a pattern → read **`.cursor/extracts/ux-common-patterns.md`**; apply matching **Recognize** / **Propose** sections.
+4. **`flowgrid audit spec`** — patch `UX_*` gaps in bundle; `CONFIRM_UX_*` → `AskQuestion` using audit `(Recommended)` options.
+5. Stable cross-project pattern → `gen-common`; never hand-duplicate common IR.
+
+| Situation | Action |
+|-----------|--------|
+| Already in DSL/registry | Skip matching checklist section |
+| Looks like list/table/breadcrumb/delete but untagged | Recognize → propose tag or CMN |
+| Thin spec/code (silent disabled, toast-only delete, …) | Propose affordance |
+
+## Proposal output (required format)
+
+```text
+DSL: [mapped | unmapped] — registry id / #tag
+Gap: [pattern-id or checklist section] — [1–2 sentences]
+Propose: [#needs-ui:… | tag | handoff field]
+Avoid: [redundant YAML/spec when DSL is sufficient]
+```
+
+## CMN pattern IDs (after DSL gap confirmed)
+
+`common-flat-design`, `common-list-page`, `common-list-toolbar`, `common-breadcrumb-flow`, `common-search-filter`, `common-pagination`, `common-data-table`, `common-table-action-column`, `common-buttons`, `common-status-chip`, `common-confirm-dialog`, `common-delete-flow`, `common-feedback`, `common-form-validation`, `common-navigation`, `common-import-csv`.

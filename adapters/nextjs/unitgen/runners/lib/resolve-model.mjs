@@ -23,6 +23,6 @@ export async function resolveModelPackagePath(root, entity) {
   }
 
   throw new Error(
-    `Model package missing for ${entity} — run codegenkit contract-gen --spec <ir/design.yaml> first`
+    `Model package missing for ${entity} — run flowgrid contract-gen --spec <ir/design.yaml> first`
   )
 }

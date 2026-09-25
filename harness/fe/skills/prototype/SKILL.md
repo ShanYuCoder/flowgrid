@@ -1,17 +1,17 @@
 ---
 name: prototype
-description: /prototype — UI from docskit ir/design.yaml with mock API via Codegenkit.
+description: /prototype — UI from FLOWGRID_DOCS_ROOT ir/design.yaml with mock API via bộ code.
 disable-model-invocation: true
 ---
 
 # /prototype — UI Prototype (Mock API Boundary)
 
-**Owner:** Codegenkit (`--type=fe`) · Adapters: `nuxt4` | `nextjs` | `dotnet-line`
+**Owner:** bộ code (`--type=fe`) · Adapters: `nuxt4` | `nextjs` | `dotnet-line`
 
 ## Artifact & Target ID Resolution Rule
 
 - User prompt MAY specify a screen ID, function ID, or slug (e.g. `W-AD-AUTH-001`, `login`).
-- Agent MUST use `--id` or resolve `surfaces/<surface>/CMP-*/<NN…>/ir/design.yaml` via `CODEGENKIT_DOCS_ROOT` or `docskit_route` (same leaf as the bundle; API trio is sibling `api/<seq>/`, not this file).
+- Agent MUST use `--id` or resolve `surfaces/<surface>/CMP-*/<NN…>/ir/design.yaml` via `FLOWGRID_DOCS_ROOT` or `flowgrid_docs_route` (same leaf as the bundle; API trio is sibling `api/<seq>/`, not this file).
 - Prerequisite: `/gen-common` when `surfaces/<surface>/common` (or `CMP-*/common`) exists — generate shared molecules/shells **before** this skill.
 - Do NOT demand full filesystem paths from the user if an ID is given.
 
@@ -22,23 +22,23 @@ surfaces/<surface>/CMP-*/<NN…>/ir/design.yaml
 
 Read the **entire** `ir/design.yaml` (script + agent inspection). Do not filter keys from `*.bundle.yaml`. **`ir/spec.yaml`** is business prose only.
 
-**Docs hub is read-only for this skill.** Never Write/patch `*.bundle.yaml`, `ir/*`, or any file under `CODEGENKIT_DOCS_ROOT`. Missing `ir/design.yaml`, empty `codegen.profile`, or `codegenkit gen` failure → **STOP**, quote the CLI error, hand off to docs-hub `/grill-dev` (or `/spec`). Do not invent SSOT to make gen pass. Login/forgot/reset must be `codegen.profile: auth` (not `create`) or gen writes `(dashboard)`.
+**Docs hub is read-only for this skill.** Never Write/patch `*.bundle.yaml`, `ir/*`, or any file under `FLOWGRID_DOCS_ROOT`. Missing `ir/design.yaml`, empty `codegen.profile`, or `flowgrid gen` failure → **STOP**, quote the CLI error, hand off to docs-hub `/grill-dev` (or `/spec`). Do not invent SSOT to make gen pass. Login/forgot/reset must be `codegen.profile: auth` (not `create`) or gen writes `(dashboard)`.
 
-Do not invent sibling docskit paths. Pass `CODEGENKIT_DOCS_ROOT` or `--docs-root`.
+Do not invent sibling docs-hub paths. Pass `FLOWGRID_DOCS_ROOT` or `--docs-root`.
 
 ## Docs Root Resolution
 
-1. If `CODEGENKIT_DOCS_ROOT` is set (non-empty), use it as the canonical
+1. If `FLOWGRID_DOCS_ROOT` is set (non-empty), use it as the canonical
    registry/IR pointer for locating `ir/design.yaml`.
-2. If `CODEGENKIT_DOCS_ROOT` is **not** set, fall back to Platform DNA
+2. If `FLOWGRID_DOCS_ROOT` is **not** set, fall back to Platform DNA
    configuration (`platform-dna`) to resolve the docs hub path.
    Platform DNA discovery is slower and more error-prone, so always prefer
-   an explicit `CODEGENKIT_DOCS_ROOT` when available.
+   an explicit `FLOWGRID_DOCS_ROOT` when available.
 
 ## Route
 
-Architecture/C4 → Docskit (`DOCSKIT_ROOT`); IR/registry/gen →
-`CODEGENKIT_DOCS_ROOT`; symbols/call-graph for repo X → Platform DNA-wired
+Architecture/C4 → bộ docs (`FLOWGRID_DOCS_ROOT`); IR/registry/gen →
+`FLOWGRID_DOCS_ROOT`; symbols/call-graph for repo X → Platform DNA-wired
 `codegraph-<repo-key>`. Never workspace-parent graphs, sibling-path inference,
 or member-edited MCP. Local ArtifactGraph is allowlist/tag hints for this repo
 only.
@@ -50,17 +50,17 @@ npm run codegen:dry -- --id W-AD-AUTH-001
 npm run codegen -- --id W-AD-AUTH-001
 
 # Fallback direct CLI if wrappers missing:
-codegenkit gen:dry --adapter=nuxt4 --docs-root=/path/to/docs-hub -- --id W-AD-AUTH-001
-codegenkit gen --adapter=nuxt4 --docs-root=/path/to/docs-hub -- --id W-AD-AUTH-001
+flowgrid gen:dry --adapter=nuxt4 --docs-root=/path/to/docs-hub -- --id W-AD-AUTH-001
+flowgrid gen --adapter=nuxt4 --docs-root=/path/to/docs-hub -- --id W-AD-AUTH-001
 
-codegenkit gen:dry --adapter=nextjs -- --spec ir/design.yaml
-codegenkit gen --adapter=nextjs -- --spec ir/design.yaml
-codegenkit gen:dry --adapter=dotnet-line -- --spec ir/design.yaml
-codegenkit gen --adapter=dotnet-line -- --spec ir/design.yaml
-codegenkit registry --adapter=dotnet-line
+flowgrid gen:dry --adapter=nextjs -- --spec ir/design.yaml
+flowgrid gen --adapter=nextjs -- --spec ir/design.yaml
+flowgrid gen:dry --adapter=dotnet-line -- --spec ir/design.yaml
+flowgrid gen --adapter=dotnet-line -- --spec ir/design.yaml
+flowgrid registry --adapter=dotnet-line
 ```
 
-You MUST run `/gen-common` for this surface (then `--module=CMP-…` if the module has `common/yaml`) when those trees exist, then run the codegen script (`npm run codegen` or `codegenkit gen`) FIRST to generate the skeleton from **design IR**, before filling gaps **in the FE repo only**.
+You MUST run `/gen-common` for this surface (then `--module=CMP-…` if the module has `common/yaml`) when those trees exist, then run the codegen script (`npm run codegen` or `flowgrid gen`) FIRST to generate the skeleton from **design IR**, before filling gaps **in the FE repo only**.
 
 ## Shadcn/ui skill (FE repo only)
 
@@ -71,12 +71,12 @@ For each HANDOFF / `#needs-component: Mo…` after gen:
 1. Run or read `shadcn info --json` (framework, aliases, installed set, base `radix|aria`).
 2. `shadcn search` / docs: if the gap is a missing **primitive**, `shadcn add` it — do **not** hand-roll Button/Dialog/Table.
 3. Implement `Mo*` as **composition** of those primitives (FieldGroup for forms, semantic tokens). Match `components.json` aliases.
-4. Re-run `codegenkit gen` so slots bind to the new file.
+4. Re-run `flowgrid gen` so slots bind to the new file.
 5. Dotnet-line / no `components.json`: skip this section; do not invent React/shadcn APIs.
 
-Do not copy the shadcn skill into Docskit. Do not author `#ui:` tags from memory if `shadcn search` can name the registry item.
+Do not copy the shadcn skill into bộ docs. Do not author `#ui:` tags from memory if `shadcn search` can name the registry item.
 
-`dotnet-line` requires the .NET 8 SDK (`CODEGENKIT_DOTNET`, then `dotnet`) and
+`dotnet-line` requires the .NET 8 SDK (`FLOWGRID_DOTNET`, then `dotnet`) and
 is limited to the pilot-specific `kiosk-check-in` profile. Its main pass also
 emits generated test source.
 
@@ -84,14 +84,14 @@ emits generated test source.
 
 ```text
 if local ArtifactGraph available: recommend/check the FE repo's allowlisted gen command
-else: run codegenkit gen:dry / gen directly
+else: run flowgrid gen:dry / gen directly
 
 Missing ArtifactGraph never blocks prototype generation. Complete the direct,
-deterministic Codegenkit fallback first, then follow
-`.cursor/rules/codegenkit-optional-integrations.mdc` for once-per-run telemetry.
+deterministic bộ code fallback first, then follow
+`.cursor/rules/flowgrid-code-optional-integrations.mdc` for once-per-run telemetry.
 ```
 
-Docs render / `spec:split` remain docskit / Docskit handoffs.
+Docs render / `spec:split` remain flowgrid / bộ docs handoffs.
 
 ## Translation Rule
 Luôn bọc text tĩnh bằng i18n helper native của framework. 

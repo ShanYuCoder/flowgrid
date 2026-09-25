@@ -28,7 +28,7 @@ export function folderToPascalCase(kebab) {
  */
 export async function loadDesignRegistry(root) {
   let registryPath = path.join(root, REGISTRY_REL)
-  const customPath = path.join(root, '.forgekit/adapters/custom/registries/design.registry.json')
+  const customPath = path.join(root, '.flowgrid/adapters/custom/registries/design.registry.json')
   
   // Check if custom registry exists
   try {

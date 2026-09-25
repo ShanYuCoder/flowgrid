@@ -10,7 +10,7 @@ extractBundle: architecture-core
 
 # /adopt — Legacy Adoption Index & Common Discovery
 
-**Audit Interlock:** Run `node engines/spec/lib/audit-legacy-gaps.mjs <target-id>`. Consume JSON gap report to verify mapping or prompt member if index is missing.
+**Audit Interlock:** Run `flowgrid audit legacy <target-id>`. Consume JSON gap report to verify mapping or prompt member if index is missing.
 
 ---
 
@@ -57,7 +57,7 @@ extractBundle: architecture-core
   - For each approved `CMN-*` item in the plan, Agent executes a closed-loop 3-step pipeline:
     1. **Step 1: Common Spec (`common-spec`)**: Generate standardized Spec document (`common/specs/CMN-*.yaml` or `.md`), defining Props, Inputs/Outputs, Exception handling, and DSL Contract.
     2. **Step 2: Common Code Generation (`codegen common`)**: Generate production code inside the new project's shared/common directory (`shared/components/`, `shared/services/`, `shared/utils/`).
-    3. **Step 3: DSL Registration**: Register `CMN-*` into ForgeKit DSL Registry. When generating specs or code for any future screen using this feature, Codegen Engine **automatically links & imports Common Code** without code duplication.
+    3. **Step 3: DSL Registration**: Register `CMN-*` into FlowGrid DSL Registry. When generating specs or code for any future screen using this feature, Codegen Engine **automatically links & imports Common Code** without code duplication.
 
 ---
 

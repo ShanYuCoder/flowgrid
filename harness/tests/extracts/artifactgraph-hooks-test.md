@@ -3,10 +3,10 @@
 - Use the installed testcase taxonomy for scenario, coverage, and dimension
   suggestions on the current tests repo's own plans only.
 - Resolve known E2E bundles from the current product index (local).
-- Full product registry/IR remains in docs. Testkit reads cross-repo evidence
-  through `TESTKIT_DOCS_ROOT` / `TESTKIT_TESTS_ROOT`; ArtifactGraph does not
+- Full product registry/IR remains in docs. bộ test reads cross-repo evidence
+  through `FLOWGRID_DOCS_ROOT` / `FLOWGRID_TESTS_ROOT`; ArtifactGraph does not
   follow those pointers.
-- Architecture ID / C4 lookups go to Docskit (`DOCSKIT_ROOT`). Symbol /
+- Architecture ID / C4 lookups go to bộ docs (`FLOWGRID_DOCS_ROOT`). Symbol /
   call-graph lookups go to the target repo's `codegraph-<key>` MCP — Platform
   DNA owns that auto-wire, not ArtifactGraph.
 - Run testcase generation only when the current repo allowlists it.

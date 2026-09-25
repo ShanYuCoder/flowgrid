@@ -1,4 +1,4 @@
-# SSOT Agent Protocol — Physical Interlocks (Docskit)
+# SSOT Agent Protocol — Physical Interlocks (bộ docs)
 
 > [!CRITICAL]
 > These are **PHYSICAL INTERLOCKS**, not casual reminders.
@@ -12,11 +12,11 @@
 
 **Objective:** Eliminate refusal to read original specification files.
 
-In any thread (new or continuing), whenever a user requests to run a skill or feature, the **MANDATORY FIRST ACTION** is to invoke `{{DOC_SKIT_READ_TOOL}}` (or equivalent read tool) directly on the target `SKILL.md` to load the current standards.
+In any thread (new or continuing), whenever a user requests to run a skill or feature, the **MANDATORY FIRST ACTION** is to invoke `{{FLOWGRID_READ_TOOL}}` (or equivalent read tool) directly on the target `SKILL.md` to load the current standards.
 
 **STRICTLY FORBIDDEN** to rely on speculative memory or context from prior turns.
 
-Without first invoking `{{DOC_SKIT_READ_TOOL}}` on `SKILL.md` → **FORBIDDEN** to generate plans, YAML files, or any product artifacts.
+Without first invoking `{{FLOWGRID_READ_TOOL}}` on `SKILL.md` → **FORBIDDEN** to generate plans, YAML files, or any product artifacts.
 
 ---
 
@@ -135,12 +135,12 @@ In standard `/spec` runs, the sole duty is to **consume existing common definiti
 
 **1. Boundaries & Ownership:**
 - ArtifactGraph manages solely `artifactgraph.json`, `registries/*.json`, `templates`, and `lexicon/` within the current repository.
-- It does **NOT** manage Architecture Markdown (owned by Docskit), Code Generators (owned by Codegenkit/Testkit), or Symbol Indexes (owned by CodeGraph).
+- It does **NOT** manage Architecture Markdown (owned by bộ docs), Code Generators (owned by bộ code/bộ test), or Symbol Indexes (owned by CodeGraph).
 
 **2. Cross-Repo Routing:**
 - **STRICTLY FORBIDDEN** to use ArtifactGraph for broad cross-repo scanning or entire workspace graphs. Route by ownership:
-  - Architecture ID / C4 path → Delegate to **Docskit** (`DOCSKIT_ROOT`).
-  - IR / registry / generation → Delegate to **Owning Kit** (`CODEGENKIT_DOCS_ROOT`, `TESTKIT_DOCS_ROOT`, `TESTKIT_TESTS_ROOT`).
+  - Architecture ID / C4 path → Delegate to **bộ docs** (`FLOWGRID_DOCS_ROOT`).
+  - IR / registry / generation → Delegate to **Owning Kit** (`FLOWGRID_DOCS_ROOT`, `FLOWGRID_DOCS_ROOT`, `FLOWGRID_TESTS_ROOT`).
   - Symbol / Call-graph lookups for repo X → Use **CodeGraph MCP** for repo X (`codegraph-<key>`).
 
 **3. Protocol for MCP Usage:**
@@ -156,7 +156,7 @@ In standard `/spec` runs, the sole duty is to **consume existing common definiti
 ## Mandatory Lock Sequence for Each Skill Run
 
 ```text
-1) {{DOC_SKIT_READ_TOOL}} SKILL.md                          → Law 1
+1) {{FLOWGRID_READ_TOOL}} SKILL.md                          → Law 1
 2) Derive dynamic checklist                                 → Law 2
 3) Write immediately upon producing durable results (No RAM) → Law 4
 4) Sourced exclusively from User | ArtifactGraph; tag gaps   → Law 5

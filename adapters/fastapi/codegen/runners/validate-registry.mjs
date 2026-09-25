@@ -3,7 +3,7 @@ import { access, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const target = path.resolve(process.env.CODEGENKIT_ROOT || process.cwd())
+const target = path.resolve(process.env.FLOWGRID_PROJECT_ROOT || process.env.FLOWGRID_PROJECT_ROOT || process.cwd())
 const adapter = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 async function exists(file) {

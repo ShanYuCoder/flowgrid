@@ -28,7 +28,7 @@ function auditLegacyInventory(inventoryPath, targetId) {
       'critical',
       'adoption-inventory.md',
       'Legacy adoption index file `adoption-inventory.md` does not exist at workspace root.',
-      'Run `@docskit /adopt` to scan and index legacy repositories before archaeology.'
+      'Run `@flowgrid /adopt` to scan and index legacy repositories before archaeology.'
     );
     return {
       file: inventoryPath,
@@ -49,7 +49,7 @@ function auditLegacyInventory(inventoryPath, targetId) {
         'critical',
         `adoption-inventory.md#${targetId}`,
         `Archaeology target ID "${targetId}" is not listed in adoption-inventory.md.`,
-        `Re-run @docskit /adopt or manually add mapping line: "- ID: ${targetId} -> Path: path/to/legacy/file".`
+        `Re-run @flowgrid /adopt or manually add mapping line: "- ID: ${targetId} -> Path: path/to/legacy/file".`
       );
     }
   }

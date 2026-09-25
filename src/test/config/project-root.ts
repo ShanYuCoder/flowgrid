@@ -4,7 +4,15 @@ import { fileURLToPath } from 'node:url'
 
 const pkgRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
-export type TestkitType = 'tests' | 'fe'
+export type FlowGridTestLane = 'tests' | 'fe'
+
+function envFirst(...keys: string[]): string | undefined {
+  for (const key of keys) {
+    const value = process.env[key]
+    if (value) return value
+  }
+  return undefined
+}
 
 export function packageRoot(): string {
   return pkgRoot
@@ -16,8 +24,10 @@ export function packageVersion(): string {
 }
 
 export function resolveProjectRoot(explicit?: string): string {
-  const root = path.resolve(explicit ?? process.env.TESTKIT_ROOT ?? process.cwd())
-  if (!existsSync(root)) throw new Error(`Testkit project root not found: ${root}`)
+  const root = path.resolve(
+    explicit ?? envFirst('FLOWGRID_PROJECT_ROOT') ?? process.cwd(),
+  )
+  if (!existsSync(root)) throw new Error(`FlowGrid test project root not found: ${root}`)
   return root
 }
 

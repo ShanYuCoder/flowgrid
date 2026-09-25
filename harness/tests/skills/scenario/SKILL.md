@@ -9,11 +9,11 @@ disable-model-invocation: true
 
 # /scenario
 
-**Owner:** Testkit (`--type=tests`)
+**Owner:** bộ test (`--type=tests`)
 
 Author cross-flow scenarios (SC) on the current tests hub. Design rules stay on the docs hub.
 
-Scenarios test a **business process** (`FLOW-*`) that spans multiple screens (`W-*`) or modules. They mirror the docs FLOW file **after** Docskit LCA `common/` placement (not a flat `common/` tree).
+Scenarios test a **business process** (`FLOW-*`) that spans multiple screens (`W-*`) or modules. They mirror the docs FLOW file **after** bộ docs LCA `common/` placement (not a flat `common/` tree).
 
 ## Output Rules
 
@@ -21,19 +21,21 @@ Scenarios test a **business process** (`FLOW-*`) that spans multiple screens (`W
 - Explain the **Business Context**: Why does this cross-flow exist? What is the real-world process?
 - Outline the **Expected Outcome**: Detail what the end-to-end user journey should achieve.
 - Include metadata like `priority`, `status`, `module`, and `tags` if available.
+- **[MANDATORY]** Frontmatter MUST list every `W-*` touched by the journey: `screens: [W-…, W-…]` (keep legacy `screen:` for primary screen if needed).
+- **[MANDATORY]** After authoring, run `flowgrid audit scenario <SC file> --tests-root <tests-hub-root>`; fix `SC_SCREEN_NO_TC` gaps with `cases/**/TC-*.yaml` or `coverage_deferred` + `QA-*` per screen.
 - **Valid YAML Syntax:** **[MANDATORY]** Do NOT write raw JavaScript expressions directly into YAML values. If you need a long string, wrap the exact code expression entirely in single quotes (e.g., `value: '"a".repeat(256)'`).
 - **Concise Naming Convention:** **[MANDATORY]** The `id` must be short (e.g., `SC-CHK-01`). The `title` MUST be extremely short and concise (limit 15-20 characters, e.g., `Guest Checkout`, `Refund Flow`). Put long explanations into `description`, not `title` or `id`.
 
 ## Target / ID Resolution Rule
 
-- **[MANDATORY]** Agent MUST locate the **`FLOW-*.md`** file on the docs hub (`TESTKIT_DOCS_ROOT`) via `docskit_route` / `docskit_get_element` / glob. Filenames are `FLOW-…md`, not `flow-*`.
-- Search in this order (same LCA as Docskit `common-scope.md`):
+- **[MANDATORY]** Agent MUST locate the **`FLOW-*.md`** file on the docs hub (`FLOWGRID_DOCS_ROOT`) via `flowgrid_docs_route` / `flowgrid_docs_get_element` / glob. Filenames are `FLOW-…md`, not `flow-*`.
+- Search in this order (same LCA as bộ docs `common-scope.md`):
   1. `surfaces/<surface>/<CMP-id>/<NN>/common/processes/FLOW-*.md` (cluster)
   2. `surfaces/<surface>/<CMP-id>/common/processes/FLOW-*.md` (module)
   3. `surfaces/<surface>/common/processes/FLOW-*.md` (surface)
   4. `surfaces/common/processes/FLOW-*.md` (cross-surface product common)
   5. `architecture/03-business-process/FLOW-*.md` (org catalog only)
-- **Strict:** Only author a scenario if that `FLOW-*.md` exists. Missing FLOW or thin business rules → hand off to docs-hub `/business-process` or `/update-spec`, do not invent SC. **[MANDATORY]** When handing off, you MUST output a comprehensive gap report (formatted as a complete, ready-to-use prompt starting with `@docskit`) detailing exactly what flows or business rules are missing, so the user can copy-paste it directly to run the docs-hub skill.
+- **Strict:** Only author a scenario if that `FLOW-*.md` exists. Missing FLOW or thin business rules → hand off to docs-hub `/business-process` or `/update-spec`, do not invent SC. **[MANDATORY]** When handing off, you MUST output a comprehensive gap report (formatted as a complete, ready-to-use prompt starting with `/docs-hub`) detailing exactly what flows or business rules are missing, so the user can copy-paste it directly to run the docs-hub skill.
 - **[STRICTLY FORBIDDEN]** Do not treat `common/yaml/` or `common/patterns/` as scenario sources.
 
 ## Directory Mirroring Rule (Docs SSOT)

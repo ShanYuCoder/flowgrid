@@ -7,7 +7,7 @@ import { parseArgs, readSpecFile, toKebab } from '../../nestgen/runners/lib/read
 import { renderTemplate } from './lib/render.mjs'
 import { writeManifest, writeOutputs } from './lib/write-files.mjs'
 
-const repoRoot = path.resolve(process.env.CODEGENKIT_ROOT ?? process.cwd())
+const repoRoot = path.resolve(process.env.FLOWGRID_PROJECT_ROOT ?? process.cwd())
 const adapterRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
 async function loadRegistry() {

@@ -2,7 +2,7 @@
 
 /**
  * audit-flow-gaps.mjs
- * Zero-dependency static audit script for Forgekit Business Process markdown files (FLOW-*.md).
+ * Zero-dependency static audit script for FlowGrid Business Process markdown files (FLOW-*.md).
  * Ensures 100% adherence to the 6-section business process standard and background logic rules.
  */
 

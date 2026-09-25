@@ -66,7 +66,7 @@ Ràng buộc:
 
 **Khi nào:** Nguồn sự thật là code/docs legacy, chưa có spec.
 
-**Cách gọi:** modifier **`/legacy`** + skill Bộ Docs (Forgekit) **`/spec`** (hoặc skill khác: `/module`, `/business-process-trace`, …).  
+**Cách gọi:** modifier **`/legacy`** + skill bộ docs **`/spec`** (hoặc skill khác: `/module`, `/business-process-trace`, …).  
 **Prerequisite:** source path do user cung cấp hoặc cấu hình repo đích.
 
 ```text
@@ -85,7 +85,7 @@ Scope:
 Output:
 - surfaces/<surface>/CMP-*/<NN…>/
 - legacy-dynamics/…/_legacy.dynamics.yaml khi cần archaeology
-- pnpm forge:render && pnpm forge:publish
+- pnpm flowgrid:render && pnpm flowgrid:publish
 - Evidence: inferredFromCode | qa/open — không bịa business intent
 
 Handoff: gap lớn → /grill-with-docs · refine → /spec · UI → /prototype
@@ -116,7 +116,7 @@ Làm:
 1. Nếu ir/design.yaml đã có → verify gap (layout, actions, validation)
 2. Nếu mới → draft bundle dưới …/CMP-*/<NN…>/
 3. Testcase round 1 khớp acceptance
-4. pnpm forge:render && pnpm forge:publish
+4. pnpm flowgrid:render && pnpm flowgrid:publish
 5. Câu treo → qa/open/QA-… (không openQuestions trên YAML)
 
 Handoff: gap chưa rõ → /grill-with-docs · UI → /prototype
@@ -152,7 +152,7 @@ Focus batch này (chọn 1–2 chủ đề, không hỏi lan):
 
 Style:
 - Hỏi theo batch 3–5 câu cụ thể, có ví dụ
-- User trả lời → cập nhật YAML ngay + pnpm forge:render
+- User trả lời → cập nhật YAML ngay + pnpm flowgrid:render
 - Sau interview: **codegen readiness**; gate `pnpm portal:gen:dry --id <W-*>`
 - Dừng khi dry-run pass; không implement UI
 
@@ -267,7 +267,7 @@ Resolve backend từ platform-repos — stop nếu thiếu config.
 KHÔNG implement BE trong portal workspace.
 Báo rõ repo/path đã đọc.
 
-Pipeline BE (Bộ Code (Forgekit) trên repo api/): /api → /grill-api
+Pipeline BE (bộ code trên repo api/): /api → /grill-api
 
 Handoff Portal: /grill-api → /wire
 ```
@@ -456,12 +456,12 @@ Không đọc reference.md trừ khi cần template code đầy đủ
 
 | # | Command | Ghi chú |
 |---|---------|---------|
-| 1 | `/legacy /spec` hoặc `/spec` | Brownfield = modifier `/legacy` + Bộ Docs (Forgekit) `/spec` |
+| 1 | `/legacy /spec` hoặc `/spec` | Brownfield = modifier `/legacy` + bộ docs `/spec` |
 | 2 | `/grill-with-docs` | Permission + empty + API contract |
 | 3 | `/prototype` | List page mock 2 pages |
 | 4 | `/grill-prototype` | Audit trước demo |
 | 5 | `/model` | Zod list response |
-| 6 | `/api` → `/grill-api` | Bộ Code (Forgekit) trên repo `api/` |
+| 6 | `/api` → `/grill-api` | bộ code trên repo `api/` |
 | 7 | `/test` | 1 scenario / session |
 | 8 | `/wire` | Thay mock, restore auth |
 | 9 | `/unit` | Validation + service parser |

@@ -25,7 +25,7 @@ status: active
 | business-process-trace | Brownfield process-through-code skill — **not** product journey `FLOW-*` |
 | flow-trace | Deprecated alias of business-process-trace |
 | `_legacy.dynamics*` | Extract/artifact name for old dynamics — keep filename; wording → FLOW/journey |
-| Docskit | Optional local index over architecture and product Markdown IDs |
+| FlowGrid bộ docs | Optional local index over architecture and product Markdown IDs |
 | Docs hub layers | arc42 (why) → C4 views (what) → Product Spec (detail) |
 
 Product/domain vocabulary — TBD with MES/IoT owners.
